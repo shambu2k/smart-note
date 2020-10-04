@@ -16,10 +16,10 @@
 
 
         <TextView
-            android:id="@+id/text_view_subject_name"
+            android:id="@+id/text_view_book_name"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            tools:text="Mathematics"
+            tools:text="Book 1"
             android:textColor="#000"
             android:textSize="32sp"
             android:gravity="center_vertical"
