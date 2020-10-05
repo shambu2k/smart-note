@@ -1,18 +1,29 @@
 package com.example.smartnote.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.smartnote.R
+import androidx.fragment.app.Fragment
+import com.example.smartnote.databinding.FragmentQRScannerBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class QRScannerFragment : Fragment() {
+
+    private var _binding: FragmentQRScannerBinding?= null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_q_r_scanner, container, false)
+        _binding = FragmentQRScannerBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

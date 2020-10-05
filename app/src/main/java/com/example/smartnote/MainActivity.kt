@@ -35,9 +35,11 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.books_item->{
                     navController.navigate(R.id.booksFragment)
+                    binding.drawerLayout.closeDrawer(GravityCompat.START)
                 }
                 R.id.qrscanner_item->{
                     navController.navigate(R.id.qrscannerFragment)
+                    binding.drawerLayout.closeDrawer(GravityCompat.START)
                 }
             }
             true
