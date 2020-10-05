@@ -3,6 +3,7 @@ package com.example.smartnote
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.smartnote.databinding.ActivityMainBinding
+import com.example.smartnote.helpers.FileSystemHelper
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
