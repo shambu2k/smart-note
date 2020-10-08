@@ -1,22 +1,18 @@
 package com.example.smartnote.adapters
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.smartnote.R
+import com.example.smartnote.databinding.BookItemBinding
 
 class BooksAdapter: RecyclerView.Adapter<BooksAdapter.BooksViewHolder>() {
 
-    class BooksViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val textView: TextView = itemView.findViewById(R.id.text_view_book_name)
+    class BooksViewHolder(b: BookItemBinding) : RecyclerView.ViewHolder(b.root) {
+        val binding = b
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BooksViewHolder {
-        val v = LayoutInflater.from(parent.context)
-            .inflate(R.layout.book_item, parent, false)
-        return BooksViewHolder(v)
+        return BooksViewHolder(BookItemBinding.inflate(LayoutInflater.from(parent.context)))
     }
 
     override fun onBindViewHolder(holder: BooksViewHolder, position: Int) {
