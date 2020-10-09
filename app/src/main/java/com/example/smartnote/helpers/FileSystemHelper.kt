@@ -16,5 +16,3 @@ class FileSystemHelper(@ApplicationContext var context: Context) {
 
     }
 }
-
-
