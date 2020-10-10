@@ -1,24 +1,26 @@
 package com.example.smartnote
 
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.example.smartnote.databinding.ActivityMainBinding
+import com.example.smartnote.databinding.ActivityMainBinding.bind
+import com.example.smartnote.viewBindingDelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
+    private val binding by viewBinding(ActivityMainBinding::bind)
 
     private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
 
@@ -31,13 +33,13 @@ class MainActivity : AppCompatActivity() {
         navController = findNavController(R.id.nav_host_fragment)
         NavigationUI.setupActionBarWithNavController(this, navController)
         NavigationUI.setupWithNavController(binding.sideNavigationDrawer, navController)
-        binding.sideNavigationDrawer.setNavigationItemSelectedListener { item ->
+        binding.sideNavigationDrawer.setNavigationItemSelectedListener { item: MenuItem ->
             when (item.itemId) {
-                R.id.books_item->{
+                R.id.books_item -> {
                     navController.navigate(R.id.booksFragment)
                     binding.drawerLayout.closeDrawer(GravityCompat.START)
                 }
-                R.id.qrscanner_item->{
+                R.id.qrscanner_item -> {
                     navController.navigate(R.id.qrscannerFragment)
                     binding.drawerLayout.closeDrawer(GravityCompat.START)
                 }
@@ -47,7 +49,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if(binding.drawerLayout.isDrawerOpen(GravityCompat.START)){
+        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
             binding.drawerLayout.closeDrawer(GravityCompat.START)
             return
         }
