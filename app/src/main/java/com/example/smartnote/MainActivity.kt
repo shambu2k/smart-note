@@ -8,14 +8,13 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.example.smartnote.databinding.ActivityMainBinding
-import com.example.smartnote.databinding.ActivityMainBinding.bind
-import com.example.smartnote.viewBindingDelegate.viewBinding
+import com.example.smartnote.viewbinding.viewLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private val binding by viewBinding(ActivityMainBinding::bind)
+    private val binding by viewLifecycle(ActivityMainBinding::inflate)
 
     private lateinit var navController: NavController
 
