@@ -12,7 +12,8 @@ class PagesAdapter: RecyclerView.Adapter<PagesAdapter.PagesViewHolder>() {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PagesViewHolder {
-        return PagesViewHolder(PageItemBinding.inflate(LayoutInflater.from(parent.context)))
+        return PagesViewHolder(PageItemBinding.inflate(LayoutInflater.from(parent.context), parent,
+            false))
     }
 
     override fun onBindViewHolder(holder: PagesViewHolder, position: Int) {

@@ -12,7 +12,8 @@ class SubjectsAdapter: RecyclerView.Adapter<SubjectsAdapter.SubjectsViewHolder>(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubjectsViewHolder {
-        return SubjectsViewHolder(SubjectItemBinding.inflate(LayoutInflater.from(parent.context)))
+        return SubjectsViewHolder(SubjectItemBinding.inflate(LayoutInflater.from(parent.context), parent,
+            false))
     }
 
     override fun onBindViewHolder(holder: SubjectsViewHolder, position: Int) {
