@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Smart Note</string>
+    <string name="nav_drawer_books">Books</string>
+    <string name="nav_drawer_qrscanner">QRScanner</string>
 </resources>
