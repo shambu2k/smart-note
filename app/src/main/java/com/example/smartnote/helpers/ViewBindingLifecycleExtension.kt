@@ -1,4 +1,4 @@
-package com.example.smartnote.viewbinding
+package com.example.smartnote.helpers
 
 import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity

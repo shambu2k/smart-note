@@ -1,14 +1,19 @@
 package com.example.smartnote
 
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.example.smartnote.databinding.ActivityMainBinding
-import com.example.smartnote.viewbinding.viewLifecycle
+import com.example.smartnote.db.*
+import com.example.smartnote.helpers.viewLifecycle
+import com.example.smartnote.viewmodels.BookViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -18,12 +23,15 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
 
+    private lateinit var bookViewModel: BookViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val view = binding.root
         setContentView(view)
-
+   
         setupNavigation()
+
     }
 
     private fun setupNavigation() {
