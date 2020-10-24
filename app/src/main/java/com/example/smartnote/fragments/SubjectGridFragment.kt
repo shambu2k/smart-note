@@ -7,16 +7,15 @@ import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.smartnote.SubjectGrid
-import com.example.smartnote.SubjectGridViewModel
+import com.example.smartnote.db.SubjectGrid
+import com.example.smartnote.viewmodels.SubjectGridViewModel
 import com.example.smartnote.databinding.FragmentSubjectGridBinding
-import com.example.smartnote.viewbinding.viewLifecycle
+import com.example.smartnote.helpers.viewLifecycle
 
 class SubjectGridFragment : Fragment() {
     private var binding by viewLifecycle<FragmentSubjectGridBinding>()
     private val viewModel: SubjectGridViewModel by lazy {
-        ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory
-            .getInstance(requireActivity().application)).get(SubjectGridViewModel::class.java)
+        ViewModelProvider(requireActivity()).get(SubjectGridViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -33,7 +32,6 @@ class SubjectGridFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         mapOf(
             binding.editTextBookName to binding.containerBookName,
             binding.editTextSubjectOne to binding.containerSubjectOne,

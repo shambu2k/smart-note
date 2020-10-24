@@ -1,4 +1,4 @@
-package com.example.smartnote
+package com.example.smartnote.db
 
 import androidx.lifecycle.LiveData
 import androidx.room.*

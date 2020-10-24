@@ -17,5 +17,4 @@ data class Book(
     @ColumnInfo(name = "subject_path_list")
     val subjectFolderPaths:List<String>
 
-) {
-}
+)

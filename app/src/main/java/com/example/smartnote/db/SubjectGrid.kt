@@ -1,4 +1,4 @@
-package com.example.smartnote
+package com.example.smartnote.db
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
