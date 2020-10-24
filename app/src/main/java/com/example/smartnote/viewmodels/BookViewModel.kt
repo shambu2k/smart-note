@@ -36,7 +36,7 @@ class BookViewModel @ViewModelInject constructor(
         }
     }
     fun delete(book: Book){
-        viewModelScope.launch {
+        ViewModelScope.launch {
             repository.delete(book)
         }
     }
