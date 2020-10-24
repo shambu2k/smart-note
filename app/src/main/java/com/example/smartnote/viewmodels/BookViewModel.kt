@@ -8,6 +8,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.smartnote.db.Book
 import com.example.smartnote.db.BookRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
 class BookViewModel @ViewModelInject constructor(
@@ -15,17 +18,20 @@ class BookViewModel @ViewModelInject constructor(
     @Assisted private val savedStateHandle: SavedStateHandle
 ):ViewModel() {
 
+    private val viewModelJob = SupervisorJob()
+
     val books = repository.books
     val book = MutableLiveData<Book>()
 
+    private val ViewModelScope = CoroutineScope(Dispatchers.IO + viewModelJob)
     fun insert(book: Book){
-        viewModelScope.launch {
+        ViewModelScope.launch {
             repository.insert(book)
         }
     }
 
     fun update(book: Book){
-        viewModelScope.launch {
+        ViewModelScope.launch {
             repository.update(book)
         }
     }
@@ -36,7 +42,7 @@ class BookViewModel @ViewModelInject constructor(
     }
 
     fun clearAll(){
-        viewModelScope.launch {
+        ViewModelScope.launch {
             repository.deleteAll()
         }
     }
