@@ -12,7 +12,8 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.example.smartnote.databinding.ActivityMainBinding
 import com.example.smartnote.db.*
-import com.example.smartnote.viewbinding.viewLifecycle
+import com.example.smartnote.helpers.viewLifecycle
+import com.example.smartnote.viewmodels.BookViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -28,17 +29,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val view = binding.root
         setContentView(view)
-        val dao = BookDatabase.getInstance(application).bookDao
-        val repository = BookRepository(dao)
-        val factory =  BookViewModelFactory(repository)
-        bookViewModel = ViewModelProvider(this,factory).get(BookViewModel::class.java)
-        var subs = listOf<String>("Maths","Chem","Physics")
-        var folders = listOf<String>("folder1","folder2","folder3")
-        bookViewModel.insert(Book(0,"book1",subs,folders))
-        bookViewModel.insert(Book(0,"book2",subs,folders))
-        bookViewModel.books.observe(this, Observer {
-            Log.i("MyTag",it.toString())
-        })
 
         setupNavigation()
 

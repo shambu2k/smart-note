@@ -1,6 +1,8 @@
 package com.example.smartnote.db
 
-class BookRepository(private val dao:BookDao) {
+import javax.inject.Inject
+
+class BookRepository @Inject constructor (private val dao:BookDao) {
     val books = dao.getAllBooks()
 
     suspend fun insert(book:Book){

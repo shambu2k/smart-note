@@ -51,6 +51,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
     def hilt_version = "2.28-alpha"
+    def hilt_jetpack = "1.0.0-alpha01"
     def room_version = "2.2.5"
     def nav_version = "2.3.0"
     def lifecycle_version = "2.2.0"
@@ -61,6 +62,10 @@ dependencies {
     // Hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+
+    //Hilt - Jetpack extension
+    implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hilt_jetpack"
+    kapt "androidx.hilt:hilt-compiler:$hilt_jetpack"
 
     // Jetpack - Room
     implementation "androidx.room:room-runtime:$room_version"
