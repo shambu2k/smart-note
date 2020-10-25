@@ -7,10 +7,11 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.smartnote.helpers.Converter
 
-@Database(entities = [Book::class],version = 1)
+@Database(entities = [Book::class, SubjectGrid::class],version = 1)
 @TypeConverters(Converter::class)
 abstract class BookDatabase:RoomDatabase() {
     abstract val bookDao:BookDao
+    abstract val subjectDao: SubjectDao
     companion object{
         @Volatile
         private var INSTANCE: BookDatabase? = null

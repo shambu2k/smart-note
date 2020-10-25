@@ -8,7 +8,7 @@ import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.example.smartnote.databinding.ActivityMainBinding
 import com.example.smartnote.db.*
@@ -37,7 +37,8 @@ class MainActivity : AppCompatActivity() {
     private fun setupNavigation() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-        navController = findNavController(R.id.nav_host_fragment)
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.navController
         NavigationUI.setupActionBarWithNavController(this, navController)
         NavigationUI.setupWithNavController(binding.sideNavigationDrawer, navController)
         binding.sideNavigationDrawer.setNavigationItemSelectedListener { item: MenuItem ->
