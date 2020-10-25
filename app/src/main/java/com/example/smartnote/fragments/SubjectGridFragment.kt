@@ -11,7 +11,9 @@ import com.example.smartnote.db.SubjectGrid
 import com.example.smartnote.viewmodels.SubjectGridViewModel
 import com.example.smartnote.databinding.FragmentSubjectGridBinding
 import com.example.smartnote.helpers.viewLifecycle
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SubjectGridFragment : Fragment() {
     private var binding by viewLifecycle<FragmentSubjectGridBinding>()
     private val viewModel: SubjectGridViewModel by lazy {

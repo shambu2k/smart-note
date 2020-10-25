@@ -49,4 +49,9 @@ class SubjectGridViewModel @ViewModelInject constructor(
     fun getAllSubjectGrids(): LiveData<List<SubjectGrid>> {
         return allSubjectGrids
     }
+
+    override fun onCleared() {
+        viewModelJob.cancel()
+        super.onCleared()
+    }
 }

@@ -46,4 +46,9 @@ class BookViewModel @ViewModelInject constructor(
             repository.deleteAll()
         }
     }
+
+    override fun onCleared() {
+        viewModelJob.cancel()
+        super.onCleared()
+    }
 }
