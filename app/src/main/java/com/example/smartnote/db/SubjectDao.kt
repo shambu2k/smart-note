@@ -6,17 +6,17 @@ import androidx.room.*
 @Dao
 interface SubjectDao {
     @Insert
-    suspend fun insert(subjectGrid: SubjectGrid)
+    suspend fun insertSubjectGrid(subjectGrid: SubjectGrid)
 
     @Update
-    suspend fun update(subjectGrid: SubjectGrid)
+    suspend fun updateSubjectGrid(subjectGrid: SubjectGrid)
 
     @Delete
-    suspend fun delete(subjectGrid: SubjectGrid)
+    suspend fun deleteSubjectGrid(subjectGrid: SubjectGrid)
 
     @Query("DELETE FROM subject_grid_table")
-    suspend fun deleteAllNotes()
+    suspend fun deleteAllSubjectGrids()
 
     @Query("SELECT * FROM subject_grid_table ORDER BY bookName ASC")
-    fun getAllNotes(): LiveData<List<SubjectGrid>>
+    fun getAllSubjectGrids(): LiveData<List<SubjectGrid>>
 }
