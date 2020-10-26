@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import com.example.smartnote.db.SubjectGrid
 import com.example.smartnote.databinding.FragmentSubjectGridBinding
 import com.example.smartnote.db.Book
@@ -18,7 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class SubjectGridFragment : Fragment() {
     private var binding by viewLifecycle<FragmentSubjectGridBinding>()
-    private val viewModel: BookViewModel by viewModels()
+    private lateinit var viewModel: BookViewModel
     private lateinit var fileSystemHelper: FileSystemHelper
 
     override fun onCreateView(
@@ -110,5 +111,10 @@ class SubjectGridFragment : Fragment() {
             viewModel.insertBook(book)
             requireActivity().onBackPressed()
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(requireActivity()).get(BookViewModel::class.java)
     }
 }

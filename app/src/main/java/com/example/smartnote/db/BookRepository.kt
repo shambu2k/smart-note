@@ -44,4 +44,8 @@ class BookRepository @Inject constructor (private val bookDao:BookDao,
     fun getAllSubjectGrids(): LiveData<List<SubjectGrid>> {
         return allSubjectGrids
     }
+
+    fun getBook(id:Int): LiveData<Book>{
+        return bookDao.getBook(id)
+    }
 }
