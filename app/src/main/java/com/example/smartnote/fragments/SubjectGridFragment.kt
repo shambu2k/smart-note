@@ -19,7 +19,9 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class SubjectGridFragment : Fragment() {
     private var binding by viewLifecycle<FragmentSubjectGridBinding>()
-    private lateinit var viewModel: BookViewModel
+    private val viewModel: BookViewModel by lazy {
+        ViewModelProvider(requireActivity()).get(BookViewModel::class.java)
+    }
     private lateinit var fileSystemHelper: FileSystemHelper
 
     override fun onCreateView(
@@ -111,10 +113,5 @@ class SubjectGridFragment : Fragment() {
             viewModel.insertBook(book)
             requireActivity().onBackPressed()
         }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(requireActivity()).get(BookViewModel::class.java)
     }
 }

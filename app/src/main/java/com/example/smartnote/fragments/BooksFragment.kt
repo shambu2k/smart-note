@@ -26,12 +26,14 @@ class BooksFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: BooksAdapter
 
-    private lateinit var viewModel: BookViewModel
+    private val viewModel: BookViewModel by lazy {
+        ViewModelProvider(requireActivity()).get(BookViewModel::class.java)
+    }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         binding = FragmentBooksBinding.inflate(inflater, container, false)
         binding.buttonAddBook.setOnClickListener {
@@ -55,11 +57,11 @@ class BooksFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(requireActivity()).get(BookViewModel::class.java)
         viewModel.books.observe(this, Observer { books ->
             books?.let {
                 this.books = books
-                adapter.refresh(this.books) }
+                adapter.refresh(this.books)
+            }
         })
     }
 }

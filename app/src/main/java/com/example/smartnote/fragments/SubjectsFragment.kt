@@ -23,7 +23,9 @@ class SubjectsFragment : Fragment(){
     private var binding by viewLifecycle<FragmentSubjectsBinding>()
 
     private var book: Book = Book(0,"book", listOf("1","2","3","4","5"), listOf("/1","/2","/3","/4","/5"))
-    private lateinit var viewModel: BookViewModel
+    private val viewModel: BookViewModel by lazy {
+        ViewModelProvider(requireActivity()).get(BookViewModel::class.java)
+    }
 
     //recycler_view
     private lateinit var recyclerView: RecyclerView
@@ -54,10 +56,5 @@ class SubjectsFragment : Fragment(){
             recyclerView.layoutManager = LinearLayoutManager(activity)
             recyclerView.adapter = adapter
         }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(requireActivity()).get(BookViewModel::class.java)
     }
 }
