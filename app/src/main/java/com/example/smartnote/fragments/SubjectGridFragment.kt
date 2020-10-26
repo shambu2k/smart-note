@@ -6,19 +6,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import com.example.smartnote.db.SubjectGrid
-import com.example.smartnote.viewmodels.SubjectGridViewModel
 import com.example.smartnote.databinding.FragmentSubjectGridBinding
+import com.example.smartnote.db.Book
+import com.example.smartnote.helpers.FileSystemHelper
 import com.example.smartnote.helpers.viewLifecycle
+import com.example.smartnote.viewmodels.BookViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SubjectGridFragment : Fragment() {
     private var binding by viewLifecycle<FragmentSubjectGridBinding>()
-    private val viewModel: SubjectGridViewModel by lazy {
-        ViewModelProvider(requireActivity()).get(SubjectGridViewModel::class.java)
-    }
+    private val viewModel: BookViewModel by viewModels()
+    private lateinit var fileSystemHelper: FileSystemHelper
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,6 +34,7 @@ class SubjectGridFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        fileSystemHelper = FileSystemHelper(requireContext())
         super.onViewCreated(view, savedInstanceState)
         mapOf(
             binding.editTextBookName to binding.containerBookName,
@@ -62,36 +64,50 @@ class SubjectGridFragment : Fragment() {
         val subjectOneName = binding.editTextSubjectOne.text.toString()
         if (subjectOneName.isEmpty()) {
             allOk = false
-            binding.containerSubjectOne.error = "Subject One Name should not be empty"
+            binding.containerSubjectOne.error = "Subject One Name should be unique and not empty"
         }
 
         val subjectTwoName = binding.editTextSubjectTwo.text.toString()
-        if (subjectTwoName.isEmpty()) {
+        if (subjectTwoName.isEmpty() || subjectTwoName == subjectOneName) {
             allOk = false
-            binding.containerSubjectTwo.error = "Subject Two Name should not be empty"
+            binding.containerSubjectTwo.error = "Subject Two Name should be unique and not empty"
         }
         val subjectThreeName = binding.editTextSubjectThree.text.toString()
-        if (subjectThreeName.isEmpty()) {
+        if (subjectThreeName.isEmpty() || subjectThreeName == subjectTwoName
+            || subjectThreeName == subjectOneName) {
             allOk = false
-            binding.containerSubjectThree.error = "Subject Three Name should not be empty"
+            binding.containerSubjectThree.error = "Subject Three Name should be unique and not empty"
         }
 
         val subjectFourName = binding.editTextSubjectFour.text.toString()
-        if (subjectFourName.isEmpty()) {
+        if (subjectFourName.isEmpty() || subjectFourName == subjectThreeName
+            || subjectFourName == subjectTwoName || subjectFourName == subjectOneName) {
             allOk = false
-            binding.containerSubjectFour.error = "Subject Four Name should not be empty"
+            binding.containerSubjectFour.error = "Subject Four Name should be unique and not empty"
         }
 
         val subjectFiveName = binding.editTextSubjectFive.text.toString()
-        if (subjectFiveName.isEmpty()) {
+        if (subjectFiveName.isEmpty() || subjectFiveName == subjectFourName
+            || subjectFiveName == subjectThreeName || subjectFiveName == subjectTwoName
+            || subjectFiveName == subjectOneName) {
             allOk = false
-            binding.containerSubjectFive.error = "Subject Five Name should not be empty"
+            binding.containerSubjectFive.error = "Subject Five Name should be unique and not empty"
         }
 
         if (allOk) {
-            val subjectGrid = SubjectGrid(null, bookName, subjectOneName, subjectTwoName, subjectThreeName,
+            val subjectGrid = SubjectGrid(null, bookName, subjectOneName, subjectTwoName,
+                subjectThreeName, subjectFourName, subjectFiveName)
+            val subjects = listOf(subjectOneName, subjectTwoName, subjectThreeName,
                 subjectFourName, subjectFiveName)
-            viewModel.insert(subjectGrid)
+            val subjectFolderPaths = mutableListOf<String>()
+            fileSystemHelper.makeFolder(bookName, "")
+            subjects.forEach { subjectName->
+                fileSystemHelper.makeFolder(subjectName, "/$bookName")
+                subjectFolderPaths.add("/${bookName}/${subjectName}")
+            }
+            val book = Book(0, bookName, subjects, subjectFolderPaths)
+            viewModel.insertSubjectGrid(subjectGrid)
+            viewModel.insertBook(book)
             requireActivity().onBackPressed()
         }
     }

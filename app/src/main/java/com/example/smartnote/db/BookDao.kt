@@ -15,7 +15,7 @@ interface BookDao {
     suspend fun deleteBook(book: Book)
 
     @Query("DELETE FROM user_books_table")
-    suspend fun deleteAll()
+    suspend fun deleteAllBooks()
 
     @Query("SELECT * FROM user_books_table")
     fun getAllBooks(): LiveData<List<Book>>
