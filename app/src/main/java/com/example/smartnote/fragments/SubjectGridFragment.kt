@@ -8,6 +8,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.smartnote.db.SubjectGrid
 import com.example.smartnote.databinding.FragmentSubjectGridBinding
 import com.example.smartnote.db.Book
@@ -111,7 +112,8 @@ class SubjectGridFragment : Fragment() {
             val book = Book(0, bookName, subjects, subjectFolderPaths)
             viewModel.insertSubjectGrid(subjectGrid)
             viewModel.insertBook(book)
-            requireActivity().onBackPressed()
+            findNavController().navigate(SubjectGridFragmentDirections
+                .actionSubjectGridFragmentToScannerFragment())
         }
     }
 }
