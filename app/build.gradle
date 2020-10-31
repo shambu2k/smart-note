@@ -95,6 +95,7 @@ dependencies {
     // Open CV SDK
     
     // Document Scanning library
+    implementation project(":scanlibrary")
 
     // QR Scanning
 
