@@ -17,6 +17,14 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+
+        <action
+            android:id="@+id/action_booksFragment_to_subjectsFragment"
+            app:destination="@id/subjectsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
@@ -29,7 +37,7 @@
         android:name="com.example.smartnote.fragments.SubjectGridFragment"
         android:label="Add New Book"
         tools:layout="@layout/fragment_subject_grid" >
-        <action
+      <action
             android:id="@+id/action_subjectGridFragment_to_scannerFragment"
             app:destination="@id/scannerFragment"
             app:popUpTo="@id/booksFragment"
@@ -39,9 +47,18 @@
             app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
+        android:id="@+id/subjectsFragment"
+        android:name="com.example.smartnote.fragments.SubjectsFragment"
+        android:label="Subjects"
+        tools:layout="@layout/fragment_subjects" >
+        <argument
+            android:name="bookId"
+            app:argType="integer"
+            android:defaultValue="0"/>
+    </fragment>
+    <fragment
         android:id="@+id/scannerFragment"
         android:name="com.example.smartnote.fragments.ScannerFragment"
         android:label="Scanner"
         tools:layout="@layout/fragment_scanner" />
-
 </navigation>

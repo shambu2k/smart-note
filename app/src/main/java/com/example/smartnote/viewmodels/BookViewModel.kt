@@ -83,4 +83,8 @@ class BookViewModel @ViewModelInject constructor(
         viewModelJob.cancel()
         super.onCleared()
     }
+
+    fun getBookById(id:Int):LiveData<Book>{
+        return bookRepository.getBook(id)
+    }
 }

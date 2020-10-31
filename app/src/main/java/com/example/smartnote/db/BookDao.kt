@@ -19,4 +19,7 @@ interface BookDao {
 
     @Query("SELECT * FROM user_books_table")
     fun getAllBooks(): LiveData<List<Book>>
+
+    @Query("SELECT * FROM user_books_table WHERE book_id=:id")
+    fun getBook(id: Int): LiveData<Book>
 }
