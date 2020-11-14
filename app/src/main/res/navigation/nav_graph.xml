@@ -28,11 +28,6 @@
     </fragment>
 
     <fragment
-        android:id="@+id/qrscannerFragment"
-        android:name="com.example.smartnote.fragments.QRScannerFragment"
-        android:label="QRScanner"
-        tools:layout="@layout/fragment_q_r_scanner"/>
-    <fragment
         android:id="@+id/subjectGridFragment"
         android:name="com.example.smartnote.fragments.SubjectGridFragment"
         android:label="Add New Book"

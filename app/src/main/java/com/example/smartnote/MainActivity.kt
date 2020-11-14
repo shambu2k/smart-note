@@ -1,19 +1,25 @@
 package com.example.smartnote
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.util.Patterns
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.example.smartnote.databinding.ActivityMainBinding
 import com.example.smartnote.db.*
 import com.example.smartnote.helpers.viewLifecycle
 import com.example.smartnote.viewmodels.BookViewModel
+import com.google.zxing.integration.android.IntentIntegrator
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -48,7 +54,7 @@ class MainActivity : AppCompatActivity() {
                     binding.drawerLayout.closeDrawer(GravityCompat.START)
                 }
                 R.id.qrscanner_item -> {
-                    navController.navigate(R.id.qrscannerFragment)
+                    scanQr()
                     binding.drawerLayout.closeDrawer(GravityCompat.START)
                 }
             }
@@ -66,5 +72,31 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         return NavigationUI.navigateUp(navController, binding.drawerLayout)
+    }
+
+    private fun scanQr(){
+        IntentIntegrator(this).initiateScan()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
+        if (result != null) {
+            if (result.contents == null) {
+                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show()
+            } else {
+                if (Patterns.WEB_URL.matcher(result.contents).matches()) {
+                    // Open URL
+                    val browserIntent =
+                        Intent(Intent.ACTION_VIEW, Uri.parse(result.contents))
+                    startActivity(browserIntent)
+
+                }else{
+                    Toast.makeText(this, "Scan a valid QR", Toast.LENGTH_LONG).show()
+                    scanQr()
+                }
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
     }
 }
