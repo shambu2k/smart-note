@@ -59,6 +59,8 @@ dependencies {
     def lifecycle_version = "2.2.0"
     def glide_version = "4.11.0"
     def material_version = "1.2.1"
+    def zxing_version = "4.1.0"
+    def zxing_old = "3.3.0"
 
 
     // Hilt
@@ -98,5 +100,7 @@ dependencies {
     implementation project(":scanlibrary")
 
     // QR Scanning
+    implementation ("com.journeyapps:zxing-android-embedded:$zxing_version"){transitive = true}
+    implementation "com.google.zxing:core:$zxing_old"
 
 }
