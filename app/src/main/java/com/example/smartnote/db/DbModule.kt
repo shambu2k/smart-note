@@ -21,5 +21,10 @@ object DbModule {
     }
 
     @Provides
-    fun provideBookRepository(bookDao: BookDao, subjectDao: SubjectDao) = BookRepository(bookDao, subjectDao)
+    fun provideUnitDao(@ApplicationContext appContext: Context) : UnitDao {
+        return BookDatabase.getInstance(appContext).unitDao
+    }
+
+    @Provides
+    fun provideBookRepository(bookDao: BookDao, subjectDao: SubjectDao , unitDao: UnitDao) = BookRepository(bookDao, subjectDao,unitDao)
 }

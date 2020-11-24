@@ -104,12 +104,14 @@ class SubjectGridFragment : Fragment() {
             val subjects = listOf(subjectOneName, subjectTwoName, subjectThreeName,
                 subjectFourName, subjectFiveName)
             val subjectFolderPaths = mutableListOf<String>()
+            val units = listOf("unit1","unit2","unit3","unit4","unit5")
+            val unitFolderPaths = mutableListOf<String>()
             fileSystemHelper.makeFolder(bookName, "")
             subjects.forEach { subjectName->
                 fileSystemHelper.makeFolder(subjectName, "/$bookName")
                 subjectFolderPaths.add("/${bookName}/${subjectName}")
             }
-            val book = Book(0, bookName, subjects, subjectFolderPaths)
+            val book = Book(0, bookName, subjects, subjectFolderPaths,units,unitFolderPaths)
             viewModel.insertSubjectGrid(subjectGrid)
             viewModel.insertBook(book)
             findNavController().navigate(SubjectGridFragmentDirections.actionSubjectGridFragmentToScannerFragment())

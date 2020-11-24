@@ -15,6 +15,10 @@ data class Book(
     @ColumnInfo(name = "subject_list")
     val subjects:List<String>,
     @ColumnInfo(name = "subject_path_list")
-    val subjectFolderPaths:List<String>
+    val subjectFolderPaths:List<String>,
+    @ColumnInfo(name = "unit_list")
+    val units:List<String>,
+    @ColumnInfo(name = "unit_path_list")
+    val unitFolderPaths:List<String>
 
 )
