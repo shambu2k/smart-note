@@ -55,5 +55,9 @@
         android:id="@+id/scannerFragment"
         android:name="com.example.smartnote.fragments.ScannerFragment"
         android:label="Scanner"
-        tools:layout="@layout/fragment_scanner" />
+        tools:layout="@layout/fragment_scanner" >
+        <argument
+            android:name="bookName"
+            app:argType="string" />
+    </fragment>
 </navigation>
