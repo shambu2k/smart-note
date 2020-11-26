@@ -15,6 +15,7 @@ import com.example.smartnote.db.Book
 import com.example.smartnote.helpers.FileSystemHelper
 import com.example.smartnote.helpers.viewLifecycle
 import com.example.smartnote.viewmodels.BookViewModel
+import com.example.smartnote.viewmodels.FileViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -23,7 +24,8 @@ class SubjectGridFragment : Fragment() {
     private val viewModel: BookViewModel by lazy {
         ViewModelProvider(requireActivity()).get(BookViewModel::class.java)
     }
-    private lateinit var fileSystemHelper: FileSystemHelper
+
+    private lateinit var fileViewModel: FileViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,7 +40,8 @@ class SubjectGridFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        fileSystemHelper = FileSystemHelper(requireContext())
+
+        fileViewModel = ViewModelProvider(requireActivity()).get(FileViewModel::class.java)
         super.onViewCreated(view, savedInstanceState)
         mapOf(
             binding.editTextBookName to binding.containerBookName,
@@ -106,14 +109,17 @@ class SubjectGridFragment : Fragment() {
             val subjectFolderPaths = mutableListOf<String>()
             val units = listOf("unit1","unit2","unit3","unit4","unit5")
 
-            fileSystemHelper.makeFolder(bookName, "")
+
+            fileViewModel.makeFolder(bookName,"")
             subjects.forEach { subjectName->
-                fileSystemHelper.makeFolder(subjectName, "/$bookName")
+
+                fileViewModel.makeFolder(subjectName,"/$bookName")
                 subjectFolderPaths.add("/${bookName}/${subjectName}")
             }
             for (i in 0 until 5){
                 for(j in 0 until 5) {
-                    fileSystemHelper.makeFolder(units[j], subjectFolderPaths[i])
+
+                    fileViewModel.makeFolder(units[j],subjectFolderPaths[i])
                 }
             }
             val book = Book(0, bookName, subjects, subjectFolderPaths,units)

@@ -7,7 +7,7 @@ import java.io.File
 
 class FileSystemHelper(@ApplicationContext var context: Context) {
 
-     fun makeFolder(folderName: String,filePath: String){
+     suspend fun makeFolder(folderName: String,filePath: String){
         val medFolder = File(context.filesDir.toString() + filePath, folderName)
          Log.i("myTag",context.filesDir.toString()+ filePath)
          if (!medFolder.exists()) {
