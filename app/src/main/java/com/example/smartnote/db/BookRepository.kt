@@ -4,7 +4,9 @@ import androidx.lifecycle.LiveData
 import javax.inject.Inject
 
 class BookRepository @Inject constructor (private val bookDao:BookDao,
-                                          private val subjectDao: SubjectDao) {
+                                          private val subjectDao: SubjectDao,
+                                          private val unitDao: UnitDao)
+{
     val books = bookDao.getAllBooks()
 
     private var allSubjectGrids: LiveData<List<SubjectGrid>> = subjectDao.getAllSubjectGrids()

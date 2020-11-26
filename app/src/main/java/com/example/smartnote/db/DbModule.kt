@@ -1,6 +1,7 @@
 package com.example.smartnote.db
 
 import android.content.Context
+import com.example.smartnote.helpers.FileSystemHelper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,5 +22,13 @@ object DbModule {
     }
 
     @Provides
-    fun provideBookRepository(bookDao: BookDao, subjectDao: SubjectDao) = BookRepository(bookDao, subjectDao)
+    fun provideUnitDao(@ApplicationContext appContext: Context) : UnitDao {
+        return BookDatabase.getInstance(appContext).unitDao
+    }
+
+    @Provides
+    fun provideBookRepository(bookDao: BookDao, subjectDao: SubjectDao , unitDao: UnitDao) = BookRepository(bookDao, subjectDao,unitDao)
+
+    @Provides
+    fun provideFileSystemHelper(@ApplicationContext appContext: Context) = FileSystemHelper(appContext)
 }
