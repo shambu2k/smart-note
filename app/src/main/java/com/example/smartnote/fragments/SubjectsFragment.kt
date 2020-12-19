@@ -18,43 +18,46 @@ import com.example.smartnote.viewmodels.BookViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SubjectsFragment : Fragment(){
+class SubjectsFragment : Fragment() {
 
-    private var binding by viewLifecycle<FragmentSubjectsBinding>()
+  private var binding by viewLifecycle<FragmentSubjectsBinding>()
 
-    private var book: Book = Book(0,"book", listOf("1","2","3","4","5"), listOf("/1","/2","/3","/4","/5") , listOf("u1","u2","u3","u4","u5"))
-    private val viewModel: BookViewModel by lazy {
-        ViewModelProvider(requireActivity()).get(BookViewModel::class.java)
-    }
+  private var book: Book = Book(0, "book", listOf("1", "2", "3", "4", "5"), listOf("/1", "/2", "/3", "/4", "/5"), listOf("u1", "u2", "u3", "u4", "u5"))
+  private val viewModel: BookViewModel by lazy {
+    ViewModelProvider(requireActivity()).get(BookViewModel::class.java)
+  }
 
-    //recycler_view
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: SubjectsAdapter
+  // recycler_view
+  private lateinit var recyclerView: RecyclerView
+  private lateinit var adapter: SubjectsAdapter
 
+  override fun onCreateView(
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): View? {
+    binding = FragmentSubjectsBinding.inflate(inflater, container, false)
+    return binding.root
+  }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentSubjectsBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        arguments?.let {
-            val args: SubjectsFragmentArgs by navArgs()
-            val bookId: Int = args.bookId
-            adapter = SubjectsAdapter(book)
-            viewModel.getBookById(bookId).observe(viewLifecycleOwner, Observer { book ->
-                book?.let {
-                    this.book = book
-                    adapter.refresh(book) }
-            })
-            recyclerView = binding.recyclerView
-            recyclerView.layoutManager = LinearLayoutManager(activity)
-            recyclerView.adapter = adapter
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    arguments?.let {
+      val args: SubjectsFragmentArgs by navArgs()
+      val bookId: Int = args.bookId
+      adapter = SubjectsAdapter(book)
+      viewModel.getBookById(bookId).observe(
+        viewLifecycleOwner,
+        Observer { book ->
+          book?.let {
+            this.book = book
+            adapter.refresh(book)
+          }
         }
+      )
+      recyclerView = binding.recyclerView
+      recyclerView.layoutManager = LinearLayoutManager(activity)
+      recyclerView.adapter = adapter
     }
+  }
 }

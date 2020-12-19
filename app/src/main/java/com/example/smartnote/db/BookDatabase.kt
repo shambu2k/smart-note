@@ -7,28 +7,27 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.smartnote.helpers.Converter
 
-@Database(entities = [Book::class, SubjectGrid::class,UnitGrid::class],version = 1)
+@Database(entities = [Book::class, SubjectGrid::class, UnitGrid::class], version = 1)
 @TypeConverters(Converter::class)
-abstract class BookDatabase:RoomDatabase() {
-    abstract val bookDao:BookDao
-    abstract val subjectDao: SubjectDao
-    abstract val unitDao:UnitDao
-    companion object{
-        @Volatile
-        private var INSTANCE: BookDatabase? = null
-        fun getInstance(context:Context):BookDatabase{
-            synchronized(this){
-                var instance = INSTANCE
-                if(instance == null){
-                    instance = Room.databaseBuilder(
-                        context.applicationContext,
-                        BookDatabase::class.java,
-                        "user_books_table"
-                    ).build()
-                }
-                return instance
-            }
+abstract class BookDatabase : RoomDatabase() {
+  abstract val bookDao: BookDao
+  abstract val subjectDao: SubjectDao
+  abstract val unitDao: UnitDao
+  companion object {
+    @Volatile
+    private var INSTANCE: BookDatabase? = null
+    fun getInstance(context: Context): BookDatabase {
+      synchronized(this) {
+        var instance = INSTANCE
+        if (instance == null) {
+          instance = Room.databaseBuilder(
+            context.applicationContext,
+            BookDatabase::class.java,
+            "user_books_table"
+          ).build()
         }
+        return instance
+      }
     }
-
+  }
 }

@@ -7,17 +7,16 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "user_books_table")
 data class Book(
 
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "book_id")
-    val id:Int,
-    @ColumnInfo(name = "book_name")
-    val name:String,
-    @ColumnInfo(name = "subject_list")
-    val subjects:List<String>,
-    @ColumnInfo(name = "subject_path_list")
-    val subjectFolderPaths:List<String>,
-    @ColumnInfo(name = "unit_list")
-    val units:List<String>
-
+  @PrimaryKey(autoGenerate = true)
+  @ColumnInfo(name = "book_id")
+  val id: Int,
+  @ColumnInfo(name = "book_name")
+  val name: String,
+  @ColumnInfo(name = "subject_list")
+  val subjects: List<String>,
+  @ColumnInfo(name = "subject_path_list")
+  val subjectFolderPaths: List<String>,
+  @ColumnInfo(name = "unit_list")
+  val units: List<String>
 
 )

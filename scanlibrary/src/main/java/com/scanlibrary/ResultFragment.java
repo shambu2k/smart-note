@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,7 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import java.io.IOException;
 
@@ -24,16 +26,24 @@ public class ResultFragment extends Fragment {
 
     private View view;
     private ImageView scannedImageView;
-    private Button doneButton;
     private Bitmap original;
     private Button originalButton;
     private Button MagicColorButton;
     private Button grayModeButton;
     private Button bwButton;
+    private Button exitButton;
+    private Button rotateLeftButton;
+    private Button rotateRightButton;
+    private Button doneButton;
+    private RadioGroup subjectRadioGroup;
+    private RadioButton subRadioButton;
+    private RadioGroup unitRadioGroup;
+    private RadioButton unitRadioButton;
     private Bitmap transformed;
     private static ProgressDialogFragment progressDialogFragment;
 
     public ResultFragment() {
+
     }
 
     @Override
@@ -55,7 +65,13 @@ public class ResultFragment extends Fragment {
         bwButton.setOnClickListener(new BWButtonClickListener());
         Bitmap bitmap = getBitmap();
         setScannedImage(bitmap);
-        doneButton = (Button) view.findViewById(R.id.doneButton);
+        exitButton = (Button) view.findViewById(R.id.exit_button);
+        exitButton.setOnClickListener(new ExitButtonClickListener());
+        rotateLeftButton = (Button) view.findViewById(R.id.rotate_left);
+        rotateLeftButton.setOnClickListener(new RotateLeftButtonClickListener());
+        rotateRightButton = (Button) view.findViewById(R.id.rotate_right);
+        rotateRightButton.setOnClickListener(new RotateRightButtonClickListener());
+        doneButton = (Button) view.findViewById(R.id.done_button);
         doneButton.setOnClickListener(new DoneButtonClickListener());
     }
 
@@ -80,36 +96,91 @@ public class ResultFragment extends Fragment {
         scannedImageView.setImageBitmap(scannedImage);
     }
 
-    private class DoneButtonClickListener implements View.OnClickListener {
+    private class ExitButtonClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+
+        }
+    }
+
+    private class RotateLeftButtonClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
             showProgressDialog(getResources().getString(R.string.loading));
             AsyncTask.execute(new Runnable() {
                 @Override
                 public void run() {
-                    try {
-                        Intent data = new Intent();
-                        Bitmap bitmap = transformed;
-                        if (bitmap == null) {
-                            bitmap = original;
+                    transformed = rotateBitmap(-90, transformed != null ? transformed : original);
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            scannedImageView.setImageBitmap(transformed);
+                            dismissDialog();
                         }
-                        Uri uri = Utils.getUri(getActivity(), bitmap);
-                        data.putExtra(ScanConstants.SCANNED_RESULT, uri);
-                        getActivity().setResult(Activity.RESULT_OK, data);
-                        original.recycle();
-                        System.gc();
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                dismissDialog();
-                                getActivity().finish();
-                            }
-                        });
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    });
                 }
             });
+        }
+    }
+
+    private class RotateRightButtonClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            showProgressDialog(getResources().getString(R.string.loading));
+            AsyncTask.execute(new Runnable() {
+                @Override
+                public void run() {
+                    transformed = rotateBitmap(90, transformed != null ? transformed : original);
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            scannedImageView.setImageBitmap(transformed);
+                            dismissDialog();
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    private class DoneButtonClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            if(subjectRadioGroup.getCheckedRadioButtonId() == -1 && unitRadioGroup.getCheckedRadioButtonId() == -1) {
+
+            } else {
+                showProgressDialog(getResources().getString(R.string.loading));
+                AsyncTask.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Intent data = new Intent();
+                            Bitmap bitmap = transformed;
+                            if (bitmap == null) {
+                                bitmap = original;
+                            }
+                            subRadioButton = (RadioButton) view.findViewById(subjectRadioGroup.getCheckedRadioButtonId());
+                            unitRadioButton = (RadioButton) view.findViewById(unitRadioGroup.getCheckedRadioButtonId());
+                            Uri uri = Utils.getUri(getActivity(), bitmap);
+                            data.putExtra(ScanConstants.SCANNED_RESULT, uri);
+                            data.putExtra(ScanConstants.SCANNED_SUB, subjectRadioGroup.indexOfChild(subRadioButton) + 1);
+                            data.putExtra(ScanConstants.SCANNED_UNIT, unitRadioGroup.indexOfChild(unitRadioButton) + 1);
+                            getActivity().setResult(Activity.RESULT_OK, data);
+                            original.recycle();
+                            System.gc();
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    dismissDialog();
+                                    getActivity().finish();
+                                }
+                            });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
         }
     }
 
@@ -240,5 +311,17 @@ public class ResultFragment extends Fragment {
 
     protected synchronized void dismissDialog() {
         progressDialogFragment.dismissAllowingStateLoss();
+    }
+
+    private Bitmap rotateBitmap(final int degrees, Bitmap bitMapOrg) {
+        try {
+            Matrix matrix = new Matrix();
+            matrix.postRotate(degrees, bitMapOrg.getWidth()/2, bitMapOrg.getHeight()/2);
+            Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitMapOrg, bitMapOrg.getWidth(), bitMapOrg.getHeight(), true);
+            return Bitmap.createBitmap(scaledBitmap, 0, 0, scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

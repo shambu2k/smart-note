@@ -10,16 +10,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
-class FileViewModel  @ViewModelInject constructor(private val fileSystemHelper: FileSystemHelper,
-                                @Assisted private val savedStateHandle: SavedStateHandle
-) :ViewModel() {
-    private val viewModelJob = SupervisorJob()
-    private val scope = CoroutineScope(Dispatchers.IO + viewModelJob)
+class FileViewModel @ViewModelInject constructor(
+  private val fileSystemHelper: FileSystemHelper,
+  @Assisted private val savedStateHandle: SavedStateHandle
+) : ViewModel() {
+  private val viewModelJob = SupervisorJob()
+  private val scope = CoroutineScope(Dispatchers.IO + viewModelJob)
 
-    fun makeFolder(folderName: String,filePath: String){
-        scope.launch {
-            fileSystemHelper.makeFolder(folderName,filePath)
-        }
+  fun makeFolder(folderName: String, filePath: String) {
+    scope.launch {
+      fileSystemHelper.makeFolder(folderName, filePath)
     }
-
+  }
 }

@@ -2,4 +2,6 @@
     <string name="app_name">Smart Note</string>
     <string name="nav_drawer_books">Books</string>
     <string name="nav_drawer_qrscanner">QRScanner</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
 </resources>

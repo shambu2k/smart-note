@@ -5,13 +5,13 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "unit_grid_table")
 data class UnitGrid(
-    @PrimaryKey(autoGenerate = true)
-    var id:Int,
-    var bookname:String,
-    var subjectName: String,
-    var unitOne: String,
-    var unitTwo: String,
-    var unitThree: String,
-    var unitFour: String,
-    var unitFive: String
+  @PrimaryKey(autoGenerate = true)
+  var id: Int,
+  var bookname: String,
+  var subjectName: String,
+  var unitOne: String,
+  var unitTwo: String,
+  var unitThree: String,
+  var unitFour: String,
+  var unitFive: String
 )

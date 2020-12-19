@@ -14,6 +14,8 @@ public class ScanConstants {
     public final static int OPEN_CAMERA = 4;
     public final static int OPEN_MEDIA = 5;
     public final static String SCANNED_RESULT = "scannedResult";
+    public static final String SCANNED_SUB = "scannedSub";
+    public static final String SCANNED_UNIT = "scannedUnit";
     public final static String IMAGE_PATH = Environment
             .getExternalStorageDirectory().getPath() + "/scanSample";
 
