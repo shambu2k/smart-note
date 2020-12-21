@@ -89,8 +89,16 @@ class BookViewModel @ViewModelInject constructor(
     return bookRepository.getBook(id)
   }
 
-  fun getSubjectFolderPath() {
-    //TODO(): book, subject number can be passed as parameters
+  fun getSubjectFolderPath(bookName:String, subNo:String) : String {
+    var sub = bookRepository.getSubjectGrid(bookName)
+    when(subNo){
+      "1"->return sub.subjectOne
+      "2"->return sub.subjectTwo
+      "3"->return sub.subjectThree
+      "4"->return sub.subjectFour
+      "5"->return sub.subjectFive
+      else -> return "invalid"
+    }
   }
 
   fun getUnitFolderPath() {

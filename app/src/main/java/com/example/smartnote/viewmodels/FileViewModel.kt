@@ -24,9 +24,11 @@ class FileViewModel @ViewModelInject constructor(
     }
   }
 
-  fun storeImage(bitmap: Bitmap,fileName:String, filePath: String){
+  fun storeImage(bitmap: Bitmap?,fileName:String, filePath: String){
     scope.launch {
-      fileSystemHelper.storeImage(bitmap,fileName,filePath)
+      if (bitmap != null) {
+        fileSystemHelper.storeImage(bitmap,fileName,filePath)
+      }
     }
   }
 }

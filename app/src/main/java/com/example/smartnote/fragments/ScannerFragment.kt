@@ -17,6 +17,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavArgs
+import androidx.navigation.fragment.navArgs
 import com.example.smartnote.databinding.FragmentScannerBinding
 import com.example.smartnote.helpers.viewLifecycle
 import com.example.smartnote.viewmodels.BookViewModel
@@ -43,6 +45,7 @@ class ScannerFragment : Fragment() {
   private val bookViewModel:BookViewModel by lazy {
     ViewModelProvider(this).get(BookViewModel::class.java)
   }
+
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -103,6 +106,10 @@ class ScannerFragment : Fragment() {
         // get them using the key "scannedSubject" and "scannedUnit"
         var scannedSub = data!!.extras!!.get("scannedSubject")
         var scannedUnit = data!!.extras!!.get("scannedUnit")
+        var path = bookViewModel.getSubjectFolderPath(bookName = requireArguments().getString("bookName",""),subNo = scannedSub.toString())
+        fileViewModel.storeImage(bitmap,scannedUnit.toString(),path)
+
+
 
         binding.scannedImage.setImageBitmap(bitmap)
       } catch (e: IOException) {

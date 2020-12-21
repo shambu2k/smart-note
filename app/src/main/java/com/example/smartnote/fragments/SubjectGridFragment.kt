@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.example.smartnote.R
 import com.example.smartnote.db.SubjectGrid
 import com.example.smartnote.databinding.FragmentSubjectGridBinding
 import com.example.smartnote.db.Book
@@ -137,7 +139,8 @@ class SubjectGridFragment : Fragment() {
       val book = Book(0, bookName, subjects, subjectFolderPaths, units)
       viewModel.insertSubjectGrid(subjectGrid)
       viewModel.insertBook(book)
-      findNavController().navigate(SubjectGridFragmentDirections.actionSubjectGridFragmentToScannerFragment(bookName))
+      val bundle = bundleOf("bookName" to bookName)
+      findNavController().navigate(R.id.action_subjectGridFragment_to_scannerFragment,bundle)
     }
   }
 }

@@ -19,4 +19,8 @@ interface SubjectDao {
 
   @Query("SELECT * FROM subject_grid_table ORDER BY bookName ASC")
   fun getAllSubjectGrids(): LiveData<List<SubjectGrid>>
+
+
+  @Query("SELECT * FROM SUBJECT_GRID_TABLE WHERE bookName = :bookName")
+  fun getSubGrid(bookName:String):SubjectGrid
 }
