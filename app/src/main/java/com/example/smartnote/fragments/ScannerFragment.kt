@@ -16,8 +16,11 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.smartnote.databinding.FragmentScannerBinding
 import com.example.smartnote.helpers.viewLifecycle
+import com.example.smartnote.viewmodels.BookViewModel
+import com.example.smartnote.viewmodels.FileViewModel
 import com.scanlibrary.ScanActivity
 import com.scanlibrary.ScanConstants
 
@@ -33,6 +36,13 @@ class ScannerFragment : Fragment() {
   }
 
   private var binding by viewLifecycle<FragmentScannerBinding>()
+
+  private val fileViewModel:FileViewModel by lazy {
+    ViewModelProvider(this).get(FileViewModel::class.java)
+  }
+  private val bookViewModel:BookViewModel by lazy {
+    ViewModelProvider(this).get(BookViewModel::class.java)
+  }
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -91,6 +101,9 @@ class ScannerFragment : Fragment() {
         //TODO(): Need to save image to respective folder. The boxes configuration for this image can be obtained using
         // the above data object, sub number and unit number are passed as Integers,
         // get them using the key "scannedSubject" and "scannedUnit"
+        var scannedSub = data!!.extras!!.get("scannedSubject")
+        var scannedUnit = data!!.extras!!.get("scannedUnit")
+
         binding.scannedImage.setImageBitmap(bitmap)
       } catch (e: IOException) {
         e.printStackTrace()

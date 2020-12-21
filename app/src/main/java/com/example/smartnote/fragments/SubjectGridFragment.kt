@@ -137,7 +137,7 @@ class SubjectGridFragment : Fragment() {
       val book = Book(0, bookName, subjects, subjectFolderPaths, units)
       viewModel.insertSubjectGrid(subjectGrid)
       viewModel.insertBook(book)
-      findNavController().navigate(SubjectGridFragmentDirections.actionSubjectGridFragmentToScannerFragment())
+      findNavController().navigate(SubjectGridFragmentDirections.actionSubjectGridFragmentToScannerFragment(bookName))
     }
   }
 }

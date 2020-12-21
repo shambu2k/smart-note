@@ -18,6 +18,7 @@ import com.example.smartnote.helpers.viewLifecycle
 import com.example.smartnote.viewmodels.BookViewModel
 import com.google.zxing.integration.android.IntentIntegrator
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.activity_main.*
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -36,11 +37,13 @@ class MainActivity : AppCompatActivity() {
   }
 
   private fun setupNavigation() {
-    supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    setSupportActionBar(binding.toolbar)
     supportActionBar?.setDisplayShowHomeEnabled(true)
+    supportActionBar?.setDisplayHomeAsUpEnabled(true)
     val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
     navController = navHostFragment.navController
-    NavigationUI.setupActionBarWithNavController(this, navController)
+    NavigationUI.setupActionBarWithNavController(this,navController)
+    NavigationUI.setupActionBarWithNavController(this, navController, binding.drawerLayout)
     NavigationUI.setupWithNavController(binding.sideNavigationDrawer, navController)
     binding.sideNavigationDrawer.setNavigationItemSelectedListener { item: MenuItem ->
       when (item.itemId) {
