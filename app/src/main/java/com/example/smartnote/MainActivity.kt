@@ -77,6 +77,7 @@ class MainActivity : AppCompatActivity() {
   }
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
     val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
     if (result != null) {
       if (result.contents == null) {
@@ -92,7 +93,7 @@ class MainActivity : AppCompatActivity() {
           scanQr()
         }
       }
-    } else {
+    }else{
       super.onActivityResult(requestCode, resultCode, data)
     }
   }

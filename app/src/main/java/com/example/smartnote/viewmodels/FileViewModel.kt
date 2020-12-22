@@ -31,4 +31,9 @@ class FileViewModel @ViewModelInject constructor(
       }
     }
   }
+
+  override fun onCleared() {
+    viewModelJob.cancel()
+    super.onCleared()
+  }
 }

@@ -13,6 +13,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
@@ -104,9 +105,11 @@ class ScannerFragment : Fragment() {
         //TODO(): Need to save image to respective folder. The boxes configuration for this image can be obtained using
         // the above data object, sub number and unit number are passed as Integers,
         // get them using the key "scannedSubject" and "scannedUnit"
-        var scannedSub = data!!.extras!!.get("scannedSubject")
-        var scannedUnit = data!!.extras!!.get("scannedUnit")
-        var path = bookViewModel.getSubjectFolderPath(bookName = requireArguments().getString("bookName",""),subNo = scannedSub.toString())
+        val scannedSub = data.extras!!.get("scannedSub")
+        val scannedUnit = data.extras!!.get("scannedUnit")
+        Toast.makeText(requireContext(),scannedSub.toString() + " " + scannedUnit.toString() + " " + requireArguments().getString("bookName",""),Toast.LENGTH_LONG).show()
+        val path = bookViewModel.getSubjectFolderPath(bookName = requireArguments().getString("bookName",""),subNo = scannedSub as Int)
+        Toast.makeText(requireContext(),path,Toast.LENGTH_LONG).show()
         fileViewModel.storeImage(bitmap,scannedUnit.toString(),path)
 
 

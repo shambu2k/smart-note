@@ -2,7 +2,9 @@ package com.example.smartnote.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.example.smartnote.R
 import com.example.smartnote.databinding.SubjectItemBinding
 import com.example.smartnote.db.Book
 
@@ -30,6 +32,7 @@ class SubjectsAdapter(private var book: Book) : RecyclerView.Adapter<SubjectsAda
     book.subjects.get(position).let { holder.bind(it) }
     holder.itemView.setOnClickListener {
       // TODO() - navigate to display pages activity
+      it.findNavController().navigate(R.id.action_subjectsFragment_to_scannerFragment)
     }
   }
 
