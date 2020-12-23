@@ -32,7 +32,6 @@ class SubjectsAdapter(private var book: Book) : RecyclerView.Adapter<SubjectsAda
     book.subjects.get(position).let { holder.bind(it) }
     holder.itemView.setOnClickListener {
       // TODO() - navigate to display pages activity
-      it.findNavController().navigate(R.id.action_subjectsFragment_to_scannerFragment)
     }
   }
 

@@ -139,7 +139,6 @@ class SubjectGridFragment : Fragment() {
         subjectFolderPaths[3],
         subjectFolderPaths[4]
       )
-      Toast.makeText(requireContext(),subjectGrid.toString(),Toast.LENGTH_LONG).show()
       viewModel.insertSubjectGrid(subjectGrid)
       viewModel.insertBook(book)
       val bundle = bundleOf("bookName" to bookName)

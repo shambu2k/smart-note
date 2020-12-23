@@ -12,10 +12,7 @@ import androidx.lifecycle.ViewModel
 import com.example.smartnote.db.Book
 import com.example.smartnote.db.BookRepository
 import com.example.smartnote.db.SubjectGrid
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class BookViewModel @ViewModelInject constructor(
   private val bookRepository: BookRepository,
@@ -93,15 +90,15 @@ class BookViewModel @ViewModelInject constructor(
 
   fun getSubjectFolderPath(bookName:String, subNo:Int) : String {
     var sub:List<SubjectGrid>? = null
-    scope.launch {
+    runBlocking(Dispatchers.IO) {
       try {
         sub = bookRepository.getSubjectGrid(bookName)
-        //Log.i("info",sub.toString())
+        Log.i("info",sub.toString())
       }catch (e:Exception){
         Log.d("exc",e.message.toString())
       }
     }
-    if(sub == null){
+    if(sub==null){
       return "null"
     }else {
       return when (subNo) {

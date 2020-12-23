@@ -1,13 +1,13 @@
 package com.example.smartnote.helpers
 
 import android.content.Context
-import android.content.ContextWrapper
 import android.graphics.Bitmap
 import android.util.Log
 import dagger.hilt.android.qualifiers.ApplicationContext
-import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class FileSystemHelper(@ApplicationContext var context: Context) {
@@ -20,27 +20,14 @@ class FileSystemHelper(@ApplicationContext var context: Context) {
     }
   }
   suspend fun storeImage(bitmap: Bitmap, fileName: String, filePath: String) {
-   val file = File(context.filesDir.toString() + filePath, "$fileName.png")
-    if (!file.exists()) {
-      file.mkdir()
-    }
-    file.createNewFile()
-    val fileOutputStream = FileOutputStream(file)
-    val byteArrayOutputStream = ByteArrayOutputStream()
-    bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
-    fileOutputStream.write(byteArrayOutputStream.toByteArray())
-    fileOutputStream.close()
-   /* val cw =
-      ContextWrapper(context)
-    val directory = cw.getDir("files/", Context.MODE_PRIVATE)
-    if (!directory.exists()) {
-      directory.mkdir()
-    }*/
-   /* val directory = File(context.filesDir.toString() + filePath,"unit"+fileName)
+
+    val directory = File(context.filesDir.toString() + filePath,"unit"+fileName)
     if(!directory.exists()){
       directory.mkdir()
     }
-    val mypath = File(directory, "image.png")
+    val timeStamp =
+      SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+    val mypath = File(directory, "IMG_"+timeStamp+".png")
 
     var fos: FileOutputStream? = null
     try {
@@ -49,6 +36,6 @@ class FileSystemHelper(@ApplicationContext var context: Context) {
       fos.close()
     } catch (e: Exception) {
       Log.e("SAVE_IMAGE", e.message, e)
-    }*/
+    }
   }
 }

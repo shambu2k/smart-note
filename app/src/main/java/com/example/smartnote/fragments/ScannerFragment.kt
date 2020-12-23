@@ -102,14 +102,12 @@ class ScannerFragment : Fragment() {
           MediaStore.Images.Media.getBitmap(contentResolver, uri)
         }
         contentResolver.delete(uri, null, null)
-        //TODO(): Need to save image to respective folder. The boxes configuration for this image can be obtained using
-        // the above data object, sub number and unit number are passed as Integers,
-        // get them using the key "scannedSubject" and "scannedUnit"
+
         val scannedSub = data.extras!!.get("scannedSub")
         val scannedUnit = data.extras!!.get("scannedUnit")
-        Toast.makeText(requireContext(),scannedSub.toString() + " " + scannedUnit.toString() + " " + requireArguments().getString("bookName",""),Toast.LENGTH_LONG).show()
+
         val path = bookViewModel.getSubjectFolderPath(bookName = requireArguments().getString("bookName",""),subNo = scannedSub as Int)
-        Toast.makeText(requireContext(),path,Toast.LENGTH_LONG).show()
+
         fileViewModel.storeImage(bitmap,scannedUnit.toString(),path)
 
 
