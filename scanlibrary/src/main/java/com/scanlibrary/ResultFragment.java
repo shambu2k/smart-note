@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -71,6 +72,8 @@ public class ResultFragment extends Fragment {
         rotateLeftButton.setOnClickListener(new RotateLeftButtonClickListener());
         rotateRightButton = (Button) view.findViewById(R.id.rotate_right);
         rotateRightButton.setOnClickListener(new RotateRightButtonClickListener());
+        subjectRadioGroup = view.findViewById(R.id.sub_grp);
+        unitRadioGroup = view.findViewById(R.id.unit_grp);
         doneButton = (Button) view.findViewById(R.id.done_button);
         doneButton.setOnClickListener(new DoneButtonClickListener());
     }
@@ -147,7 +150,7 @@ public class ResultFragment extends Fragment {
         @Override
         public void onClick(View v) {
             if(subjectRadioGroup.getCheckedRadioButtonId() == -1 && unitRadioGroup.getCheckedRadioButtonId() == -1) {
-
+                Toast.makeText(getActivity(), "Check the radioButtons", Toast.LENGTH_SHORT).show();
             } else {
                 showProgressDialog(getResources().getString(R.string.loading));
                 AsyncTask.execute(new Runnable() {
@@ -163,8 +166,8 @@ public class ResultFragment extends Fragment {
                             unitRadioButton = (RadioButton) view.findViewById(unitRadioGroup.getCheckedRadioButtonId());
                             Uri uri = Utils.getUri(getActivity(), bitmap);
                             data.putExtra(ScanConstants.SCANNED_RESULT, uri);
-                            data.putExtra(ScanConstants.SCANNED_SUB, subjectRadioGroup.indexOfChild(subRadioButton) + 1);
-                            data.putExtra(ScanConstants.SCANNED_UNIT, unitRadioGroup.indexOfChild(unitRadioButton) + 1);
+                            data.putExtra(ScanConstants.SCANNED_SUB, subjectRadioGroup.indexOfChild(subRadioButton));
+                            data.putExtra(ScanConstants.SCANNED_UNIT, unitRadioGroup.indexOfChild(unitRadioButton)  );
                             getActivity().setResult(Activity.RESULT_OK, data);
                             original.recycle();
                             System.gc();

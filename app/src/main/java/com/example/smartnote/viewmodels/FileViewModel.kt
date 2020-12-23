@@ -1,5 +1,6 @@
 package com.example.smartnote.viewmodels
 
+import android.graphics.Bitmap
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.SavedStateHandle
@@ -21,5 +22,18 @@ class FileViewModel @ViewModelInject constructor(
     scope.launch {
       fileSystemHelper.makeFolder(folderName, filePath)
     }
+  }
+
+  fun storeImage(bitmap: Bitmap?,fileName:String, filePath: String){
+    scope.launch {
+      if (bitmap != null) {
+        fileSystemHelper.storeImage(bitmap,fileName,filePath)
+      }
+    }
+  }
+
+  override fun onCleared() {
+    viewModelJob.cancel()
+    super.onCleared()
   }
 }

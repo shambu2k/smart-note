@@ -50,10 +50,20 @@
             android:name="bookId"
             app:argType="integer"
             android:defaultValue="0"/>
+        <action
+            android:id="@+id/action_subjectsFragment_to_scannerFragment"
+            app:destination="@id/scannerFragment" />
+        <argument
+            android:name="bookName"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/scannerFragment"
         android:name="com.example.smartnote.fragments.ScannerFragment"
         android:label="Scanner"
-        tools:layout="@layout/fragment_scanner" />
+        tools:layout="@layout/fragment_scanner">
+    <argument
+        android:name="bookName"
+        app:argType="string" />
+    </fragment>
 </navigation>

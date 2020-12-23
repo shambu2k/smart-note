@@ -13,11 +13,17 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavArgs
+import androidx.navigation.fragment.navArgs
 import com.example.smartnote.databinding.FragmentScannerBinding
 import com.example.smartnote.helpers.viewLifecycle
+import com.example.smartnote.viewmodels.BookViewModel
+import com.example.smartnote.viewmodels.FileViewModel
 import com.scanlibrary.ScanActivity
 import com.scanlibrary.ScanConstants
 
@@ -33,6 +39,14 @@ class ScannerFragment : Fragment() {
   }
 
   private var binding by viewLifecycle<FragmentScannerBinding>()
+
+  private val fileViewModel:FileViewModel by lazy {
+    ViewModelProvider(this).get(FileViewModel::class.java)
+  }
+  private val bookViewModel:BookViewModel by lazy {
+    ViewModelProvider(this).get(BookViewModel::class.java)
+  }
+
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -88,9 +102,16 @@ class ScannerFragment : Fragment() {
           MediaStore.Images.Media.getBitmap(contentResolver, uri)
         }
         contentResolver.delete(uri, null, null)
-        //TODO(): Need to save image to respective folder. The boxes configuration for this image can be obtained using
-        // the above data object, sub number and unit number are passed as Integers,
-        // get them using the key "scannedSubject" and "scannedUnit"
+
+        val scannedSub = data.extras!!.get("scannedSub")
+        val scannedUnit = data.extras!!.get("scannedUnit")
+
+        val path = bookViewModel.getSubjectFolderPath(bookName = requireArguments().getString("bookName",""),subNo = scannedSub as Int)
+
+        fileViewModel.storeImage(bitmap,scannedUnit.toString(),path)
+
+
+
         binding.scannedImage.setImageBitmap(bitmap)
       } catch (e: IOException) {
         e.printStackTrace()

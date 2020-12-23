@@ -51,4 +51,8 @@ class BookRepository @Inject constructor (
   fun getBook(id: Int): LiveData<Book> {
     return bookDao.getBook(id)
   }
+  suspend fun getSubjectGrid(bookName:String) : List<SubjectGrid>{
+    return subjectDao.getSubGrid(bookName)
+  }
+
 }

@@ -1,6 +1,8 @@
 package com.example.smartnote.viewmodels
 
 import android.net.Uri
+import android.util.Log
+import android.widget.Toast
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
@@ -10,10 +12,7 @@ import androidx.lifecycle.ViewModel
 import com.example.smartnote.db.Book
 import com.example.smartnote.db.BookRepository
 import com.example.smartnote.db.SubjectGrid
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class BookViewModel @ViewModelInject constructor(
   private val bookRepository: BookRepository,
@@ -89,8 +88,28 @@ class BookViewModel @ViewModelInject constructor(
     return bookRepository.getBook(id)
   }
 
-  fun getSubjectFolderPath() {
-    //TODO(): book, subject number can be passed as parameters
+  fun getSubjectFolderPath(bookName:String, subNo:Int) : String {
+    var sub:List<SubjectGrid>? = null
+    runBlocking(Dispatchers.IO) {
+      try {
+        sub = bookRepository.getSubjectGrid(bookName)
+        Log.i("info",sub.toString())
+      }catch (e:Exception){
+        Log.d("exc",e.message.toString())
+      }
+    }
+    if(sub==null){
+      return "null"
+    }else {
+      return when (subNo) {
+        1 -> sub!![0].subjectOne
+        2 -> sub!![0].subjectTwo
+        3 -> sub!![0].subjectThree
+        4 -> sub!![0].subjectFour
+        5 -> sub!![0].subjectFive
+        else -> "invalid"
+      }
+    }
   }
 
   fun getUnitFolderPath() {
