@@ -32,7 +32,7 @@ class BooksAdapter(private var books: List<Book>) :
   override fun onBindViewHolder(holder: BooksViewHolder, position: Int) {
     holder.bind(books[position])
     holder.itemView.setOnClickListener {
-      val action = BooksFragmentDirections.actionBooksFragmentToSubjectsFragment(books[position].id)
+      val action = BooksFragmentDirections.actionBooksFragmentToSubjectsFragment(books[position].id,books[position].name)
       Navigation.findNavController(holder.itemView).navigate(action)
     }
   }
