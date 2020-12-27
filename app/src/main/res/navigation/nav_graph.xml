@@ -56,6 +56,9 @@
         <argument
             android:name="bookName"
             app:argType="string" />
+        <action
+            android:id="@+id/action_subjectsFragment_to_unitsFragment"
+            app:destination="@id/unitsFragment" />
     </fragment>
     <fragment
         android:id="@+id/scannerFragment"
@@ -65,5 +68,28 @@
     <argument
         android:name="bookName"
         app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/unitsFragment"
+        android:name="com.example.smartnote.fragments.UnitsFragment"
+        android:label="fragment_units"
+        tools:layout="@layout/fragment_units" >
+        <action
+            android:id="@+id/action_unitsFragment_to_pagesFragment"
+            app:destination="@id/pagesFragment" />
+        <argument
+            android:name="subjectFolderPath"
+            app:argType="string"
+            android:defaultValue='""' />
+    </fragment>
+    <fragment
+        android:id="@+id/pagesFragment"
+        android:name="com.example.smartnote.fragments.PagesFragment"
+        android:label="fragment_pages"
+        tools:layout="@layout/fragment_pages" >
+        <argument
+            android:name="unitFolderPath"
+            app:argType="string"
+            android:defaultValue='""' />
     </fragment>
 </navigation>
