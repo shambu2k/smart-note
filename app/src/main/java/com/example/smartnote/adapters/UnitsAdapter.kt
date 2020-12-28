@@ -2,8 +2,10 @@ package com.example.smartnote.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartnote.databinding.UnitItemBinding
+import com.example.smartnote.fragments.UnitsFragmentDirections
 
 class UnitsAdapter( private var subjectPath:String) : RecyclerView.Adapter<UnitsAdapter.UnitsViewHolder>() {
   class UnitsViewHolder(b:UnitItemBinding):RecyclerView.ViewHolder(b.root){
@@ -24,7 +26,8 @@ class UnitsAdapter( private var subjectPath:String) : RecyclerView.Adapter<Units
   override fun onBindViewHolder(holder: UnitsViewHolder, position: Int) {
    holder.bind("Unit ${position+1}")
     holder.itemView.setOnClickListener{
-      val unitFolderPath = subjectPath + "/${position+1}"
+      val unitFolderPath = subjectPath + "/unit${position+1}"
+      it.findNavController().navigate(UnitsFragmentDirections.actionUnitsFragmentToPagesFragment(unitFolderPath))
 
     }
   }
