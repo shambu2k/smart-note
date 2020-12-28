@@ -9,6 +9,7 @@ import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,10 @@ import java.io.IOException;
  * Created by jhansi on 29/03/15.
  */
 public class ResultFragment extends Fragment {
+
+    // TODO: Refine detection after getting finalized page.
+    //  Image rotating after taking picture - fix that.
+    //  Crashing with weird error - Textview cast to radiogroup??
 
     private View view;
     private ImageView scannedImageView;
@@ -41,6 +46,7 @@ public class ResultFragment extends Fragment {
     private RadioGroup unitRadioGroup;
     private RadioButton unitRadioButton;
     private Bitmap transformed;
+    private Bitmap magicColorBitmap;
     private static ProgressDialogFragment progressDialogFragment;
 
     public ResultFragment() {
@@ -76,6 +82,7 @@ public class ResultFragment extends Fragment {
         unitRadioGroup = view.findViewById(R.id.unit_grp);
         doneButton = (Button) view.findViewById(R.id.done_button);
         doneButton.setOnClickListener(new DoneButtonClickListener());
+        initRadioButtons();
     }
 
     private Bitmap getBitmap() {
@@ -97,6 +104,40 @@ public class ResultFragment extends Fragment {
 
     public void setScannedImage(Bitmap scannedImage) {
         scannedImageView.setImageBitmap(scannedImage);
+    }
+
+    private void initRadioButtons() {
+        showProgressDialog(getResources().getString(R.string.detecting_sub_unit));
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    magicColorBitmap = ((ScanActivity) getActivity()).getMagicColorBitmap(original);
+                    int r = ((ScanActivity) getActivity()).getSubjectUnit(magicColorBitmap);
+                    setRadioButtons(r);
+                    magicColorBitmap.recycle();
+                    dismissDialog();
+                } catch (final OutOfMemoryError e) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            e.printStackTrace();
+                            dismissDialog();
+                        }
+                    });
+                }
+            }
+        });
+
+    }
+
+    private void setRadioButtons(int r) {
+        Log.d("ResultFragment", "setRadioButtons int passed: " + r);
+        if(r/10 != 0 && r%10 != 0) {
+            subjectRadioGroup.check(((RadioButton)subjectRadioGroup.getChildAt(r/10)).getId());
+            unitRadioGroup.check(((RadioButton)unitRadioGroup.getChildAt(r%10)).getId());
+        } else if(r/10 != 0 && r%10 == 0) subjectRadioGroup.check(((RadioButton)subjectRadioGroup.getChildAt(r/10)).getId());
+        else if(r/10 == 0 && r%10 != 0) unitRadioGroup.check(((RadioButton)unitRadioGroup.getChildAt(r%10)).getId());
     }
 
     private class ExitButtonClickListener implements View.OnClickListener {

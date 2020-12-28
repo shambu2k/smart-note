@@ -418,6 +418,124 @@ JNIEXPORT jfloatArray JNICALL Java_com_scanlibrary_ScanActivity_getPoints
     return jArray;
 }
 
+int getSubjectUnit(Mat imgThreshed) {
+	vector<vector<Point>> contours;
+	vector<Vec4i> hierarchy;
 
+	// Finds all contours in input image
+	findContours(imgThreshed, contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
 
+	// Stores corner points of all contours
+	vector<vector<Point>> conPoly(contours.size());
 
+	int s = 0, u = 0;
+
+	int minX = INT_MAX, minY = INT_MAX, maxX = 0, maxY = 0;
+
+	vector<Point> boxes;
+
+	// Going through all contours to find marked boxes
+	for (int k = 0; k < contours.size(); k++) {
+		if (contourArea(contours[k]) > 120) {
+
+			float peri = arcLength(contours[k], true);
+			approxPolyDP(contours[k], conPoly[k], 0.02 * peri, true);
+
+			// Sometimes the contours are not exactly quadrilaterals, usually marked boxes' contour might not be detected as a quadrilateral
+			if (conPoly[k].size() == 4) {
+
+				// Marked boxes are found by the ratio of black and white pixels inside the box
+				int whiteCount = 0;
+				int blackCount = 0;
+
+				// This threshhold is to avoid detecting the boxes' borders, otherwise the pixels in borders will be added to whiteCount
+				int borThreshX = (conPoly[k][2].x - conPoly[k][0].x) / 4;
+				int borThreshY = (conPoly[k][2].y - conPoly[k][0].y) / 4;
+
+				//These values represent the bounding rectangle around the 10 boxes
+				minX = min(minX, conPoly[k][0].x);
+				minY = min(minY, conPoly[k][0].y);
+				maxX = max(maxX, conPoly[k][2].x);
+				maxY = max(maxY, conPoly[k][2].y);
+
+				for (int i = conPoly[k][0].x + borThreshX; i < conPoly[k][2].x - borThreshX; i++) {
+					for (int j = conPoly[k][0].y + borThreshY; j < conPoly[k][2].y - borThreshY; j++) {
+						Point3_<uchar>* p = imgThreshed.ptr<Point3_<uchar> >(j, i);
+						if (p->x < 55 && p->y < 55 && p->z < 55) blackCount++;
+						if (p->x > 240 && p->y > 240 && p->z > 240) whiteCount++;
+					}
+				}
+
+				float ratio = 0.0;
+				if (whiteCount != 0) ratio = (float) blackCount / whiteCount;
+
+				if (ratio > 1) {
+					Moments mu = moments(conPoly[k]);
+					Point b1 = Point2f(static_cast<float>(mu.m10 / (mu.m00 + 1e-5)), static_cast<float>(mu.m01 / (mu.m00 + 1e-5)));;
+					boxes.push_back(b1);
+				}
+			}
+			else {
+				// Assuming the messed up contours is due to the ticks made in the boxes
+				Moments mu = moments(conPoly[k]);
+				Point b1 = Point2f(static_cast<float>(mu.m10 / (mu.m00 + 1e-5)), static_cast<float>(mu.m01 / (mu.m00 + 1e-5)));;
+				boxes.push_back(b1);
+			}
+		}
+	}
+
+	// Marked boxes have been identified, now this loop find the position of those boxes
+	for (int i = 0; i < boxes.size(); i++) {
+
+		int ans = floor(5 * (float)boxes[i].x / (maxX - minX));
+		if (ans == 0) ans = round(5 * (float)boxes[i].x / (maxX - minX));
+
+		if (maxY - boxes[i].y > boxes[i].y - minY) {
+			// The box is in first row - Subject
+			s = ans;
+		}
+		else {
+			// The box is in second row - Unit
+			u = ans;
+		}
+	}
+
+	return s*10+u;
+}
+
+JNIEXPORT jint JNICALL Java_com_scanlibrary_ScanActivity_getSubjectUnit
+(JNIEnv *env, jobject thiz, jobject bitmap)
+{
+    __android_log_print(ANDROID_LOG_VERBOSE, APPNAME, "Detecting boxes");
+    int ret;
+    AndroidBitmapInfo info;
+    void* pixels = 0;
+
+    if ((ret = AndroidBitmap_getInfo(env, bitmap, &info)) < 0) {
+        __android_log_print(ANDROID_LOG_VERBOSE, APPNAME,"AndroidBitmap_getInfo() failed ! error=%d", ret);
+        return NULL;
+    }
+
+    if (info.format != ANDROID_BITMAP_FORMAT_RGBA_8888 )
+    {       __android_log_print(ANDROID_LOG_VERBOSE, APPNAME,"Bitmap format is not RGBA_8888!");
+        return NULL;
+    }
+
+    if ((ret = AndroidBitmap_lockPixels(env, bitmap, &pixels)) < 0) {
+        __android_log_print(ANDROID_LOG_VERBOSE, APPNAME,"AndroidBitmap_lockPixels() failed ! error=%d", ret);
+    }
+
+    Mat img(info.height, info.width, CV_8UC4, pixels);
+    Mat imgCrop, imgGray, imgThreshed;
+
+    // Preprocessing
+    Rect roi(img.size().width - 105, 5, 105, img.size().height / 6);
+    imgCrop = img(roi);
+    cvtColor(imgCrop, imgGray, COLOR_BGR2GRAY);
+    threshold(imgGray, imgThreshed, 0, 255, THRESH_BINARY_INV + THRESH_OTSU);
+
+    int r;
+    r = getSubjectUnit(imgThreshed);
+   	// __android_log_print(ANDROID_LOG_VERBOSE, APPNAME, "Subject - " + r/10 + "," + "Unit - " + r%10);
+   	return abs(r);
+}

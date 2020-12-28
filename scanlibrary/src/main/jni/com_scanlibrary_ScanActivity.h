@@ -78,6 +78,8 @@ JNIEXPORT jobject JNICALL Java_com_scanlibrary_ScanActivity_getMagicColorBitmap
 JNIEXPORT jobject JNICALL Java_com_scanlibrary_ScanActivity_getGrayBitmap
 (JNIEnv *, jobject, jobject);
 
+JNIEXPORT jint JNICALL Java_com_scanlibrary_ScanActivity_getSubjectUnit
+(JNIEnv *env, jobject thiz, jobject bitmap);
 
 #ifdef __cplusplus
 }
