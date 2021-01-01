@@ -3,7 +3,6 @@ package com.example.smartnote.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.smartnote.databinding.PageItemBinding
 import com.squareup.picasso.Picasso
 import java.io.File
