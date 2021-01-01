@@ -4,8 +4,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartnote.databinding.PageItemBinding
+import com.squareup.picasso.Picasso
+import java.io.File
 
-class PagesAdapter : RecyclerView.Adapter<PagesAdapter.PagesViewHolder>() {
+class PagesAdapter(val listImages : Array<File>) : RecyclerView.Adapter<PagesAdapter.PagesViewHolder>() {
 
   class PagesViewHolder(b: PageItemBinding) : RecyclerView.ViewHolder(b.root) {
     val binding = b
@@ -22,10 +24,10 @@ class PagesAdapter : RecyclerView.Adapter<PagesAdapter.PagesViewHolder>() {
   }
 
   override fun onBindViewHolder(holder: PagesViewHolder, position: Int) {
-    TODO()
+    Picasso.get().load(File(listImages[position].toURI())).into(holder.binding.imageViewPage)
   }
 
   override fun getItemCount(): Int {
-    TODO()
+    return listImages.size
   }
 }

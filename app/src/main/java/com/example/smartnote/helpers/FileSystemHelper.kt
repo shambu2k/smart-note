@@ -3,6 +3,7 @@ package com.example.smartnote.helpers
 import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
+import androidx.lifecycle.LiveData
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import java.io.FileOutputStream
@@ -37,5 +38,10 @@ class FileSystemHelper(@ApplicationContext var context: Context) {
     } catch (e: Exception) {
       Log.e("SAVE_IMAGE", e.message, e)
     }
+  }
+
+  suspend fun getFilesList(folderPath:String): Array<File>? {
+    val path = File(context.filesDir.toString() + folderPath)
+    return path.listFiles()
   }
 }

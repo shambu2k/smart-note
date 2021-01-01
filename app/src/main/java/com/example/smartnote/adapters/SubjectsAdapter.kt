@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.smartnote.R
 import com.example.smartnote.databinding.SubjectItemBinding
 import com.example.smartnote.db.Book
+import com.example.smartnote.fragments.SubjectsFragmentDirections
 
 class SubjectsAdapter(private var book: Book) : RecyclerView.Adapter<SubjectsAdapter.SubjectsViewHolder>() {
 
@@ -31,7 +32,7 @@ class SubjectsAdapter(private var book: Book) : RecyclerView.Adapter<SubjectsAda
   override fun onBindViewHolder(holder: SubjectsViewHolder, position: Int) {
     book.subjects.get(position).let { holder.bind(it) }
     holder.itemView.setOnClickListener {
-      // TODO() - navigate to display pages activity
+      it.findNavController().navigate(SubjectsFragmentDirections.actionSubjectsFragmentToUnitsFragment(book.subjectFolderPaths.get(position)))
     }
   }
 
