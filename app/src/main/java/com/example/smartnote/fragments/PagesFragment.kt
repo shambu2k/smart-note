@@ -37,7 +37,7 @@ class PagesFragment : Fragment() {
     super.onViewCreated(view, savedInstanceState)
     val args:PagesFragmentArgs by navArgs()
     val list = viewModel.getFiles(args.unitFolderPath)
-    
+
     binding.pagesRecyclerView.layoutManager = GridLayoutManager(requireContext(),2)
     val adapter = list?.let { PagesAdapter(it) }
     binding.pagesRecyclerView.adapter = adapter

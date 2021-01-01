@@ -57,7 +57,6 @@ dependencies {
     def room_version = "2.2.5"
     def nav_version = "2.3.0"
     def lifecycle_version = "2.2.0"
-    def glide_version = "4.11.0"
     def material_version = "1.2.1"
     def zxing_version = "4.1.0"
     def zxing_old = "3.3.0"
@@ -88,9 +87,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
 
-    // Glide
-    implementation "com.github.bumptech.glide:glide:$glide_version"
-    kapt "com.github.bumptech.glide:compiler:$glide_version"
+
 
     // Material Components
     implementation "com.google.android.material:material:$material_version"
