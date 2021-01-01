@@ -420,87 +420,89 @@ JNIEXPORT jfloatArray JNICALL Java_com_scanlibrary_ScanActivity_getPoints
 
 int getSubjectUnit(Mat imgThreshed) {
 	vector<vector<Point>> contours;
-	vector<Vec4i> hierarchy;
+    vector<Vec4i> hierarchy;
 
-	// Finds all contours in input image
-	findContours(imgThreshed, contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
+    // Finds all contours in input image
+    findContours(imgThreshed, contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
 
-	// Stores corner points of all contours
-	vector<vector<Point>> conPoly(contours.size());
 
-	int s = 0, u = 0;
+    // Stores corner points of all contours
+    vector<vector<Point>> conPoly(contours.size());
 
-	int minX = INT_MAX, minY = INT_MAX, maxX = 0, maxY = 0;
+    int s = 0, u = 0;
 
-	vector<Point> boxes;
+    int minX = INT_MAX, minY = INT_MAX, maxX = 0, maxY = 0;
 
-	// Going through all contours to find marked boxes
-	for (int k = 0; k < contours.size(); k++) {
-		if (contourArea(contours[k]) > 120) {
+    vector<Point> boxes;
 
-			float peri = arcLength(contours[k], true);
-			approxPolyDP(contours[k], conPoly[k], 0.02 * peri, true);
+    // Going through all contours to find marked boxes
+    for (int k = 0; k < contours.size(); k++) {
+        if (contourArea(contours[k]) > 120) {
 
-			// Sometimes the contours are not exactly quadrilaterals, usually marked boxes' contour might not be detected as a quadrilateral
-			if (conPoly[k].size() == 4) {
+            float peri = arcLength(contours[k], true);
+            approxPolyDP(contours[k], conPoly[k], 0.02 * peri, true);
 
-				// Marked boxes are found by the ratio of black and white pixels inside the box
-				int whiteCount = 0;
-				int blackCount = 0;
+            // Sometimes the contours are not exactly quadrilaterals, usually marked boxes' contour might not be detected as a quadrilateral
+            if (conPoly[k].size() == 4) {
 
-				// This threshhold is to avoid detecting the boxes' borders, otherwise the pixels in borders will be added to whiteCount
-				int borThreshX = (conPoly[k][2].x - conPoly[k][0].x) / 4;
-				int borThreshY = (conPoly[k][2].y - conPoly[k][0].y) / 4;
+                // Marked boxes are found by the ratio of white and black pixels inside the box
+                int whiteCount = 0;
+                int blackCount = 0;
 
-				//These values represent the bounding rectangle around the 10 boxes
-				minX = min(minX, conPoly[k][0].x);
-				minY = min(minY, conPoly[k][0].y);
-				maxX = max(maxX, conPoly[k][2].x);
-				maxY = max(maxY, conPoly[k][2].y);
+                // This threshhold is to avoid detecting the boxes' borders, otherwise the pixels in borders will be added to whiteCount
+                int borThreshX = abs((conPoly[k][2].x - conPoly[k][0].x)) / 4;
+                int borThreshY = abs((conPoly[k][2].y - conPoly[k][0].y)) / 4;
 
-				for (int i = conPoly[k][0].x + borThreshX; i < conPoly[k][2].x - borThreshX; i++) {
-					for (int j = conPoly[k][0].y + borThreshY; j < conPoly[k][2].y - borThreshY; j++) {
-						Point3_<uchar>* p = imgThreshed.ptr<Point3_<uchar> >(j, i);
-						if (p->x < 55 && p->y < 55 && p->z < 55) blackCount++;
-						if (p->x > 240 && p->y > 240 && p->z > 240) whiteCount++;
-					}
-				}
+                //These values represent the bounding rectangle around the 10 boxes
+                minX = min(minX, conPoly[k][0].x);
+                minY = min(minY, conPoly[k][0].y);
+                maxX = max(maxX, conPoly[k][2].x);
+                maxY = max(maxY, conPoly[k][2].y);
 
-				float ratio = 0.0;
-				if (whiteCount != 0) ratio = (float) blackCount / whiteCount;
 
-				if (ratio > 1) {
-					Moments mu = moments(conPoly[k]);
-					Point b1 = Point2f(static_cast<float>(mu.m10 / (mu.m00 + 1e-5)), static_cast<float>(mu.m01 / (mu.m00 + 1e-5)));;
-					boxes.push_back(b1);
-				}
-			}
-			else {
-				// Assuming the messed up contours is due to the ticks made in the boxes
-				Moments mu = moments(conPoly[k]);
-				Point b1 = Point2f(static_cast<float>(mu.m10 / (mu.m00 + 1e-5)), static_cast<float>(mu.m01 / (mu.m00 + 1e-5)));;
-				boxes.push_back(b1);
-			}
-		}
-	}
 
-	// Marked boxes have been identified, now this loop find the position of those boxes
-	for (int i = 0; i < boxes.size(); i++) {
+                for (int i = min(conPoly[k][0].x, conPoly[k][2].x) + borThreshX; i < max(conPoly[k][2].x, conPoly[k][0].x) - borThreshX; i++) {
+                    for (int j = min(conPoly[k][0].y, conPoly[k][2].y) + borThreshY; j < max(conPoly[k][2].y, conPoly[k][0].y) - borThreshY; j++) {
+                        Point3_<uchar>* p = imgThreshed.ptr<Point3_<uchar> >(j, i);
+                        if (p->x < 55 && p->y < 55 && p->z < 55) blackCount++;
+                        if (p->x > 240 && p->y > 240 && p->z > 240) whiteCount++;
+                    }
+                }
 
-		int ans = floor(5 * (float)boxes[i].x / (maxX - minX));
-		if (ans == 0) ans = round(5 * (float)boxes[i].x / (maxX - minX));
+                float ratio = 0.0;
+                if (blackCount != 0) ratio = (float) whiteCount / blackCount;
 
-		if (maxY - boxes[i].y > boxes[i].y - minY) {
-			// The box is in first row - Subject
-			s = ans;
-		}
-		else {
-			// The box is in second row - Unit
-			u = ans;
-		}
-	}
+                if (ratio > 0.2) {
+                    Moments mu = moments(conPoly[k]);
+                    Point b1 = Point2f(static_cast<float>(mu.m10 / (mu.m00 + 1e-5)), static_cast<float>(mu.m01 / (mu.m00 + 1e-5)));;
+                    boxes.push_back(b1);
+                }
+            }
+            else {
+                // Assuming the messed up contours is due to the ticks made in the boxes
+                Moments mu = moments(conPoly[k]);
+                Point b1 = Point2f(static_cast<float>(mu.m10 / (mu.m00 + 1e-5)), static_cast<float>(mu.m01 / (mu.m00 + 1e-5)));;
+                boxes.push_back(b1);
+            }
+        }
+    }
 
-	return s*10+u;
+    // Marked boxes have been identified, now this loop find the position of those boxes
+    for (int i = 0; i < boxes.size(); i++) {
+
+        int ans = round(5 * (float)boxes[i].x / (maxX - minX));
+        if (ans == 0) ans = round(5 * (float)boxes[i].x / (maxX - minX));
+
+        if (maxY - boxes[i].y > boxes[i].y - minY) {
+            // The box is in first row - Subject
+            s = ans;
+        }
+        else {
+            // The box is in second row - Unit
+            u = ans;
+        }
+    }
+    return s*10+u;
 }
 
 JNIEXPORT jint JNICALL Java_com_scanlibrary_ScanActivity_getSubjectUnit
