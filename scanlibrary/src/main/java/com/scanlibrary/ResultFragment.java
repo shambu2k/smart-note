@@ -27,7 +27,6 @@ import java.io.IOException;
 public class ResultFragment extends Fragment {
 
     // TODO: Refine detection after getting finalized page.
-    //  Crashing with weird error - Textview cast to radiogroup??
 
     private View view;
     private ImageView scannedImageView;
