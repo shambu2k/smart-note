@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.example.smartnote.R
 import com.example.smartnote.databinding.SubjectItemBinding
 import com.example.smartnote.db.Book
 import com.example.smartnote.fragments.SubjectsFragmentDirections

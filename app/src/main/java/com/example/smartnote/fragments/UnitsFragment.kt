@@ -17,7 +17,8 @@ class UnitsFragment : Fragment() {
 
   private var binding by viewLifecycle<FragmentUnitsBinding>()
   override fun onCreateView(
-    inflater: LayoutInflater, container: ViewGroup?,
+    inflater: LayoutInflater,
+    container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
     // Inflate the layout for this fragment
@@ -28,12 +29,10 @@ class UnitsFragment : Fragment() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
-    val args:UnitsFragmentArgs by navArgs()
+    val args: UnitsFragmentArgs by navArgs()
     val path = args.subjectFolderPath
     val adapter = UnitsAdapter(path)
     binding.unitsRecyclerView.layoutManager = LinearLayoutManager(activity)
     binding.unitsRecyclerView.adapter = adapter
   }
-
-
 }

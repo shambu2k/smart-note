@@ -23,23 +23,22 @@ class FileViewModel @ViewModelInject constructor(
     }
   }
 
-  fun storeImage(bitmap: Bitmap?,fileName:String, filePath: String){
+  fun storeImage(bitmap: Bitmap?, fileName: String, filePath: String) {
     scope.launch {
       if (bitmap != null) {
-        fileSystemHelper.storeImage(bitmap,fileName,filePath)
+        fileSystemHelper.storeImage(bitmap, fileName, filePath)
       }
     }
   }
-  fun getFiles(folderPath:String) : Array<File>?{
+  fun getFiles(folderPath: String): Array<File>? {
     var list: Array<File>? = null
     runBlocking(Dispatchers.IO) {
       try {
         list = fileSystemHelper.getFilesList(folderPath)
-        Log.i("info",list.toString())
-      }catch (e:Exception) {
+        Log.i("info", list.toString())
+      } catch (e: Exception) {
         e.stackTrace
       }
-
     }
     return list
   }

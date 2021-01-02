@@ -121,6 +121,8 @@ public class ScanActivity extends Activity implements IScanner, ComponentCallbac
 
     public native float[] getPoints(Bitmap bitmap);
 
+    public native int getSubjectUnit(Bitmap bitmap);
+
     static {
         System.loadLibrary("opencv_java3");
         System.loadLibrary("Scanner");

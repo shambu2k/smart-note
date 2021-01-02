@@ -80,10 +80,22 @@ public class ScanFragment extends Fragment {
     private Bitmap getBitmap() {
         Uri uri = getUri();
         try {
-            Bitmap bitmap = Utils.getBitmap(getActivity(), uri);
+            Bitmap bitmap = rotateBitmap(90, Utils.getBitmap(getActivity(), uri));
             getActivity().getContentResolver().delete(uri, null, null);
             return bitmap;
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private Bitmap rotateBitmap(final int degrees, Bitmap bitMapOrg) {
+        try {
+            Matrix matrix = new Matrix();
+            matrix.postRotate(degrees, bitMapOrg.getWidth()/2, bitMapOrg.getHeight()/2);
+            Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitMapOrg, bitMapOrg.getWidth(), bitMapOrg.getHeight(), true);
+            return Bitmap.createBitmap(scaledBitmap, 0, 0, scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix, true);
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;

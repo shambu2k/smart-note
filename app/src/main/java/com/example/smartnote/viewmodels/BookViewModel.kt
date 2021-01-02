@@ -1,8 +1,6 @@
 package com.example.smartnote.viewmodels
 
-import android.net.Uri
 import android.util.Log
-import android.widget.Toast
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
@@ -88,19 +86,19 @@ class BookViewModel @ViewModelInject constructor(
     return bookRepository.getBook(id)
   }
 
-  fun getSubjectFolderPath(bookName:String, subNo:Int) : String {
-    var sub:List<SubjectGrid>? = null
+  fun getSubjectFolderPath(bookName: String, subNo: Int): String {
+    var sub: List<SubjectGrid>? = null
     runBlocking(Dispatchers.IO) {
       try {
         sub = bookRepository.getSubjectGrid(bookName)
-        Log.i("info",sub.toString())
-      }catch (e:Exception){
-        Log.d("exc",e.message.toString())
+        Log.i("info", sub.toString())
+      } catch (e: Exception) {
+        Log.d("exc", e.message.toString())
       }
     }
-    if(sub==null){
+    if (sub == null) {
       return "null"
-    }else {
+    } else {
       return when (subNo) {
         1 -> sub!![0].subjectOne
         2 -> sub!![0].subjectTwo
@@ -113,6 +111,6 @@ class BookViewModel @ViewModelInject constructor(
   }
 
   fun getUnitFolderPath() {
-    //TODO(): unit number can be passed as parameters
+    // TODO(): unit number can be passed as parameters
   }
 }

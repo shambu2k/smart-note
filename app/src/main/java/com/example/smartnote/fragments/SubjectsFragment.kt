@@ -48,10 +48,10 @@ class SubjectsFragment : Fragment() {
     arguments?.let {
       val args: SubjectsFragmentArgs by navArgs()
       val bookId: Int = args.bookId
-      val bookName :String = args.bookName
+      val bookName: String = args.bookName
       val bundle = bundleOf("bookName" to bookName)
       binding.buttonAddPhoto.setOnClickListener {
-        it.findNavController().navigate(R.id.action_subjectsFragment_to_scannerFragment,bundle)
+        it.findNavController().navigate(R.id.action_subjectsFragment_to_scannerFragment, bundle)
       }
       adapter = SubjectsAdapter(book)
       viewModel.getBookById(bookId).observe(
