@@ -46,7 +46,6 @@ public class ResultFragment extends Fragment {
     private RadioGroup unitRadioGroup;
     private RadioButton unitRadioButton;
     private Bitmap transformed;
-    private Bitmap magicColorBitmap;
     private static ProgressDialogFragment progressDialogFragment;
 
     public ResultFragment() {
@@ -112,10 +111,8 @@ public class ResultFragment extends Fragment {
             @Override
             public void run() {
                 try {
-                    magicColorBitmap = ((ScanActivity) getActivity()).getMagicColorBitmap(original);
-                    int r = ((ScanActivity) getActivity()).getSubjectUnit(magicColorBitmap);
+                    int r = ((ScanActivity) getActivity()).getSubjectUnit(original);
                     setRadioButtons(r);
-                    magicColorBitmap.recycle();
                     dismissDialog();
                 } catch (final OutOfMemoryError e) {
                     getActivity().runOnUiThread(new Runnable() {
@@ -133,11 +130,13 @@ public class ResultFragment extends Fragment {
 
     private void setRadioButtons(int r) {
         Log.d("ResultFragment", "setRadioButtons int passed: " + r);
-        if(r/10 != 0 && r%10 != 0) {
-            subjectRadioGroup.check(((RadioButton)subjectRadioGroup.getChildAt(r/10)).getId());
-            unitRadioGroup.check(((RadioButton)unitRadioGroup.getChildAt(r%10)).getId());
-        } else if(r/10 != 0 && r%10 == 0) subjectRadioGroup.check(((RadioButton)subjectRadioGroup.getChildAt(r/10)).getId());
-        else if(r/10 == 0 && r%10 != 0) unitRadioGroup.check(((RadioButton)unitRadioGroup.getChildAt(r%10)).getId());
+        if(r<=55) {
+            if(r/10 != 0 && r%10 != 0) {
+                subjectRadioGroup.check(((RadioButton)subjectRadioGroup.getChildAt(r/10)).getId());
+                unitRadioGroup.check(((RadioButton)unitRadioGroup.getChildAt(r%10)).getId());
+            } else if(r/10 != 0 && r%10 == 0) subjectRadioGroup.check(((RadioButton)subjectRadioGroup.getChildAt(r/10)).getId());
+            else if(r/10 == 0 && r%10 != 0) unitRadioGroup.check(((RadioButton)unitRadioGroup.getChildAt(r%10)).getId());
+        }
     }
 
     private class ExitButtonClickListener implements View.OnClickListener {
