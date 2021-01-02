@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -142,7 +141,7 @@ class SubjectGridFragment : Fragment() {
       viewModel.insertSubjectGrid(subjectGrid)
       viewModel.insertBook(book)
       val bundle = bundleOf("bookName" to bookName)
-      findNavController().navigate(R.id.action_subjectGridFragment_to_scannerFragment,bundle)
+      findNavController().navigate(R.id.action_subjectGridFragment_to_scannerFragment, bundle)
     }
   }
 }

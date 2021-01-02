@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.util.Patterns
 import android.view.MenuItem
 import android.widget.Toast
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.navigation.NavController
@@ -42,7 +41,7 @@ class MainActivity : AppCompatActivity() {
     supportActionBar?.setDisplayHomeAsUpEnabled(true)
     val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
     navController = navHostFragment.navController
-    NavigationUI.setupActionBarWithNavController(this,navController)
+    NavigationUI.setupActionBarWithNavController(this, navController)
     NavigationUI.setupActionBarWithNavController(this, navController, binding.drawerLayout)
     NavigationUI.setupWithNavController(binding.sideNavigationDrawer, navController)
     binding.sideNavigationDrawer.setNavigationItemSelectedListener { item: MenuItem ->
@@ -93,7 +92,7 @@ class MainActivity : AppCompatActivity() {
           scanQr()
         }
       }
-    }else{
+    } else {
       super.onActivityResult(requestCode, resultCode, data)
     }
   }

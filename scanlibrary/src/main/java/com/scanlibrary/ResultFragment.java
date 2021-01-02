@@ -27,7 +27,6 @@ import java.io.IOException;
 public class ResultFragment extends Fragment {
 
     // TODO: Refine detection after getting finalized page.
-    //  Image rotating after taking picture - fix that.
     //  Crashing with weird error - Textview cast to radiogroup??
 
     private View view;

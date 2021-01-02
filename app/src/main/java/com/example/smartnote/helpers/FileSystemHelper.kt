@@ -3,13 +3,11 @@ package com.example.smartnote.helpers
 import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
-import androidx.lifecycle.LiveData
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
-
 
 class FileSystemHelper(@ApplicationContext var context: Context) {
 
@@ -22,13 +20,13 @@ class FileSystemHelper(@ApplicationContext var context: Context) {
   }
   suspend fun storeImage(bitmap: Bitmap, fileName: String, filePath: String) {
 
-    val directory = File(context.filesDir.toString() + filePath,"unit"+fileName)
-    if(!directory.exists()){
+    val directory = File(context.filesDir.toString() + filePath, "unit" + fileName)
+    if (!directory.exists()) {
       directory.mkdir()
     }
     val timeStamp =
       SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-    val mypath = File(directory, "IMG_"+timeStamp+".png")
+    val mypath = File(directory, "IMG_" + timeStamp + ".png")
 
     var fos: FileOutputStream? = null
     try {
@@ -40,7 +38,7 @@ class FileSystemHelper(@ApplicationContext var context: Context) {
     }
   }
 
-  suspend fun getFilesList(folderPath:String): Array<File>? {
+  suspend fun getFilesList(folderPath: String): Array<File>? {
     val path = File(context.filesDir.toString() + folderPath)
     return path.listFiles()
   }

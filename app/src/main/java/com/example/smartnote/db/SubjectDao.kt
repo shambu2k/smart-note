@@ -21,5 +21,5 @@ interface SubjectDao {
   fun getAllSubjectGrids(): LiveData<List<SubjectGrid>>
 
   @Query("SELECT * FROM subject_grid_table WHERE bookName = :bookName")
-  fun getSubGrid(bookName:String):List<SubjectGrid>
+  fun getSubGrid(bookName: String): List<SubjectGrid>
 }
