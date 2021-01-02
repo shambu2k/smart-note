@@ -531,7 +531,7 @@ JNIEXPORT jint JNICALL Java_com_scanlibrary_ScanActivity_getSubjectUnit
     Mat imgCrop, imgGray, imgThreshed;
 
     // Preprocessing
-    Rect roi(img.size().width - 105, 5, 105, img.size().height / 6);
+    Rect roi(41, 5, 160, img.size().height / 6);
     imgCrop = img(roi);
     cvtColor(imgCrop, imgGray, COLOR_BGR2GRAY);
     threshold(imgGray, imgThreshed, 0, 255, THRESH_BINARY_INV + THRESH_OTSU);
