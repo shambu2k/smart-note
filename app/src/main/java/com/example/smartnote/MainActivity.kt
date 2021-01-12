@@ -59,6 +59,10 @@ class MainActivity : AppCompatActivity() {
           scanQr()
           binding.drawerLayout.closeDrawer(GravityCompat.START)
         }
+        R.id.backup_item -> {
+            navController.navigate(R.id.backupFragment)
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
+        }
       }
       true
     }

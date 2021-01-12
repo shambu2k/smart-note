@@ -96,4 +96,9 @@
             app:argType="integer"
             android:defaultValue="0" />
     </fragment>
+    <fragment
+        android:id="@+id/backupFragment"
+        android:name="com.example.smartnote.fragments.BackupFragment"
+        android:label="Drive Backup"
+        tools:layout="@layout/fragment_backup" />
 </navigation>

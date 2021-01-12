@@ -111,4 +111,5 @@ dependencies {
     //WorkManager
     implementation "androidx.work:work-runtime-ktx:$work_version"
 
+    implementation 'com.google.android.gms:play-services-auth:19.0.0'
 }
