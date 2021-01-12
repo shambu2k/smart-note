@@ -1,21 +1,36 @@
 package com.example.smartnote.adapters
 
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartnote.databinding.BookItemBinding
 import com.example.smartnote.db.Book
 import com.example.smartnote.fragments.BooksFragmentDirections
+import java.util.*
+
 
 class BooksAdapter(private var books: List<Book>) :
   RecyclerView.Adapter<BooksAdapter.BooksViewHolder>() {
 
   class BooksViewHolder(b: BookItemBinding) : RecyclerView.ViewHolder(b.root) {
     val binding = b
+    var bookImageTextView = binding.textViewImage
     var bookTextView = binding.textViewBookName
+    var layout: LinearLayout = binding.linearLayout
     fun bind(book: Book) {
-      bookTextView.text = book.name
+      (layout.getBackground() as GradientDrawable).setColor(Color.rgb((0..200).random(),(0..200).random(),(0..200).random()))
+      var text = book.name.substring(0, 2).toUpperCase(Locale.ROOT)
+      bookImageTextView.text = text
+      if(book.name.length > 10){
+        text = book.name.substring(0,11) + ".."
+        bookTextView.text = text
+      }else{
+        bookTextView.text = book.name
+      }
     }
   }
 
