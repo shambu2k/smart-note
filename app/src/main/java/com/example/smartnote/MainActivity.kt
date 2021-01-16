@@ -11,13 +11,17 @@ import androidx.core.view.GravityCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
+import androidx.work.PeriodicWorkRequest
+import androidx.work.WorkManager
 import com.example.smartnote.databinding.ActivityMainBinding
 import com.example.smartnote.db.*
+import com.example.smartnote.helpers.UploadWorker
 import com.example.smartnote.helpers.viewLifecycle
 import com.example.smartnote.viewmodels.BookViewModel
 import com.google.zxing.integration.android.IntentIntegrator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -33,6 +37,7 @@ class MainActivity : AppCompatActivity() {
     val view = binding.root
     setContentView(view)
     setupNavigation()
+    Backup();
   }
 
   private fun setupNavigation() {
@@ -95,5 +100,12 @@ class MainActivity : AppCompatActivity() {
     } else {
       super.onActivityResult(requestCode, resultCode, data)
     }
+  }
+
+  private fun Backup(){
+    val periodicWorkRequest = PeriodicWorkRequest
+      .Builder(UploadWorker::class.java,24,TimeUnit.HOURS)
+      .build()
+    WorkManager.getInstance(applicationContext).enqueue(periodicWorkRequest)
   }
 }

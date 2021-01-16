@@ -6,7 +6,8 @@ import javax.inject.Inject
 class BookRepository @Inject constructor (
   private val bookDao: BookDao,
   private val subjectDao: SubjectDao,
-  private val unitDao: UnitDao
+  private val unitDao: UnitDao,
+  private val pdfDao: PdfDao
 ) {
   val books = bookDao.getAllBooks()
 
