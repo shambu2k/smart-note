@@ -62,12 +62,32 @@
         android:layout_gravity="center"
         android:layout_margin="@dimen/scanPadding">
 
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
         <ImageView
             android:id="@+id/scannedImage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_margin="@dimen/scanPadding" />
+
+                <ImageView
+                    android:id="@+id/processedImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="0dp"
+                    android:src="@drawable/camera" />
+
+            </RelativeLayout>
+        </ScrollView>
     </FrameLayout>
 
     <RadioGroup
