@@ -81,6 +81,9 @@ JNIEXPORT jobject JNICALL Java_com_scanlibrary_ScanActivity_getGrayBitmap
 JNIEXPORT jint JNICALL Java_com_scanlibrary_ScanActivity_getSubjectUnit
 (JNIEnv *env, jobject thiz, jobject bitmap);
 
+JNIEXPORT jobject JNICALL Java_com_scanlibrary_ScanActivity_getProcessedBitmap
+(JNIEnv *env, jobject thiz,jobject bitmap);
+
 #ifdef __cplusplus
 }
 #endif

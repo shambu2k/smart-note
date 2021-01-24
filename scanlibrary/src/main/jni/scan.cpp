@@ -531,7 +531,7 @@ JNIEXPORT jint JNICALL Java_com_scanlibrary_ScanActivity_getSubjectUnit
     Mat imgCrop, imgGray, imgThreshed;
 
     // Preprocessing
-    Rect roi(41, 5, 160, img.size().height / 6);
+    Rect roi(41, 5, 260, img.size().height / 6);
     imgCrop = img(roi);
     cvtColor(imgCrop, imgGray, COLOR_BGR2GRAY);
     threshold(imgGray, imgThreshed, 0, 255, THRESH_BINARY_INV + THRESH_OTSU);
@@ -540,4 +540,45 @@ JNIEXPORT jint JNICALL Java_com_scanlibrary_ScanActivity_getSubjectUnit
     r = getSubjectUnit(imgThreshed);
    	// __android_log_print(ANDROID_LOG_VERBOSE, APPNAME, "Subject - " + r/10 + "," + "Unit - " + r%10);
    	return abs(r);
+}
+
+JNIEXPORT jobject JNICALL Java_com_scanlibrary_ScanActivity_getProcessedBitmap
+(JNIEnv *env, jobject thiz,jobject bitmap)
+{
+    __android_log_print(ANDROID_LOG_VERBOSE, APPNAME, "Scanning getProcessed");
+    int ret;
+    AndroidBitmapInfo info;
+    void* pixels = 0;
+
+    if ((ret = AndroidBitmap_getInfo(env, bitmap, &info)) < 0) {
+        __android_log_print(ANDROID_LOG_VERBOSE, APPNAME,"AndroidBitmap_getInfo() failed ! error=%d", ret);
+        return NULL;
+    }
+
+    if (info.format != ANDROID_BITMAP_FORMAT_RGBA_8888 )
+    {       __android_log_print(ANDROID_LOG_VERBOSE, APPNAME,"Bitmap format is not RGBA_8888!");
+        return NULL;
+    }
+
+    if ((ret = AndroidBitmap_lockPixels(env, bitmap, &pixels)) < 0) {
+        __android_log_print(ANDROID_LOG_VERBOSE, APPNAME,"AndroidBitmap_lockPixels() failed ! error=%d", ret);
+    }
+
+    Mat img(info.height, info.width, CV_8UC4, pixels);
+    Mat imgCrop, imgGray, imgThreshed;
+
+    // Preprocessing
+    Rect roi(41, 5, 260, img.size().height / 6);
+    imgCrop = img(roi);
+    cvtColor(imgCrop, imgGray, COLOR_BGR2GRAY);
+    threshold(imgGray, imgThreshed, 0, 255, THRESH_BINARY_INV + THRESH_OTSU);
+
+    //get source bitmap's config
+    jclass java_bitmap_class = (jclass)env->FindClass("android/graphics/Bitmap");
+    jmethodID mid = env->GetMethodID(java_bitmap_class, "getConfig", "()Landroid/graphics/Bitmap$Config;");
+    jobject bitmap_config = env->CallObjectMethod(bitmap, mid);
+    jobject _bitmap = mat_to_bitmap(env,imgThreshed,false,bitmap_config);
+
+    AndroidBitmap_unlockPixels(env, bitmap);
+    return _bitmap;
 }

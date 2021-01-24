@@ -30,6 +30,7 @@ public class ResultFragment extends Fragment {
 
     private View view;
     private ImageView scannedImageView;
+    private ImageView processedImgV;
     private Bitmap original;
     private Button originalButton;
     private Button MagicColorButton;
@@ -44,6 +45,7 @@ public class ResultFragment extends Fragment {
     private RadioGroup unitRadioGroup;
     private RadioButton unitRadioButton;
     private Bitmap transformed;
+    private Bitmap processed;
     private static ProgressDialogFragment progressDialogFragment;
 
     public ResultFragment() {
@@ -59,6 +61,7 @@ public class ResultFragment extends Fragment {
 
     private void init() {
         scannedImageView = (ImageView) view.findViewById(R.id.scannedImage);
+        processedImgV = (ImageView) view.findViewById(R.id.processedImage);
         originalButton = (Button) view.findViewById(R.id.original);
         originalButton.setOnClickListener(new OriginalButtonClickListener());
         MagicColorButton = (Button) view.findViewById(R.id.magicColor);
@@ -101,6 +104,9 @@ public class ResultFragment extends Fragment {
 
     public void setScannedImage(Bitmap scannedImage) {
         scannedImageView.setImageBitmap(scannedImage);
+
+        processed = ((ScanActivity) getActivity()).getProcessedBitmap(original);
+        processedImgV.setImageBitmap(processed);
     }
 
     private void initRadioButtons() {
