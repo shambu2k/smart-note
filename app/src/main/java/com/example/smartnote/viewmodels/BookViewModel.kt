@@ -115,6 +115,10 @@ class BookViewModel @ViewModelInject constructor(
     // TODO(): unit number can be passed as parameters
   }
 
+  fun getAllPDFs(): LiveData<List<Pdf>> {
+      return bookRepository.getAllPDFs()
+  }
+
   fun insertPdf(pdf: Pdf){
     scope.launch {
       bookRepository.insertPdf(pdf)

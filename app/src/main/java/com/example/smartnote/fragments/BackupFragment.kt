@@ -6,12 +6,16 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import com.example.smartnote.databinding.FragmentBackupBinding
+import com.example.smartnote.db.Pdf
 import com.example.smartnote.helpers.DriveServiceHelper
 import com.example.smartnote.helpers.viewLifecycle
 import com.example.smartnote.viewmodels.BackupViewModel
+import com.example.smartnote.viewmodels.BookViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -34,8 +38,13 @@ class BackupFragment : Fragment() {
     private var binding by viewLifecycle<FragmentBackupBinding>()
     @Inject lateinit var mGoogleSignInClient: GoogleSignInClient
     private lateinit var mDriveServiceHelper: DriveServiceHelper
+    private lateinit var mPdfs: List<Pdf>
+
     private val backupViewModel: BackupViewModel by lazy {
         ViewModelProvider(requireActivity()).get(BackupViewModel::class.java)
+    }
+    private val booksViewModel: BookViewModel by lazy {
+        ViewModelProvider(requireActivity()).get(BookViewModel::class.java)
     }
 
     companion object {
@@ -73,6 +82,15 @@ class BackupFragment : Fragment() {
         binding.uploadButton.setOnClickListener {
             uploadPDF()
         }
+        booksViewModel.getAllPDFs().observe(viewLifecycleOwner) {
+            mPdfs = it
+        }
+        backupViewModel.isUploaded.observe(viewLifecycleOwner) { isUploaded ->
+            if (isUploaded) {
+              Toast.makeText(requireContext(), "Uploaded PDFs!!", Toast.LENGTH_LONG).show()
+              backupViewModel.isUploaded.postValue(false)
+            }
+        }
     }
 
     private fun signIn() {
@@ -81,7 +99,11 @@ class BackupFragment : Fragment() {
     }
 
     private fun uploadPDF() {
-        backupViewModel.uploadPDF(mDriveServiceHelper, "/data/user/0/com.example.smartnote/files/MyBook/asdasdas/unit1.pdf")
+        //backupViewModel.uploadPDF(mDriveServiceHelper, "/data/user/0/com.example.smartnote/files/MyBook/asdasdas/unit1.pdf")
+        Toast.makeText(requireContext(), "Uploading...", Toast.LENGTH_LONG).show()
+        if (this::mPdfs.isInitialized) {
+            backupViewModel.uploadPDFs(mDriveServiceHelper, mPdfs, requireContext().filesDir.toString())
+        }
     }
 
     private fun signOut() {

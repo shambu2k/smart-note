@@ -18,9 +18,9 @@ class BackupRepository {
     ) {
         try {
             val details = pdfPath.split("/")
-            val pdfName = details[details.size - 1]
-            val subjectName = details[details.size - 2]
-            val bookName = details[details.size - 3]
+            val pdfName = details[details.size - 2] + ".pdf"
+            val subjectName = details[details.size - 3]
+            val bookName = details[details.size - 4]
             val baseFolderName = "Smart Note"
             val fileList = helper.queryFiles().await()
             val files = fileList!!.files
