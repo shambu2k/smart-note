@@ -68,13 +68,25 @@ class PagesFragment : Fragment() {
       Log.i("pdf",fileStrings.size.toString())
       if(fileStrings.size==0){
         Toast.makeText(activity,"No Images",Toast.LENGTH_SHORT).show()
-      }
+      }else {
 
-      Log.i("pdf","not null")
-      viewModel.storePdf(fileStrings,context?.filesDir.toString()+ args.unitFolderPath,args.unitFolderPath.split('/').toString())
-      val pdf = Pdf(0,args.unitFolderPath.split('/').toString(),args.unitFolderPath,Calendar.getInstance().time)
-      bookViewModel.deletePdfByName(args.unitFolderPath.split('/').toString())
-      bookViewModel.insertPdf(pdf)
+        Log.i("pdf", "not null")
+        viewModel.storePdf(
+          fileStrings,
+          context?.filesDir.toString() + args.unitFolderPath,
+          args.unitFolderPath.split('/').toString()
+        )
+        val pdf = Pdf(
+          0,
+          args.unitFolderPath.split('/').toString(),
+          args.unitFolderPath,
+          Calendar.getInstance().time
+        )
+        //if there is a pdf with same name it will delete it in db first then add newone
+        bookViewModel.deletePdfByName(args.unitFolderPath.split('/').toString())
+        bookViewModel.insertPdf(pdf)
+        Toast.makeText(activity, "Pdf created successfully", Toast.LENGTH_SHORT).show()
+      }
     }
   }
 }

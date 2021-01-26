@@ -2,9 +2,6 @@ package com.example.smartnote.helpers
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Canvas
-import android.graphics.pdf.PdfDocument
 import android.util.Log
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
