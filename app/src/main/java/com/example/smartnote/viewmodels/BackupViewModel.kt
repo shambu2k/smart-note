@@ -19,9 +19,9 @@ class BackupViewModel @ViewModelInject constructor(
     private val viewModelJob = SupervisorJob()
     private val scope = CoroutineScope(Dispatchers.IO + viewModelJob)
 
-    fun uploadPDF(driveServiceHelper: DriveServiceHelper, fileName: String, folderName: String) {
+    fun uploadPDF(driveServiceHelper: DriveServiceHelper, pdfPath: String) {
         scope.launch {
-            backupRepository.uploadPDF(driveServiceHelper, fileName, folderName)
+            backupRepository.uploadPDF(driveServiceHelper, pdfPath)
         }
     }
 }

@@ -81,7 +81,7 @@ class BackupFragment : Fragment() {
     }
 
     private fun uploadPDF() {
-        backupViewModel.uploadPDF(mDriveServiceHelper, "mypdf", "SmartNoteFolder")
+        backupViewModel.uploadPDF(mDriveServiceHelper, "/data/user/0/com.example.smartnote/files/MyBook/asdasdas/unit1.pdf")
     }
 
     private fun signOut() {

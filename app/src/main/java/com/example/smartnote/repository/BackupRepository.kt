@@ -13,22 +13,47 @@ class BackupRepository {
     }
 
     suspend fun uploadPDF(
-        driveServiceHelper: DriveServiceHelper,
-        fileName: String, folderName: String
+        helper: DriveServiceHelper,
+        pdfPath: String
     ) {
         try {
-            val fileList = driveServiceHelper.queryFiles().await()
+            val details = pdfPath.split("/")
+            val pdfName = details[details.size - 1]
+            val subjectName = details[details.size - 2]
+            val bookName = details[details.size - 3]
+            val baseFolderName = "Smart Note"
+            val fileList = helper.queryFiles().await()
             val files = fileList!!.files
+            var bookFolderID: String? = null
+            var subjectFolderID: String? = null
+            var baseFolderID: String? = null
             for (file in files) {
-                if (file["mimeType"] == TYPE_FOLDER && file["name"] == folderName) {
-                    val fileID =
-                        driveServiceHelper.createFile(fileName, file["id"] as String?).await()
-                    Log.i(TAG, "fileID: $fileID")
-                    return
+                if (file["mimeType"] == TYPE_FOLDER) {
+                    when (file["name"]) {
+                        bookName -> {
+                            bookFolderID = file["id"] as String
+                        }
+                        baseFolderName -> {
+                            baseFolderID = file["id"] as String
+                        }
+                    }
                 }
             }
-            val folderID = driveServiceHelper.createFolder(folderName).await()
-            val fileID = driveServiceHelper.createFile(fileName, folderID).await()
+            if (baseFolderID == null) {
+                baseFolderID = helper.createFolder(baseFolderName, "root").await()
+            }
+            if (bookFolderID == null) {
+                bookFolderID = helper.createFolder(bookName, baseFolderID).await()
+            }
+            subjectFolderID = helper.getFileChildren(bookFolderID, subjectName).await()
+            if (subjectFolderID == null) {
+                subjectFolderID = helper.createFolder(subjectName, bookFolderID).await()
+            }
+            val existingFileID = helper.getFileChildren(subjectFolderID, pdfName).await()
+            if (existingFileID != null) {
+                helper.deleteFile(existingFileID)
+            }
+            val fileID = helper.createPDF(pdfName, subjectFolderID, pdfPath).await()
             Log.i(TAG, "fileList: $fileList")
             Log.i(TAG, "fileID: $fileID")
         } catch (e: ApiException) {
