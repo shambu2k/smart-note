@@ -21,5 +21,8 @@ interface PdfDao {
   @Query("SELECT * FROM pdf_locations_table")
   fun getAllpdfs(): LiveData<List<Pdf>>
 
+  @Query("DELETE FROM pdf_locations_table where pdf_name=:name")
+  suspend fun deletePdfByname(name:String)
+
 
 }

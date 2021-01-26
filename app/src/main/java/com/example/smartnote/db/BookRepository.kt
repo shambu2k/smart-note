@@ -55,4 +55,11 @@ class BookRepository @Inject constructor (
   suspend fun getSubjectGrid(bookName: String): List<SubjectGrid> {
     return subjectDao.getSubGrid(bookName)
   }
+
+  suspend fun insertPdf(pdf:Pdf){
+    pdfDao.insertPdf(pdf)
+  }
+  suspend fun deletePdf(name:String){
+    pdfDao.deletePdfByname(name)
+  }
 }

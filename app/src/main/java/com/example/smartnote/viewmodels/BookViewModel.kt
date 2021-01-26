@@ -9,6 +9,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.example.smartnote.db.Book
 import com.example.smartnote.db.BookRepository
+import com.example.smartnote.db.Pdf
 import com.example.smartnote.db.SubjectGrid
 import kotlinx.coroutines.*
 
@@ -112,5 +113,16 @@ class BookViewModel @ViewModelInject constructor(
 
   fun getUnitFolderPath() {
     // TODO(): unit number can be passed as parameters
+  }
+
+  fun insertPdf(pdf: Pdf){
+    scope.launch {
+      bookRepository.insertPdf(pdf)
+    }
+  }
+  fun deletePdfByName(name:String){
+    scope.launch {
+      bookRepository.deletePdf(name)
+    }
   }
 }
