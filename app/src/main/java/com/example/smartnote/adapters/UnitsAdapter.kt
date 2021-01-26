@@ -26,7 +26,7 @@ class UnitsAdapter(private var subjectPath: String) : RecyclerView.Adapter<Units
     holder.bind("Unit ${position + 1}")
     holder.itemView.setOnClickListener {
       val unitFolderPath = subjectPath + "/unit${position + 1}"
-      it.findNavController().navigate(UnitsFragmentDirections.actionUnitsFragmentToPagesFragment(unitFolderPath))
+      it.findNavController().navigate(UnitsFragmentDirections.actionUnitsFragmentToPagesFragment(unitFolderPath,position+1))
     }
   }
 }

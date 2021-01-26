@@ -8,12 +8,14 @@ import android.graphics.pdf.PdfDocument.PageInfo
 import android.net.Uri
 import android.util.Log
 import com.squareup.picasso.Picasso
+import dagger.Provides
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.FileOutputStream
 import java.lang.Exception
+import javax.inject.Inject
 
 
-class PdfHelper() {
+class PdfHelper @Inject constructor() {
 
     suspend fun createPdfFromImages(
       paths: List<String>,
@@ -36,10 +38,11 @@ class PdfHelper() {
         pdfDocument.finishPage(page)
       }
 
-      val fileOutputStream = FileOutputStream(outPath + "/${fileName}.pdf")
+      val fileOutputStream = FileOutputStream( outPath + "/${fileName}.pdf")
       pdfDocument.writeTo(fileOutputStream)
       fileOutputStream.close()
       pdfDocument.close()
+      Log.i("pdf","reached here")
     }
 
     private fun getBitmapFromLocalPath(path: String): Bitmap? {

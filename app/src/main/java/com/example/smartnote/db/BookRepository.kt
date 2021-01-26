@@ -6,7 +6,8 @@ import javax.inject.Inject
 class BookRepository @Inject constructor (
   private val bookDao: BookDao,
   private val subjectDao: SubjectDao,
-  private val unitDao: UnitDao
+  private val unitDao: UnitDao,
+  private val pdfDao: PdfDao
 ) {
   val books = bookDao.getAllBooks()
 
@@ -53,5 +54,12 @@ class BookRepository @Inject constructor (
   }
   suspend fun getSubjectGrid(bookName: String): List<SubjectGrid> {
     return subjectDao.getSubGrid(bookName)
+  }
+
+  suspend fun insertPdf(pdf:Pdf){
+    pdfDao.insertPdf(pdf)
+  }
+  suspend fun deletePdf(name:String){
+    pdfDao.deletePdfByname(name)
   }
 }

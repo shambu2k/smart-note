@@ -10,5 +10,13 @@
         android:id="@+id/pagesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/button_create_pdf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:src="@drawable/ic_baseline_picture_as_pdf_24"
+        android:layout_margin="16dp"
+        android:contentDescription="Create PDF" />
 
 </FrameLayout>

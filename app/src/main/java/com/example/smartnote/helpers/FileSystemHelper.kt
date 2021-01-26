@@ -42,4 +42,6 @@ class FileSystemHelper(@ApplicationContext var context: Context) {
     val path = File(context.filesDir.toString() + folderPath)
     return path.listFiles()
   }
+
+
 }

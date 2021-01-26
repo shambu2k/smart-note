@@ -7,15 +7,19 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.example.smartnote.helpers.FileSystemHelper
+import com.example.smartnote.helpers.PdfHelper
 import kotlinx.coroutines.*
 import java.io.File
+import javax.inject.Inject
 
 class FileViewModel @ViewModelInject constructor(
   private val fileSystemHelper: FileSystemHelper,
+  private val pdfHelper: PdfHelper,
   @Assisted private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
   private val viewModelJob = SupervisorJob()
   private val scope = CoroutineScope(Dispatchers.IO + viewModelJob)
+
 
   fun makeFolder(folderName: String, filePath: String) {
     scope.launch {
@@ -41,6 +45,12 @@ class FileViewModel @ViewModelInject constructor(
       }
     }
     return list
+  }
+  fun storePdf(paths: List<String>, outPath: String, fileName: String){
+    runBlocking(Dispatchers.IO)  {
+      pdfHelper.createPdfFromImages(paths,outPath,fileName)
+      Log.i("pdf","reached viewModel")
+    }
   }
 
   override fun onCleared() {
