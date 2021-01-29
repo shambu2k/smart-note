@@ -1,12 +1,12 @@
 package com.example.smartnote
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.smartnote.databinding.ActivitySignInBinding
-import com.example.smartnote.fragments.BackupFragment
+import com.example.smartnote.fragments.SettingsFragment
 import com.example.smartnote.helpers.viewLifecycle
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -69,7 +69,7 @@ class SignInActivity : AppCompatActivity() {
       Toast.makeText(this, "Welcome ${account?.displayName}!", Toast.LENGTH_LONG).show()
       startMainActivity()
     } catch (e: ApiException) {
-      Log.w(BackupFragment.TAG, "signInResult:failed code=" + e.statusCode)
+      Log.w(SettingsFragment.TAG, "signInResult:failed code=" + e.statusCode)
     }
   }
 

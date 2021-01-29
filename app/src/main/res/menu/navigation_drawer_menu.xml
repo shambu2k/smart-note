@@ -14,11 +14,6 @@
             android:title="@string/nav_drawer_qrscanner" />
 
         <item
-            android:id="@+id/backup_item"
-            android:icon="@drawable/ic_baseline_backup_24"
-            android:title="@string/drive_backup" />
-
-        <item
             android:id="@+id/settings_item"
             android:icon="@drawable/ic_baseline_settings_24"
             android:title="@string/nav_drawer_settings" />

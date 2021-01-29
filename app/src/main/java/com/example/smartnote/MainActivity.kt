@@ -5,6 +5,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Patterns
 import android.view.MenuItem
+import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -18,6 +20,7 @@ import com.example.smartnote.db.*
 import com.example.smartnote.helpers.UploadWorker
 import com.example.smartnote.helpers.viewLifecycle
 import com.example.smartnote.viewmodels.BookViewModel
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.zxing.integration.android.IntentIntegrator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
@@ -59,12 +62,21 @@ class MainActivity : AppCompatActivity() {
           scanQr()
           binding.drawerLayout.closeDrawer(GravityCompat.START)
         }
-        R.id.backup_item -> {
-            navController.navigate(R.id.backupFragment)
-            binding.drawerLayout.closeDrawer(GravityCompat.START)
+        R.id.settings_item -> {
+          navController.navigate(R.id.settingsFragment)
+          binding.drawerLayout.closeDrawer(GravityCompat.START)
+        }
+        R.id.about_item -> {
+          navController.navigate(R.id.aboutFragment)
+          binding.drawerLayout.closeDrawer(GravityCompat.START)
         }
       }
       true
+    }
+    val account = GoogleSignIn.getLastSignedInAccount(applicationContext)
+    if(account != null){
+      val view : View = binding.sideNavigationDrawer.getHeaderView(0)
+      view.findViewById<TextView>(R.id.signIn).setText(account.displayName)
     }
   }
 
