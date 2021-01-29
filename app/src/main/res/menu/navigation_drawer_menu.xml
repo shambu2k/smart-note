@@ -1,39 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
-    <item
-        android:id="@+id/books_item"
-        android:title="@string/nav_drawer_books"
-        android:icon="@drawable/ic_baseline_menu_book_24">
-        <!--menu of books-->
-    </item>
+        <item
+            android:id="@+id/books_item"
+            android:icon="@drawable/ic_baseline_menu_book_24"
+            android:title="@string/nav_drawer_books">
+            <!--menu of books-->
+        </item>
 
-    <item
-        android:id="@+id/qrscanner_item"
-        android:title="@string/nav_drawer_qrscanner"
-        android:icon="@drawable/ic_baseline_qr_code_scanner_24">
+        <item
+            android:id="@+id/qrscanner_item"
+            android:icon="@drawable/ic_baseline_qr_code_scanner_24"
+            android:title="@string/nav_drawer_qrscanner" />
 
-    </item>
+        <item
+            android:id="@+id/backup_item"
+            android:icon="@drawable/ic_baseline_backup_24"
+            android:title="@string/drive_backup" />
+
         <item
             android:id="@+id/settings_item"
-            android:title="@string/nav_drawer_settings"
-            android:icon="@drawable/ic_baseline_settings_24">
-
-        </item>
+            android:icon="@drawable/ic_baseline_settings_24"
+            android:title="@string/nav_drawer_settings" />
     </group>
 
     <group android:checkableBehavior="single">
         <item android:title="App Info">
-        <menu>
-        <item
-            android:id="@+id/about_item"
-            android:title="@string/nav_drawer_about"
-            android:icon="@drawable/ic_baseline_info_24"/>
-        <item
-            android:id="@+id/contact_item"
-            android:title="@string/nav_drawer_contact"
-            android:icon="@drawable/ic_baseline_contact_page_24"/>
-        </menu>
+            <menu>
+                <item
+                    android:id="@+id/about_item"
+                    android:icon="@drawable/ic_baseline_info_24"
+                    android:title="@string/nav_drawer_about" />
+                <item
+                    android:id="@+id/contact_item"
+                    android:icon="@drawable/ic_baseline_contact_page_24"
+                    android:title="@string/nav_drawer_contact" />
+            </menu>
         </item>
     </group>
 
