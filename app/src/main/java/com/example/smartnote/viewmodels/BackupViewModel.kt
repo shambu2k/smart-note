@@ -13,6 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import java.util.*
 
 class BackupViewModel @ViewModelInject constructor(
     private val backupRepository: BackupRepository,
@@ -29,12 +30,15 @@ class BackupViewModel @ViewModelInject constructor(
         }
     }
 
-    fun uploadPDFs(driveServiceHelper: DriveServiceHelper, pdfs: List<Pdf>, basePath: String) {
+    fun uploadPDFs(driveServiceHelper: DriveServiceHelper, pdfs: List<Pdf>, basePath: String, lastSyncedDate: Date) {
         isUploaded.postValue(false)
         scope.launch {
+            val currentTime = Calendar.getInstance().time
             pdfs.forEach {
-                Log.i("Backup", "$basePath${it.location}/${it.name}.pdf")
-                backupRepository.uploadPDF(driveServiceHelper, "$basePath${it.location}/${it.name}.pdf")
+                if (it.time.after(lastSyncedDate)) {
+                  Log.i("Backup", "$basePath${it.location}/${it.name}.pdf")
+                  backupRepository.uploadPDF(driveServiceHelper, "$basePath${it.location}/${it.name}.pdf")
+                }
             }
             isUploaded.postValue(true)
         }
