@@ -22,8 +22,13 @@ class BooksAdapter(private var books: List<Book>) :
     var bookTextView = binding.textViewBookName
     var layout: LinearLayout = binding.linearLayout
     fun bind(book: Book) {
-      (layout.getBackground() as GradientDrawable).setColor(Color.rgb((0..200).random(),(0..200).random(),(0..200).random()))
-      var text = book.name.substring(0, 2).toUpperCase(Locale.ROOT)
+      (layout.background as GradientDrawable).setColor(Color.parseColor(book.colorString))
+      var text : String
+      text = if(book.name.length > 2){
+        book.name.substring(0, 2).toUpperCase(Locale.ROOT)
+      }else{
+        book.name.toUpperCase(Locale.ROOT)
+      }
       bookImageTextView.text = text
       if(book.name.length > 10){
         text = book.name.substring(0,11) + ".."

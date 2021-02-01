@@ -1,5 +1,6 @@
 package com.example.smartnote.fragments
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,9 +11,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.smartnote.R
-import com.example.smartnote.db.SubjectGrid
 import com.example.smartnote.databinding.FragmentSubjectGridBinding
 import com.example.smartnote.db.Book
+import com.example.smartnote.db.SubjectGrid
 import com.example.smartnote.helpers.viewLifecycle
 import com.example.smartnote.viewmodels.BookViewModel
 import com.example.smartnote.viewmodels.FileViewModel
@@ -128,7 +129,8 @@ class SubjectGridFragment : Fragment() {
           fileViewModel.makeFolder(units[j], subjectFolderPaths[i])
         }
       }
-      val book = Book(0, bookName, subjects, subjectFolderPaths, units)
+      val colorString = "#%02x%02x%02x".format((0..200).random(), (0..200).random(), (0..200).random())
+      val book = Book(0, bookName, subjects, subjectFolderPaths, units, colorString)
       val subjectGrid = SubjectGrid(
         null,
         bookName,
