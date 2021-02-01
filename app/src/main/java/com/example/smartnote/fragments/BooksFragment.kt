@@ -49,7 +49,7 @@ class BooksFragment : Fragment() {
   }
 
   private fun setUpRecyclerView() {
-    adapter = BooksAdapter(books)
+    adapter = context?.let { BooksAdapter(books, it) }!!
     recyclerView = binding.recyclerView
     recyclerView.layoutManager = LinearLayoutManager(activity)
     recyclerView.adapter = adapter

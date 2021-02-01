@@ -1,5 +1,6 @@
 package com.example.smartnote.fragments
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,9 +11,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.smartnote.R
-import com.example.smartnote.db.SubjectGrid
 import com.example.smartnote.databinding.FragmentSubjectGridBinding
 import com.example.smartnote.db.Book
+import com.example.smartnote.db.SubjectGrid
 import com.example.smartnote.helpers.viewLifecycle
 import com.example.smartnote.viewmodels.BookViewModel
 import com.example.smartnote.viewmodels.FileViewModel
@@ -20,6 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SubjectGridFragment : Fragment() {
+  private val sharedPref = "sharedPrefs"
   private var binding by viewLifecycle<FragmentSubjectGridBinding>()
   private val viewModel: BookViewModel by lazy {
     ViewModelProvider(requireActivity()).get(BookViewModel::class.java)
@@ -140,6 +142,13 @@ class SubjectGridFragment : Fragment() {
       )
       viewModel.insertSubjectGrid(subjectGrid)
       viewModel.insertBook(book)
+      val sharedPreferences = context?.getSharedPreferences(sharedPref,0)
+      val editor: SharedPreferences.Editor? = sharedPreferences?.edit()
+      var colorString = sharedPreferences?.getString("COLOR","")
+      if (colorString != null) {
+        colorString = colorString + "," + "#%02x%02x%02x".format((0..200).random(), (0..200).random(), (0..200).random())
+        editor?.putString("COLOR",colorString)?.apply()
+      }
       val bundle = bundleOf("bookName" to bookName)
       findNavController().navigate(R.id.action_subjectGridFragment_to_scannerFragment, bundle)
     }
