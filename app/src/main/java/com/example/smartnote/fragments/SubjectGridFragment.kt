@@ -21,7 +21,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SubjectGridFragment : Fragment() {
-  private val sharedPref = "sharedPrefs"
   private var binding by viewLifecycle<FragmentSubjectGridBinding>()
   private val viewModel: BookViewModel by lazy {
     ViewModelProvider(requireActivity()).get(BookViewModel::class.java)
@@ -130,7 +129,8 @@ class SubjectGridFragment : Fragment() {
           fileViewModel.makeFolder(units[j], subjectFolderPaths[i])
         }
       }
-      val book = Book(0, bookName, subjects, subjectFolderPaths, units)
+      val colorString = "#%02x%02x%02x".format((0..200).random(), (0..200).random(), (0..200).random())
+      val book = Book(0, bookName, subjects, subjectFolderPaths, units, colorString)
       val subjectGrid = SubjectGrid(
         null,
         bookName,
@@ -142,13 +142,6 @@ class SubjectGridFragment : Fragment() {
       )
       viewModel.insertSubjectGrid(subjectGrid)
       viewModel.insertBook(book)
-      val sharedPreferences = context?.getSharedPreferences(sharedPref,0)
-      val editor: SharedPreferences.Editor? = sharedPreferences?.edit()
-      var colorString = sharedPreferences?.getString("COLOR","")
-      if (colorString != null) {
-        colorString = colorString + "," + "#%02x%02x%02x".format((0..200).random(), (0..200).random(), (0..200).random())
-        editor?.putString("COLOR",colorString)?.apply()
-      }
       val bundle = bundleOf("bookName" to bookName)
       findNavController().navigate(R.id.action_subjectGridFragment_to_scannerFragment, bundle)
     }

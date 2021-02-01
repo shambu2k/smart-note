@@ -25,7 +25,7 @@ class SubjectsFragment : Fragment() {
 
   private var binding by viewLifecycle<FragmentSubjectsBinding>()
 
-  private var book: Book = Book(0, "book", listOf("1", "2", "3", "4", "5"), listOf("/1", "/2", "/3", "/4", "/5"), listOf("u1", "u2", "u3", "u4", "u5"))
+  private var book: Book = Book(0, "book", listOf("1", "2", "3", "4", "5"), listOf("/1", "/2", "/3", "/4", "/5"), listOf("u1", "u2", "u3", "u4", "u5"),"")
   private val viewModel: BookViewModel by lazy {
     ViewModelProvider(requireActivity()).get(BookViewModel::class.java)
   }

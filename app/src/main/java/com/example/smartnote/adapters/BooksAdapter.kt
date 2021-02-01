@@ -1,6 +1,5 @@
 package com.example.smartnote.adapters
 
-import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
@@ -14,27 +13,16 @@ import com.example.smartnote.fragments.BooksFragmentDirections
 import java.util.*
 
 
-class BooksAdapter(private var books: List<Book>, context:Context) :
+class BooksAdapter(private var books: List<Book>) :
   RecyclerView.Adapter<BooksAdapter.BooksViewHolder>() {
-
-  private val sharedPref = "sharedPrefs"
-  lateinit var colorStrings : Array<String>
-
-  init {
-      val sharedPreferences = context.getSharedPreferences(sharedPref,0)
-      val colorString = sharedPreferences?.getString("COLOR","")
-      if (colorString != null) {
-        colorStrings = colorString.split(",").toTypedArray()
-      }
-  }
 
   class BooksViewHolder(b: BookItemBinding) : RecyclerView.ViewHolder(b.root) {
     val binding = b
     var bookImageTextView = binding.textViewImage
     var bookTextView = binding.textViewBookName
     var layout: LinearLayout = binding.linearLayout
-    fun bind(book: Book, color : String) {
-      (layout.background as GradientDrawable).setColor(Color.parseColor(color))
+    fun bind(book: Book) {
+      (layout.background as GradientDrawable).setColor(Color.parseColor(book.colorString))
       var text : String
       text = if(book.name.length > 2){
         book.name.substring(0, 2).toUpperCase(Locale.ROOT)
@@ -62,7 +50,7 @@ class BooksAdapter(private var books: List<Book>, context:Context) :
   }
 
   override fun onBindViewHolder(holder: BooksViewHolder, position: Int) {
-    holder.bind(books[position], colorStrings[position+1])
+    holder.bind(books[position])
     holder.itemView.setOnClickListener {
       val action = BooksFragmentDirections.actionBooksFragmentToSubjectsFragment(books[position].id, books[position].name)
       Navigation.findNavController(holder.itemView).navigate(action)
