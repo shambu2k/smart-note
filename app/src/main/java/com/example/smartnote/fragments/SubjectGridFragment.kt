@@ -140,8 +140,7 @@ class SubjectGridFragment : Fragment() {
       )
       viewModel.insertSubjectGrid(subjectGrid)
       viewModel.insertBook(book)
-      val bundle = bundleOf("bookName" to bookName)
-      findNavController().navigate(R.id.action_subjectGridFragment_to_scannerFragment, bundle)
+      findNavController().navigate(R.id.action_subjectGridFragment_to_booksFragment)
     }
   }
 }

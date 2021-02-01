@@ -32,14 +32,13 @@
         android:name="com.example.smartnote.fragments.SubjectGridFragment"
         android:label="Add New Book"
         tools:layout="@layout/fragment_subject_grid" >
-      <action
-            android:id="@+id/action_subjectGridFragment_to_scannerFragment"
-            app:destination="@id/scannerFragment"
+        <action
+            android:id="@+id/action_subjectGridFragment_to_booksFragment"
+            app:destination="@id/booksFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
             app:popUpTo="@id/booksFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/subjectsFragment"
