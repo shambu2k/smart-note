@@ -32,7 +32,7 @@ class UploadService : Service() {
   private lateinit var backupRepository: BackupRepository
   private var pdfs: List<Pdf>? = null
   private lateinit var basePath: String
-  private lateinit var notif : Notification
+  private lateinit var notif: Notification
 
   override fun onCreate() {
     super.onCreate()
@@ -47,30 +47,28 @@ class UploadService : Service() {
       val pdfDao = providePdfDao(applicationContext)
       pdfs = pdfDao.getPdfs()
       val totalPdfs = pdfs?.size ?: 0
-      CoroutineScope(Dispatchers.IO).launch {
-        pdfs?.forEachIndexed { index, pdf ->
-          if (pdf.time.after(lastSyncedDate)) {
-             notif =
-              NotificationCompat.Builder(baseContext, "upload_channel")
-                .setContentTitle("Uploading pdf : $index out of $totalPdfs")
-                .setProgress(totalPdfs, index, false)
-                .setSmallIcon(R.drawable.ic_baseline_backup_24)
-                .setOngoing(true)
-                .build()
-            val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.notify(1, notif)
-            Log.i("Backup", "$basePath${pdf.location}/${pdf.name}.pdf")
-            backupRepository.uploadPDF(mDriveServiceHelper, "$basePath${pdf.location}/${pdf.name}.pdf")
-          }
+      pdfs?.forEachIndexed { index, pdf ->
+        if (pdf.time.after(lastSyncedDate)) {
+          notif =
+            NotificationCompat.Builder(baseContext, "upload_channel")
+              .setContentTitle("Uploading pdf : $index out of $totalPdfs")
+              .setProgress(totalPdfs, index, false)
+              .setSmallIcon(R.drawable.ic_baseline_backup_24)
+              .setOngoing(true)
+              .build()
+          val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+          notificationManager.notify(1, notif)
+          Log.i("Backup", "$basePath${pdf.location}/${pdf.name}.pdf")
+          backupRepository.uploadPDF(mDriveServiceHelper, "$basePath${pdf.location}/${pdf.name}.pdf")
         }
-        val currentDate = Calendar.getInstance().time.time
-        with (sharedPreferences.edit()) {
-          putLong(Constants.LAST_SYNCED_TIME, currentDate)
-          apply()
-        }
-        stopForeground(true)
-        stopSelf()
       }
+      val currentDate = Calendar.getInstance().time.time
+      with(sharedPreferences.edit()) {
+        putLong(Constants.LAST_SYNCED_TIME, currentDate)
+        apply()
+      }
+      stopForeground(true)
+      stopSelf()
     }
   }
 
