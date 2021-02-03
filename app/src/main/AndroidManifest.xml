@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
     <application
         android:name=".SmartNoteApplication"
@@ -33,6 +34,10 @@
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
             tools:replace="android:screenOrientation" />
+        <service
+            android:name=".UploadService"
+            android:icon="@drawable/ic_baseline_backup_24"
+            android:label="Files upload"/>
     </application>
 
 </manifest>

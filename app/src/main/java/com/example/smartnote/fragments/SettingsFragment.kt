@@ -7,10 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import com.example.smartnote.SignInActivity
+import com.example.smartnote.UploadService
 import com.example.smartnote.databinding.FragmentSettingsBinding
 import com.example.smartnote.db.Pdf
 import com.example.smartnote.helpers.Constants
@@ -75,7 +77,25 @@ class SettingsFragment : Fragment() {
       signOut()
     }
     binding.uploadButton.setOnClickListener {
-      uploadPDF()
+      //uploadPdf()
+      Toast.makeText(requireContext(), "Uploading...", Toast.LENGTH_LONG).show()
+      val sharedPreferences = requireActivity().getSharedPreferences("shared_prefs",Context.MODE_PRIVATE)
+      val lastSyncedDate = Date(sharedPreferences.getLong(Constants.LAST_SYNCED_TIME, 0))
+      if (this::mPDFs.isInitialized) {
+        var size = 0
+        mPDFs.forEach(){
+          if(it.time.after(lastSyncedDate)){
+            size++;
+          }
+        }
+        if(size > 0){
+          val intent = Intent(activity, UploadService::class.java)
+          activity?.let { it1 -> ContextCompat.startForegroundService(it1,intent) }
+          activity?.startService(intent)
+        }else{
+          Toast.makeText(requireContext(), "You files have been uploaded already", Toast.LENGTH_LONG).show()
+        }
+      }
     }
     binding.daily.setOnClickListener{
 
@@ -94,7 +114,7 @@ class SettingsFragment : Fragment() {
         Toast.makeText(requireContext(), "Uploaded PDFs!!", Toast.LENGTH_LONG).show()
         backupViewModel.isUploaded.postValue(false)
         val currentDate = Calendar.getInstance().time.time
-        val sharedPreferences = requireActivity().getPreferences(Context.MODE_PRIVATE)
+        val sharedPreferences = requireActivity().getSharedPreferences("shared_prefs",Context.MODE_PRIVATE)
         with (sharedPreferences.edit()) {
           putLong(Constants.LAST_SYNCED_TIME, currentDate)
           apply()
