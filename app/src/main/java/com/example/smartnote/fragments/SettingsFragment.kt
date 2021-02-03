@@ -93,7 +93,7 @@ class SettingsFragment : Fragment() {
           activity?.let { it1 -> ContextCompat.startForegroundService(it1,intent) }
           activity?.startService(intent)
         }else{
-          Toast.makeText(requireContext(), "You files have been uploaded already", Toast.LENGTH_LONG).show()
+          Toast.makeText(requireContext(), "Your files have been uploaded already", Toast.LENGTH_LONG).show()
         }
       }
     }
