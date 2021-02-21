@@ -6,11 +6,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
+import com.example.smartnote.R
 import com.example.smartnote.SignInActivity
 import com.example.smartnote.UploadService
 import com.example.smartnote.databinding.FragmentSettingsBinding
@@ -59,6 +62,26 @@ class SettingsFragment : Fragment() {
     savedInstanceState: Bundle?
   ): View {
     binding = FragmentSettingsBinding.inflate(inflater, container, false)
+
+    binding.radioGrp.setOnCheckedChangeListener{group, checkedId ->
+      when(checkedId){
+        R.id.daily -> {
+
+        }
+        R.id.weekly -> {
+
+        }
+        R.id.monthly -> {
+
+        }
+        R.id.none ->{
+
+        }
+        else -> {
+
+        }
+      }
+    }
     return binding.root
   }
 
@@ -79,33 +102,12 @@ class SettingsFragment : Fragment() {
     binding.uploadButton.setOnClickListener {
       //uploadPdf()
       Toast.makeText(requireContext(), "Uploading...", Toast.LENGTH_LONG).show()
-      val sharedPreferences = requireActivity().getSharedPreferences("shared_prefs",Context.MODE_PRIVATE)
-      val lastSyncedDate = Date(sharedPreferences.getLong(Constants.LAST_SYNCED_TIME, 0))
-      if (this::mPDFs.isInitialized) {
-        var size = 0
-        mPDFs.forEach(){
-          if(it.time.after(lastSyncedDate)){
-            size++;
-          }
-        }
-        if(size > 0){
-          val intent = Intent(activity, UploadService::class.java)
-          activity?.let { it1 -> ContextCompat.startForegroundService(it1,intent) }
-          activity?.startService(intent)
-        }else{
-          Toast.makeText(requireContext(), "Your files have been uploaded already", Toast.LENGTH_LONG).show()
-        }
-      }
-    }
-    binding.daily.setOnClickListener{
 
+      val intent = Intent(activity, UploadService::class.java)
+      activity?.let { it1 -> ContextCompat.startForegroundService(it1,intent) }
+      activity?.startService(intent)
     }
-    binding.weekly.setOnClickListener{
 
-    }
-    binding.monthly.setOnClickListener{
-
-    }
     booksViewModel.getAllPDFs().observe(viewLifecycleOwner) {
       mPDFs = it
     }

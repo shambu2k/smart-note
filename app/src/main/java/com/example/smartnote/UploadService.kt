@@ -10,10 +10,12 @@ import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import com.example.smartnote.db.DbModule.provideBookDao
 import com.example.smartnote.db.DbModule.providePdfDao
 import com.example.smartnote.db.Pdf
 import com.example.smartnote.helpers.Constants
 import com.example.smartnote.helpers.DriveServiceHelper
+import com.example.smartnote.helpers.PdfHelper
 import com.example.smartnote.repository.BackupRepository
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.Scopes
@@ -25,14 +27,17 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
+import kotlin.collections.ArrayList
 
 class UploadService : Service() {
 
   private lateinit var mDriveServiceHelper: DriveServiceHelper
   private lateinit var backupRepository: BackupRepository
-  private var pdfs: List<Pdf>? = null
+  private lateinit var pdfs: ArrayList<Pdf>
   private lateinit var basePath: String
   private lateinit var notif: Notification
+  private lateinit var pdfHelper: PdfHelper
+  val fileStrings = mutableListOf<String>()
 
   override fun onCreate() {
     super.onCreate()
@@ -40,14 +45,48 @@ class UploadService : Service() {
     startForeground(1, notification)
     val sharedPreferences = this.getSharedPreferences("shared_prefs", Context.MODE_PRIVATE)
     val lastSyncedDate = Date(sharedPreferences.getLong(Constants.LAST_SYNCED_TIME, 0))
+    var isuploaded: Boolean = false
     basePath = applicationContext.filesDir.toString()
     backupRepository = BackupRepository()
+    pdfs = ArrayList()
+    pdfHelper = PdfHelper()
     CoroutineScope(Dispatchers.IO).launch {
       initializeDriveHelper()
-      val pdfDao = providePdfDao(applicationContext)
-      pdfs = pdfDao.getPdfs()
-      val totalPdfs = pdfs?.size ?: 0
-      pdfs?.forEachIndexed { index, pdf ->
+      val books = provideBookDao(applicationContext).getBooks()
+      for(book in books){
+        val subjectPaths = book.subjectFolderPaths
+        for(subjectPath in subjectPaths){
+          for(i in 1..5){
+            val unitPath = subjectPath + "/unit${i}"
+            /*val pdf = providePdfDao(applicationContext).getPdfByName(pdfName)
+            try to append images to the existing pdf*/
+            val images = pdfHelper.getFiles(unitPath,applicationContext)
+            if(images != null){
+              for(image in images){
+                if(image.name.endsWith(".png")) {
+                  fileStrings.add(image.path)
+                  if(Date(image.lastModified()).after(lastSyncedDate)){
+                    storePdf(unitPath)
+                    Log.d("path - service",unitPath)
+                    val pdfName = unitPath.split('/').toString()
+                    providePdfDao(applicationContext).deletePdfByname(pdfName)
+                    val pdf =Pdf(
+                      0,
+                      unitPath.split('/').toString(),
+                      unitPath,
+                      Calendar.getInstance().time)
+                    providePdfDao(applicationContext).insertPdf(pdf)
+                    pdfs.add(pdf)
+                    break
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      val totalPdfs = pdfs.size
+      pdfs.forEachIndexed { index, pdf ->
         if (pdf.time.after(lastSyncedDate)) {
           notif =
             NotificationCompat.Builder(baseContext, "upload_channel")
@@ -60,12 +99,15 @@ class UploadService : Service() {
           notificationManager.notify(1, notif)
           Log.i("Backup", "$basePath${pdf.location}/${pdf.name}.pdf")
           backupRepository.uploadPDF(mDriveServiceHelper, "$basePath${pdf.location}/${pdf.name}.pdf")
+          isuploaded = true
         }
       }
-      val currentDate = Calendar.getInstance().time.time
-      with(sharedPreferences.edit()) {
-        putLong(Constants.LAST_SYNCED_TIME, currentDate)
-        apply()
+      if(isuploaded) {
+        val currentDate = Calendar.getInstance().time.time
+        with(sharedPreferences.edit()) {
+          putLong(Constants.LAST_SYNCED_TIME, currentDate)
+          apply()
+        }
       }
       stopForeground(true)
       stopSelf()
@@ -106,5 +148,10 @@ class UploadService : Service() {
       .setSmallIcon(R.drawable.ic_baseline_backup_24)
       .setContentTitle("Uploading pdfs..")
       .build()
+  }
+
+  private fun storePdf(unitPath: String){
+    pdfHelper.storePdf(fileStrings, applicationContext.filesDir.toString() + unitPath,
+      unitPath.split('/').toString())
   }
 }
