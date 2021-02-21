@@ -2,7 +2,9 @@ package com.example.smartnote.fragments
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +15,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
+import androidx.work.PeriodicWorkRequest
+import androidx.work.WorkManager
 import com.example.smartnote.R
 import com.example.smartnote.SignInActivity
 import com.example.smartnote.UploadService
@@ -20,6 +24,7 @@ import com.example.smartnote.databinding.FragmentSettingsBinding
 import com.example.smartnote.db.Pdf
 import com.example.smartnote.helpers.Constants
 import com.example.smartnote.helpers.DriveServiceHelper
+import com.example.smartnote.helpers.UploadWorker
 import com.example.smartnote.helpers.viewLifecycle
 import com.example.smartnote.viewmodels.BackupViewModel
 import com.example.smartnote.viewmodels.BookViewModel
@@ -34,6 +39,7 @@ import com.google.api.services.drive.Drive
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -44,6 +50,7 @@ class SettingsFragment : Fragment() {
   lateinit var mGoogleSignInClient: GoogleSignInClient
   private lateinit var mDriveServiceHelper: DriveServiceHelper
   private lateinit var mPDFs: List<Pdf>
+  private lateinit var sharedPreferences: SharedPreferences
 
   private val backupViewModel: BackupViewModel by lazy {
     ViewModelProvider(requireActivity()).get(BackupViewModel::class.java)
@@ -62,24 +69,29 @@ class SettingsFragment : Fragment() {
     savedInstanceState: Bundle?
   ): View {
     binding = FragmentSettingsBinding.inflate(inflater, container, false)
-
+    sharedPreferences = requireActivity().getSharedPreferences("shared_prefs",Context.MODE_PRIVATE)
+    val index = sharedPreferences.getInt("settings", -1)
+    if(index != -1){
+      binding.radioGrp.check(binding.radioGrp.getChildAt(index).id)
+    }
     binding.radioGrp.setOnCheckedChangeListener{group, checkedId ->
       when(checkedId){
         R.id.daily -> {
-
+          backup(1)
         }
         R.id.weekly -> {
-
+          backup(7)
         }
         R.id.monthly -> {
-
+          backup(30)
         }
-        R.id.none ->{
-
+        R.id.none -> {
+          backup(0)
         }
-        else -> {
-
-        }
+      }
+      with (sharedPreferences.edit()) {
+        putInt("settings", binding.radioGrp.indexOfChild(binding.radioGrp.findViewById(binding.radioGrp.checkedRadioButtonId)))
+        apply()
       }
     }
     return binding.root
@@ -116,7 +128,6 @@ class SettingsFragment : Fragment() {
         Toast.makeText(requireContext(), "Uploaded PDFs!!", Toast.LENGTH_LONG).show()
         backupViewModel.isUploaded.postValue(false)
         val currentDate = Calendar.getInstance().time.time
-        val sharedPreferences = requireActivity().getSharedPreferences("shared_prefs",Context.MODE_PRIVATE)
         with (sharedPreferences.edit()) {
           putLong(Constants.LAST_SYNCED_TIME, currentDate)
           apply()
@@ -161,6 +172,17 @@ class SettingsFragment : Fragment() {
       binding.displayName.text = account.displayName
       val uri = account.photoUrl
       Picasso.get().load(uri).into(binding.displayImage)
+    }
+  }
+
+  private fun backup(time: Long){
+    context?.let { WorkManager.getInstance(it).cancelAllWork() }
+    if(time != 0L){
+      Log.d("TIME", time.toString());
+      val periodicWorkRequest = PeriodicWorkRequest
+        .Builder(UploadWorker::class.java,time, TimeUnit.DAYS)
+        .build()
+      context?.let { WorkManager.getInstance(it).enqueue(periodicWorkRequest) }
     }
   }
 }

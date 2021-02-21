@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
     val view = binding.root
     setContentView(view)
     setupNavigation()
-    Backup();
+    //Backup();
   }
 
   private fun setupNavigation() {
