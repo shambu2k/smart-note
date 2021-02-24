@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.smartnote.MainActivity
 import com.example.smartnote.adapters.PagesAdapter
 import com.example.smartnote.databinding.FragmentPagesBinding
 import com.example.smartnote.db.Pdf
@@ -44,6 +45,7 @@ class PagesFragment : Fragment() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     val args: PagesFragmentArgs by navArgs()
+    (activity as MainActivity).supportActionBar?.title = "Unit ${args.unitNo}"
     val fileStrings = mutableListOf<String>()
     val list = context?.let { viewModel.getFiles(args.unitFolderPath, it) }
     if (list != null && list.size > 0) {

@@ -80,6 +80,10 @@
             android:name="subjectFolderPath"
             app:argType="string"
             android:defaultValue='""' />
+        <argument
+            android:name="subjectName"
+            app:argType="string"
+            android:defaultValue='""' />
     </fragment>
     <fragment
         android:id="@+id/pagesFragment"
