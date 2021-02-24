@@ -33,7 +33,6 @@ class BackupViewModel @ViewModelInject constructor(
     fun uploadPDFs(driveServiceHelper: DriveServiceHelper, pdfs: List<Pdf>, basePath: String, lastSyncedDate: Date) {
         isUploaded.postValue(false)
         scope.launch {
-            val currentTime = Calendar.getInstance().time
             pdfs.forEach {
                 if (it.time.after(lastSyncedDate)) {
                   Log.i("Backup", "$basePath${it.location}/${it.name}.pdf")

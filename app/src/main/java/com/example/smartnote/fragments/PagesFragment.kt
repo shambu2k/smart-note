@@ -45,7 +45,7 @@ class PagesFragment : Fragment() {
     super.onViewCreated(view, savedInstanceState)
     val args: PagesFragmentArgs by navArgs()
     val fileStrings = mutableListOf<String>()
-    val list = viewModel.getFiles(args.unitFolderPath)
+    val list = context?.let { viewModel.getFiles(args.unitFolderPath, it) }
     if (list != null && list.size > 0) {
       for (currentFile in list) {
         if (currentFile.name.endsWith(".png")) {
@@ -83,6 +83,8 @@ class PagesFragment : Fragment() {
           Calendar.getInstance().time
         )
         //if there is a pdf with same name it will delete it in db first then add newone
+        Log.d("filesdir",context?.filesDir.toString())
+        Log.d("path",args.unitFolderPath.split('/').toString())
         bookViewModel.deletePdfByName(args.unitFolderPath.split('/').toString())
         bookViewModel.insertPdf(pdf)
         Toast.makeText(activity, "Pdf created successfully", Toast.LENGTH_SHORT).show()

@@ -1,16 +1,18 @@
 package com.example.smartnote.viewmodels
 
+import android.content.Context
 import android.graphics.Bitmap
-import android.util.Log
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.example.smartnote.helpers.FileSystemHelper
 import com.example.smartnote.helpers.PdfHelper
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import java.io.File
-import javax.inject.Inject
 
 class FileViewModel @ViewModelInject constructor(
   private val fileSystemHelper: FileSystemHelper,
@@ -34,23 +36,11 @@ class FileViewModel @ViewModelInject constructor(
       }
     }
   }
-  fun getFiles(folderPath: String): Array<File>? {
-    var list: Array<File>? = null
-    runBlocking(Dispatchers.IO) {
-      try {
-        list = fileSystemHelper.getFilesList(folderPath)
-        Log.i("info", list.toString())
-      } catch (e: Exception) {
-        e.stackTrace
-      }
-    }
-    return list
+  fun getFiles(folderPath: String, context: Context): Array<File>? {
+    return pdfHelper.getFiles(folderPath,context)
   }
   fun storePdf(paths: List<String>, outPath: String, fileName: String){
-    runBlocking(Dispatchers.IO)  {
-      pdfHelper.createPdfFromImages(paths,outPath,fileName)
-      Log.i("pdf","reached viewModel")
-    }
+    pdfHelper.storePdf(paths,outPath,fileName)
   }
 
   override fun onCleared() {
