@@ -45,7 +45,7 @@ class PagesFragment : Fragment() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     val args: PagesFragmentArgs by navArgs()
-    (activity as MainActivity).supportActionBar?.title = "Unit ${args.unitNo}"
+    (activity as MainActivity).supportActionBar?.title = "${args.subjectName} - Unit ${args.unitNo}"
     val fileStrings = mutableListOf<String>()
     val list = context?.let { viewModel.getFiles(args.unitFolderPath, it) }
     if (list != null && list.size > 0) {

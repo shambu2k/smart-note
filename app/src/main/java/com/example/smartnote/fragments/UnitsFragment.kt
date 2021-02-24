@@ -33,7 +33,7 @@ class UnitsFragment : Fragment() {
     val args: UnitsFragmentArgs by navArgs()
     (activity as MainActivity).supportActionBar?.title = args.subjectName
     val path = args.subjectFolderPath
-    val adapter = UnitsAdapter(path)
+    val adapter = UnitsAdapter(path,args.subjectName)
     binding.unitsRecyclerView.layoutManager = LinearLayoutManager(activity)
     binding.unitsRecyclerView.adapter = adapter
   }
