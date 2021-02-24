@@ -70,10 +70,8 @@ class SettingsFragment : Fragment() {
   ): View {
     binding = FragmentSettingsBinding.inflate(inflater, container, false)
     sharedPreferences = requireActivity().getSharedPreferences("shared_prefs",Context.MODE_PRIVATE)
-    val index = sharedPreferences.getInt("settings", -1)
-    if(index != -1){
-      binding.radioGrp.check(binding.radioGrp.getChildAt(index).id)
-    }
+    val index = sharedPreferences.getInt("settings", 3)
+    binding.radioGrp.check(binding.radioGrp.getChildAt(index).id)
     binding.radioGrp.setOnCheckedChangeListener{group, checkedId ->
       when(checkedId){
         R.id.daily -> {
