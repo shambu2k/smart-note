@@ -23,6 +23,7 @@ class FileViewModel @ViewModelInject constructor(
   private val viewModelJob = SupervisorJob()
   private val scope = CoroutineScope(Dispatchers.IO + viewModelJob)
   val isDeleted = MutableLiveData<Boolean>(false)
+  val isStored = MutableLiveData<Boolean>(false)
 
 
   fun makeFolder(folderName: String, filePath: String) {
@@ -35,6 +36,7 @@ class FileViewModel @ViewModelInject constructor(
     scope.launch {
       if (bitmap != null) {
         fileSystemHelper.storeImage(bitmap, fileName, filePath)
+        isStored.postValue(true)
       }
     }
   }

@@ -47,6 +47,7 @@ class PagesFragment : Fragment() {
     ViewModelProvider(requireActivity()).get(BookViewModel::class.java)
   }
   private val args: PagesFragmentArgs by navArgs()
+  private lateinit var adapter:PagesAdapter
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -68,7 +69,7 @@ class PagesFragment : Fragment() {
 
     binding.pagesRecyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
     val folderPath = args.unitFolderPath
-    val adapter =  PagesAdapter(fileStrings,activity as MainActivity,object:PagesAdapter.DeleteListener{
+    adapter =  PagesAdapter(fileStrings,activity as MainActivity,object:PagesAdapter.DeleteListener{
       override fun deletePages(selectedItems: MutableList<String>) {
         for(item in selectedItems) {
           viewModel.deleteFile(item)
@@ -80,6 +81,13 @@ class PagesFragment : Fragment() {
       if(it){
         Toast.makeText(requireContext(), "Selected Pages Deleted Successfully!!", Toast.LENGTH_LONG).show()
         viewModel.isDeleted.postValue(false)
+        adapter.listImages = reloadImgs(args.unitFolderPath)
+        adapter.notifyDataSetChanged()
+      }
+    }
+    viewModel.isStored.observe(viewLifecycleOwner){
+      if(it){
+        viewModel.isStored.postValue(false)
         adapter.listImages = reloadImgs(args.unitFolderPath)
         adapter.notifyDataSetChanged()
       }
