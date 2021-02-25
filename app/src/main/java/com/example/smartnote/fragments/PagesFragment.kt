@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.smartnote.MainActivity
@@ -63,23 +64,26 @@ class PagesFragment : Fragment() {
       checkPermissionAndScan()
     }
     (activity as MainActivity).supportActionBar?.title = "${args.subjectName} - Unit ${args.unitNo}"
-    val fileStrings = mutableListOf<String>()
-    val list = context?.let { viewModel.getFiles(args.unitFolderPath, it) }
-    if (list != null && list.size > 0) {
-      for (currentFile in list) {
-        if (currentFile.name.endsWith(".png")) {
-          // File absolute path
-          Log.i("pdf", currentFile.path)
-          // File Name
-          Log.i("pdf", currentFile.getName())
-          fileStrings.add(currentFile.path)
-          Log.i("pdf",fileStrings.size.toString())
-        }
-      }
-    }
+    val fileStrings = reloadImgs(args.unitFolderPath)
 
     binding.pagesRecyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
-    val adapter = fileStrings.let { PagesAdapter(it) }
+    val folderPath = args.unitFolderPath
+    val adapter =  PagesAdapter(fileStrings,activity as MainActivity,object:PagesAdapter.DeleteListener{
+      override fun deletePages(selectedItems: MutableList<String>) {
+        for(item in selectedItems) {
+          viewModel.deleteFile(item)
+        }
+      }
+
+    })
+    viewModel.isDeleted.observe(viewLifecycleOwner){
+      if(it){
+        Toast.makeText(requireContext(), "Selected Pages Deleted Successfully!!", Toast.LENGTH_LONG).show()
+        viewModel.isDeleted.postValue(false)
+        adapter.listImages = reloadImgs(args.unitFolderPath)
+        adapter.notifyDataSetChanged()
+      }
+    }
     binding.pagesRecyclerView.adapter = adapter
 
     binding.buttonCreatePdf.setOnClickListener {
@@ -162,5 +166,22 @@ class PagesFragment : Fragment() {
         e.printStackTrace()
       }
     }
+  }
+  fun reloadImgs(unitPath:String): MutableList<String> {
+    val fileStrings = mutableListOf<String>()
+    val list = context?.let { viewModel.getFiles(unitPath, it) }
+    if (list != null && list.size > 0) {
+      for (currentFile in list) {
+        if (currentFile.name.endsWith(".png")) {
+          // File absolute path
+          Log.i("pdf", currentFile.path)
+          // File Name
+          Log.i("pdf", currentFile.getName())
+          fileStrings.add(currentFile.path)
+          Log.i("pdf", fileStrings.size.toString())
+        }
+      }
+    }
+    return fileStrings
   }
 }

@@ -86,6 +86,9 @@ class SettingsFragment : Fragment() {
         R.id.none -> {
           backup(0)
         }
+        else -> {
+          backup(0);
+        }
       }
       with (sharedPreferences.edit()) {
         putInt("settings", binding.radioGrp.indexOfChild(binding.radioGrp.findViewById(binding.radioGrp.checkedRadioButtonId)))

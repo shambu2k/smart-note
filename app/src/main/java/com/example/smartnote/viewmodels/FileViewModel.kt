@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.example.smartnote.helpers.FileSystemHelper
@@ -21,6 +22,7 @@ class FileViewModel @ViewModelInject constructor(
 ) : ViewModel() {
   private val viewModelJob = SupervisorJob()
   private val scope = CoroutineScope(Dispatchers.IO + viewModelJob)
+  val isDeleted = MutableLiveData<Boolean>(false)
 
 
   fun makeFolder(folderName: String, filePath: String) {
@@ -41,6 +43,13 @@ class FileViewModel @ViewModelInject constructor(
   }
   fun storePdf(paths: List<String>, outPath: String, fileName: String){
     pdfHelper.storePdf(paths,outPath,fileName)
+  }
+
+  fun deleteFile(fileName:String){
+    scope.launch {
+      fileSystemHelper.deleteFile(fileName)
+      isDeleted.postValue(true)
+    }
   }
 
   override fun onCleared() {
