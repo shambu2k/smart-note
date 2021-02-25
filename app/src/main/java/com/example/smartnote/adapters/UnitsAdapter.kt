@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.smartnote.databinding.UnitItemBinding
 import com.example.smartnote.fragments.UnitsFragmentDirections
 
-class UnitsAdapter(private var subjectPath: String,private var subjectName:String) : RecyclerView.Adapter<UnitsAdapter.UnitsViewHolder>() {
+class UnitsAdapter(private val bookName: String, private var subjectPath: String,private var subjectName:String) : RecyclerView.Adapter<UnitsAdapter.UnitsViewHolder>() {
   class UnitsViewHolder(b: UnitItemBinding) : RecyclerView.ViewHolder(b.root) {
     var binding = b
     var unitTextView = binding.textViewUnitName
@@ -26,7 +26,7 @@ class UnitsAdapter(private var subjectPath: String,private var subjectName:Strin
     holder.bind("Unit ${position + 1}")
     holder.itemView.setOnClickListener {
       val unitFolderPath = subjectPath + "/unit${position + 1}"
-      it.findNavController().navigate(UnitsFragmentDirections.actionUnitsFragmentToPagesFragment(unitFolderPath,position+1,subjectName))
+      it.findNavController().navigate(UnitsFragmentDirections.actionUnitsFragmentToPagesFragment(unitFolderPath,position+1,subjectName, bookName))
     }
   }
 }
