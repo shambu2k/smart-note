@@ -49,24 +49,12 @@
             android:name="bookId"
             app:argType="integer"
             android:defaultValue="0"/>
-        <action
-            android:id="@+id/action_subjectsFragment_to_scannerFragment"
-            app:destination="@id/scannerFragment" />
         <argument
             android:name="bookName"
             app:argType="string" />
         <action
             android:id="@+id/action_subjectsFragment_to_unitsFragment"
             app:destination="@id/unitsFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/scannerFragment"
-        android:name="com.example.smartnote.fragments.ScannerFragment"
-        android:label="Scanner"
-        tools:layout="@layout/fragment_scanner">
-    <argument
-        android:name="bookName"
-        app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/unitsFragment"
@@ -84,6 +72,9 @@
             android:name="subjectName"
             app:argType="string"
             android:defaultValue='""' />
+        <argument
+            android:name="bookName"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/pagesFragment"
@@ -102,6 +93,9 @@
             android:name="subjectName"
             app:argType="string"
             android:defaultValue='""' />
+        <argument
+            android:name="bookName"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"

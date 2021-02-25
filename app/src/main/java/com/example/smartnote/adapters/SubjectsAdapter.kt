@@ -31,7 +31,7 @@ class SubjectsAdapter(private var book: Book) : RecyclerView.Adapter<SubjectsAda
   override fun onBindViewHolder(holder: SubjectsViewHolder, position: Int) {
     book.subjects.get(position).let { holder.bind(it) }
     holder.itemView.setOnClickListener {
-      it.findNavController().navigate(SubjectsFragmentDirections.actionSubjectsFragmentToUnitsFragment(book.subjectFolderPaths.get(position),book.subjects.get(position)))
+      it.findNavController().navigate(SubjectsFragmentDirections.actionSubjectsFragmentToUnitsFragment(book.subjectFolderPaths.get(position),book.subjects.get(position), book.name))
     }
   }
 
