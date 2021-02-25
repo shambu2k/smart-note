@@ -43,5 +43,12 @@ class FileSystemHelper(@ApplicationContext var context: Context) {
     return path.listFiles()
   }
 
+  suspend fun deleteFile(fileName: String){
+    val file = File(fileName)
+    if(file.exists()){
+      file.delete()
+    }
+  }
+
 
 }
