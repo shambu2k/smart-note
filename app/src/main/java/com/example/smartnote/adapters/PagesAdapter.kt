@@ -7,7 +7,7 @@ import com.example.smartnote.databinding.PageItemBinding
 import com.squareup.picasso.Picasso
 import java.io.File
 
-class PagesAdapter(val listImages: Array<File>) : RecyclerView.Adapter<PagesAdapter.PagesViewHolder>() {
+class PagesAdapter(val listImages: MutableList<String>) : RecyclerView.Adapter<PagesAdapter.PagesViewHolder>() {
 
   class PagesViewHolder(b: PageItemBinding) : RecyclerView.ViewHolder(b.root) {
     val binding = b
@@ -24,7 +24,7 @@ class PagesAdapter(val listImages: Array<File>) : RecyclerView.Adapter<PagesAdap
   }
 
   override fun onBindViewHolder(holder: PagesViewHolder, position: Int) {
-    Picasso.get().load(File(listImages[position].toURI())).into(holder.binding.imageViewPage)
+    Picasso.get().load(File(listImages[position])).into(holder.binding.imageViewPage)
   }
 
   override fun getItemCount(): Int {

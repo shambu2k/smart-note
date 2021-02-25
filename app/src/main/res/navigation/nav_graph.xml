@@ -80,6 +80,10 @@
             android:name="subjectFolderPath"
             app:argType="string"
             android:defaultValue='""' />
+        <argument
+            android:name="subjectName"
+            app:argType="string"
+            android:defaultValue='""' />
     </fragment>
     <fragment
         android:id="@+id/pagesFragment"
@@ -94,6 +98,10 @@
             android:name="unitNo"
             app:argType="integer"
             android:defaultValue="0" />
+        <argument
+            android:name="subjectName"
+            app:argType="string"
+            android:defaultValue='""' />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"

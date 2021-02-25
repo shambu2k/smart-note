@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.smartnote.MainActivity
 import com.example.smartnote.adapters.UnitsAdapter
 import com.example.smartnote.databinding.FragmentUnitsBinding
 import com.example.smartnote.helpers.viewLifecycle
@@ -30,8 +31,9 @@ class UnitsFragment : Fragment() {
     super.onViewCreated(view, savedInstanceState)
 
     val args: UnitsFragmentArgs by navArgs()
+    (activity as MainActivity).supportActionBar?.title = args.subjectName
     val path = args.subjectFolderPath
-    val adapter = UnitsAdapter(path)
+    val adapter = UnitsAdapter(path,args.subjectName)
     binding.unitsRecyclerView.layoutManager = LinearLayoutManager(activity)
     binding.unitsRecyclerView.adapter = adapter
   }

@@ -2,22 +2,23 @@ package com.example.smartnote.fragments
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.smartnote.MainActivity
 import com.example.smartnote.adapters.PagesAdapter
 import com.example.smartnote.databinding.FragmentPagesBinding
 import com.example.smartnote.db.Pdf
-import com.example.smartnote.helpers.PdfHelper
 import com.example.smartnote.helpers.viewLifecycle
 import com.example.smartnote.viewmodels.BookViewModel
 import com.example.smartnote.viewmodels.FileViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.net.URLConnection
 import java.util.*
 
 @AndroidEntryPoint
@@ -44,6 +45,7 @@ class PagesFragment : Fragment() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     val args: PagesFragmentArgs by navArgs()
+    (activity as MainActivity).supportActionBar?.title = "${args.subjectName} - Unit ${args.unitNo}"
     val fileStrings = mutableListOf<String>()
     val list = context?.let { viewModel.getFiles(args.unitFolderPath, it) }
     if (list != null && list.size > 0) {
@@ -60,7 +62,7 @@ class PagesFragment : Fragment() {
     }
 
     binding.pagesRecyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
-    val adapter = list?.let { PagesAdapter(it) }
+    val adapter = fileStrings.let { PagesAdapter(it) }
     binding.pagesRecyclerView.adapter = adapter
 
     binding.buttonCreatePdf.setOnClickListener {
