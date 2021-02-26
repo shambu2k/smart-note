@@ -25,7 +25,7 @@ interface PdfDao {
   fun getPdfs(): List<Pdf>
 
   @Query("DELETE FROM pdf_locations_table where pdf_name=:name")
-  suspend fun deletePdfByname(name:String)
+  suspend fun deletePdfByname(name: String)
 
   @Query("SELECT * FROM pdf_locations_table where pdf_name=:name")
   suspend fun getPdfByName(name: String): List<Pdf>

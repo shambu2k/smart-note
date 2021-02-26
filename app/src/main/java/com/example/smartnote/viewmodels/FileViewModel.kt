@@ -25,7 +25,6 @@ class FileViewModel @ViewModelInject constructor(
   val isDeleted = MutableLiveData<Boolean>(false)
   val isStored = MutableLiveData<Boolean>(false)
 
-
   fun makeFolder(folderName: String, filePath: String) {
     scope.launch {
       fileSystemHelper.makeFolder(folderName, filePath)
@@ -41,13 +40,13 @@ class FileViewModel @ViewModelInject constructor(
     }
   }
   fun getFiles(folderPath: String, context: Context): Array<File>? {
-    return pdfHelper.getFiles(folderPath,context)
+    return pdfHelper.getFiles(folderPath, context)
   }
-  fun storePdf(paths: List<String>, outPath: String, fileName: String){
-    pdfHelper.storePdf(paths,outPath,fileName)
+  fun storePdf(paths: List<String>, outPath: String, fileName: String) {
+    pdfHelper.storePdf(paths, outPath, fileName)
   }
 
-  fun deleteFile(fileName:String){
+  fun deleteFile(fileName: String) {
     scope.launch {
       fileSystemHelper.deleteFile(fileName)
       isDeleted.postValue(true)

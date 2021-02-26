@@ -57,7 +57,7 @@ class UnitsFragment : Fragment() {
     super.onViewCreated(view, savedInstanceState)
     (activity as MainActivity).supportActionBar?.title = args.subjectName
     val path = args.subjectFolderPath
-    val adapter = UnitsAdapter(args.bookName, path,args.subjectName)
+    val adapter = UnitsAdapter(args.bookName, path, args.subjectName)
     binding.unitsRecyclerView.layoutManager = LinearLayoutManager(activity)
     binding.unitsRecyclerView.adapter = adapter
     binding.buttonAddPhoto.setOnClickListener {
@@ -71,9 +71,9 @@ class UnitsFragment : Fragment() {
         Manifest.permission.CAMERA
       ) != PackageManager.PERMISSION_GRANTED ||
       ActivityCompat.checkSelfPermission(
-        requireContext(),
-        Manifest.permission.WRITE_EXTERNAL_STORAGE
-      ) != PackageManager.PERMISSION_GRANTED
+          requireContext(),
+          Manifest.permission.WRITE_EXTERNAL_STORAGE
+        ) != PackageManager.PERMISSION_GRANTED
     ) {
       requestPermissions(
         arrayOf(

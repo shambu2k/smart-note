@@ -33,12 +33,12 @@ object DbModule {
   }
 
   @Provides
-  fun providePdfDao(@ApplicationContext appContext: Context): PdfDao{
+  fun providePdfDao(@ApplicationContext appContext: Context): PdfDao {
     return BookDatabase.getInstance(appContext).pdfDao
   }
 
   @Provides
-  fun provideBookRepository(bookDao: BookDao, subjectDao: SubjectDao, unitDao: UnitDao, pdfDao: PdfDao) = BookRepository(bookDao, subjectDao, unitDao,pdfDao)
+  fun provideBookRepository(bookDao: BookDao, subjectDao: SubjectDao, unitDao: UnitDao, pdfDao: PdfDao) = BookRepository(bookDao, subjectDao, unitDao, pdfDao)
 
   @Provides
   fun provideFileSystemHelper(@ApplicationContext appContext: Context) = FileSystemHelper(appContext)
@@ -49,9 +49,9 @@ object DbModule {
   @Provides
   fun provideGoogleSignInClient(@ApplicationContext appContext: Context): GoogleSignInClient {
     val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-        .requestScopes(Scope(DriveScopes.DRIVE_FILE))
-        .requestEmail()
-        .build()
+      .requestScopes(Scope(DriveScopes.DRIVE_FILE))
+      .requestEmail()
+      .build()
     return GoogleSignIn.getClient(appContext, gso)
   }
 }

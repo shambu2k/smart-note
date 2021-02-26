@@ -33,7 +33,6 @@ import com.scanlibrary.ScanActivity
 import com.scanlibrary.ScanConstants
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.IOException
-import java.net.URLConnection
 import java.util.*
 
 @AndroidEntryPoint
@@ -47,7 +46,7 @@ class PagesFragment : Fragment() {
     ViewModelProvider(requireActivity()).get(BookViewModel::class.java)
   }
   private val args: PagesFragmentArgs by navArgs()
-  private lateinit var adapter:PagesAdapter
+  private lateinit var adapter: PagesAdapter
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -69,24 +68,27 @@ class PagesFragment : Fragment() {
 
     binding.pagesRecyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
     val folderPath = args.unitFolderPath
-    adapter =  PagesAdapter(fileStrings,activity as MainActivity,object:PagesAdapter.DeleteListener{
-      override fun deletePages(selectedItems: MutableList<String>) {
-        for(item in selectedItems) {
-          viewModel.deleteFile(item)
+    adapter = PagesAdapter(
+      fileStrings,
+      activity as MainActivity,
+      object : PagesAdapter.DeleteListener {
+        override fun deletePages(selectedItems: MutableList<String>) {
+          for (item in selectedItems) {
+            viewModel.deleteFile(item)
+          }
         }
       }
-
-    })
-    viewModel.isDeleted.observe(viewLifecycleOwner){
-      if(it){
+    )
+    viewModel.isDeleted.observe(viewLifecycleOwner) {
+      if (it) {
         Toast.makeText(requireContext(), "Selected Pages Deleted Successfully!!", Toast.LENGTH_LONG).show()
         viewModel.isDeleted.postValue(false)
         adapter.listImages = reloadImgs(args.unitFolderPath)
         adapter.notifyDataSetChanged()
       }
     }
-    viewModel.isStored.observe(viewLifecycleOwner){
-      if(it){
+    viewModel.isStored.observe(viewLifecycleOwner) {
+      if (it) {
         viewModel.isStored.postValue(false)
         adapter.listImages = reloadImgs(args.unitFolderPath)
         adapter.notifyDataSetChanged()
@@ -95,11 +97,11 @@ class PagesFragment : Fragment() {
     binding.pagesRecyclerView.adapter = adapter
 
     binding.buttonCreatePdf.setOnClickListener {
-      Log.i("pdf","clicked")
-      Log.i("pdf",fileStrings.size.toString())
-      if(fileStrings.size==0){
-        Toast.makeText(activity,"No Images",Toast.LENGTH_SHORT).show()
-      }else {
+      Log.i("pdf", "clicked")
+      Log.i("pdf", fileStrings.size.toString())
+      if (fileStrings.size == 0) {
+        Toast.makeText(activity, "No Images", Toast.LENGTH_SHORT).show()
+      } else {
 
         Log.i("pdf", "not null")
         viewModel.storePdf(
@@ -113,9 +115,9 @@ class PagesFragment : Fragment() {
           args.unitFolderPath,
           Calendar.getInstance().time
         )
-        //if there is a pdf with same name it will delete it in db first then add newone
-        Log.d("filesdir",context?.filesDir.toString())
-        Log.d("path",args.unitFolderPath.split('/').toString())
+        // if there is a pdf with same name it will delete it in db first then add newone
+        Log.d("filesdir", context?.filesDir.toString())
+        Log.d("path", args.unitFolderPath.split('/').toString())
         bookViewModel.deletePdfByName(args.unitFolderPath.split('/').toString())
         bookViewModel.insertPdf(pdf)
         Toast.makeText(activity, "Pdf created successfully", Toast.LENGTH_SHORT).show()
@@ -129,9 +131,9 @@ class PagesFragment : Fragment() {
         Manifest.permission.CAMERA
       ) != PackageManager.PERMISSION_GRANTED ||
       ActivityCompat.checkSelfPermission(
-        requireContext(),
-        Manifest.permission.WRITE_EXTERNAL_STORAGE
-      ) != PackageManager.PERMISSION_GRANTED
+          requireContext(),
+          Manifest.permission.WRITE_EXTERNAL_STORAGE
+        ) != PackageManager.PERMISSION_GRANTED
     ) {
       requestPermissions(
         arrayOf(
@@ -175,12 +177,12 @@ class PagesFragment : Fragment() {
       }
     }
   }
-  fun reloadImgs(unitPath:String): MutableList<String> {
+  fun reloadImgs(unitPath: String): MutableList<String> {
     val fileStrings = mutableListOf<String>()
     val list = context?.let { viewModel.getFiles(unitPath, it) }
     if (list != null && list.size > 0) {
       for (currentFile in list) {
-        if (currentFile.name.endsWith(".png")) {
+        if (currentFile.name.endsWith(".jpeg")) {
           // File absolute path
           Log.i("pdf", currentFile.path)
           // File Name

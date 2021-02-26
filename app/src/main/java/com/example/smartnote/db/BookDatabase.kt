@@ -13,7 +13,7 @@ abstract class BookDatabase : RoomDatabase() {
   abstract val bookDao: BookDao
   abstract val subjectDao: SubjectDao
   abstract val unitDao: UnitDao
-  abstract val pdfDao:PdfDao
+  abstract val pdfDao: PdfDao
   companion object {
     @Volatile
     private var INSTANCE: BookDatabase? = null

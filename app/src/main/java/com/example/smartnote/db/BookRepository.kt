@@ -9,7 +9,7 @@ class BookRepository @Inject constructor (
   private val unitDao: UnitDao,
   private val pdfDao: PdfDao
 ) {
-      val books = bookDao.getAllBooks()
+  val books = bookDao.getAllBooks()
   val pdfs = pdfDao.getAllpdfs()
 
   private var allSubjectGrids: LiveData<List<SubjectGrid>> = subjectDao.getAllSubjectGrids()
@@ -58,13 +58,13 @@ class BookRepository @Inject constructor (
   }
 
   fun getAllPDFs(): LiveData<List<Pdf>> {
-      return pdfs
+    return pdfs
   }
 
-  suspend fun insertPdf(pdf:Pdf){
+  suspend fun insertPdf(pdf: Pdf) {
     pdfDao.insertPdf(pdf)
   }
-  suspend fun deletePdf(name:String){
+  suspend fun deletePdf(name: String) {
     pdfDao.deletePdfByname(name)
   }
 }

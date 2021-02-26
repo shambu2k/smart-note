@@ -116,15 +116,15 @@ class BookViewModel @ViewModelInject constructor(
   }
 
   fun getAllPDFs(): LiveData<List<Pdf>> {
-      return bookRepository.getAllPDFs()
+    return bookRepository.getAllPDFs()
   }
 
-  fun insertPdf(pdf: Pdf){
+  fun insertPdf(pdf: Pdf) {
     scope.launch {
       bookRepository.insertPdf(pdf)
     }
   }
-  fun deletePdfByName(name:String){
+  fun deletePdfByName(name: String) {
     scope.launch {
       bookRepository.deletePdf(name)
     }
