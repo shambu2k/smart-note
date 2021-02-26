@@ -12,7 +12,6 @@ import com.example.smartnote.db.Book
 import com.example.smartnote.fragments.BooksFragmentDirections
 import java.util.*
 
-
 class BooksAdapter(private var books: List<Book>) :
   RecyclerView.Adapter<BooksAdapter.BooksViewHolder>() {
 
@@ -23,17 +22,17 @@ class BooksAdapter(private var books: List<Book>) :
     var layout: LinearLayout = binding.linearLayout
     fun bind(book: Book) {
       (layout.background as GradientDrawable).setColor(Color.parseColor(book.colorString))
-      var text : String
-      text = if(book.name.length > 2){
+      var text: String
+      text = if (book.name.length > 2) {
         book.name.substring(0, 2).toUpperCase(Locale.ROOT)
-      }else{
+      } else {
         book.name.toUpperCase(Locale.ROOT)
       }
       bookImageTextView.text = text
-      if(book.name.length > 10){
-        text = book.name.substring(0,11) + ".."
+      if (book.name.length > 10) {
+        text = book.name.substring(0, 11) + ".."
         bookTextView.text = text
-      }else{
+      } else {
         bookTextView.text = book.name
       }
     }

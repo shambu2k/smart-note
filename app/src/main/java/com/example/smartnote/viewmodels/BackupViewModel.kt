@@ -13,33 +13,33 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Date
 
 class BackupViewModel @ViewModelInject constructor(
-    private val backupRepository: BackupRepository,
-    @Assisted private val savedStateHandle: SavedStateHandle
-): ViewModel() {
+  private val backupRepository: BackupRepository,
+  @Assisted private val savedStateHandle: SavedStateHandle
+) : ViewModel() {
 
-    private val viewModelJob = SupervisorJob()
-    private val scope = CoroutineScope(Dispatchers.IO + viewModelJob)
-    val isUploaded = MutableLiveData<Boolean>(false)
+  private val viewModelJob = SupervisorJob()
+  private val scope = CoroutineScope(Dispatchers.IO + viewModelJob)
+  val isUploaded = MutableLiveData<Boolean>(false)
 
-    fun uploadPDF(driveServiceHelper: DriveServiceHelper, pdfPath: String) {
-        scope.launch {
-            backupRepository.uploadPDF(driveServiceHelper, pdfPath)
-        }
+  fun uploadPDF(driveServiceHelper: DriveServiceHelper, pdfPath: String) {
+    scope.launch {
+      backupRepository.uploadPDF(driveServiceHelper, pdfPath)
     }
+  }
 
-    fun uploadPDFs(driveServiceHelper: DriveServiceHelper, pdfs: List<Pdf>, basePath: String, lastSyncedDate: Date) {
-        isUploaded.postValue(false)
-        scope.launch {
-            pdfs.forEach {
-                if (it.time.after(lastSyncedDate)) {
-                  Log.i("Backup", "$basePath${it.location}/${it.name}.pdf")
-                  backupRepository.uploadPDF(driveServiceHelper, "$basePath${it.location}/${it.name}.pdf")
-                }
-            }
-            isUploaded.postValue(true)
+  fun uploadPDFs(driveServiceHelper: DriveServiceHelper, pdfs: List<Pdf>, basePath: String, lastSyncedDate: Date) {
+    isUploaded.postValue(false)
+    scope.launch {
+      pdfs.forEach {
+        if (it.time.after(lastSyncedDate)) {
+          Log.i("Backup", "$basePath${it.location}/${it.name}.pdf")
+          backupRepository.uploadPDF(driveServiceHelper, "$basePath${it.location}/${it.name}.pdf")
         }
+      }
+      isUploaded.postValue(true)
     }
+  }
 }

@@ -19,11 +19,9 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.smartnote.R
 import com.example.smartnote.adapters.SubjectsAdapter
 import com.example.smartnote.databinding.FragmentSubjectsBinding
 import com.example.smartnote.db.Book
@@ -42,14 +40,13 @@ class SubjectsFragment : Fragment() {
 
   private var binding by viewLifecycle<FragmentSubjectsBinding>()
 
-  private var book: Book = Book(0, "book", listOf("1", "2", "3", "4", "5"), listOf("/1", "/2", "/3", "/4", "/5"), listOf("u1", "u2", "u3", "u4", "u5"),"")
+  private var book: Book = Book(0, "book", listOf("1", "2", "3", "4", "5"), listOf("/1", "/2", "/3", "/4", "/5"), listOf("u1", "u2", "u3", "u4", "u5"), "")
   private val viewModel: BookViewModel by lazy {
     ViewModelProvider(requireActivity()).get(BookViewModel::class.java)
   }
   private val fileViewModel: FileViewModel by lazy {
     ViewModelProvider(this).get(FileViewModel::class.java)
   }
-
 
   // recycler_view
   private lateinit var recyclerView: RecyclerView
@@ -96,9 +93,9 @@ class SubjectsFragment : Fragment() {
         Manifest.permission.CAMERA
       ) != PackageManager.PERMISSION_GRANTED ||
       ActivityCompat.checkSelfPermission(
-        requireContext(),
-        Manifest.permission.WRITE_EXTERNAL_STORAGE
-      ) != PackageManager.PERMISSION_GRANTED
+          requireContext(),
+          Manifest.permission.WRITE_EXTERNAL_STORAGE
+        ) != PackageManager.PERMISSION_GRANTED
     ) {
       requestPermissions(
         arrayOf(

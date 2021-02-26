@@ -8,8 +8,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RadioButton
-import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -69,11 +67,11 @@ class SettingsFragment : Fragment() {
     savedInstanceState: Bundle?
   ): View {
     binding = FragmentSettingsBinding.inflate(inflater, container, false)
-    sharedPreferences = requireActivity().getSharedPreferences("shared_prefs",Context.MODE_PRIVATE)
+    sharedPreferences = requireActivity().getSharedPreferences("shared_prefs", Context.MODE_PRIVATE)
     val index = sharedPreferences.getInt("settings", 3)
     binding.radioGrp.check(binding.radioGrp.getChildAt(index).id)
-    binding.radioGrp.setOnCheckedChangeListener{group, checkedId ->
-      when(checkedId){
+    binding.radioGrp.setOnCheckedChangeListener { group, checkedId ->
+      when (checkedId) {
         R.id.daily -> {
           backup(1)
         }
@@ -87,10 +85,10 @@ class SettingsFragment : Fragment() {
           backup(0)
         }
         else -> {
-          backup(0);
+          backup(0)
         }
       }
-      with (sharedPreferences.edit()) {
+      with(sharedPreferences.edit()) {
         putInt("settings", binding.radioGrp.indexOfChild(binding.radioGrp.findViewById(binding.radioGrp.checkedRadioButtonId)))
         apply()
       }
@@ -113,11 +111,11 @@ class SettingsFragment : Fragment() {
       signOut()
     }
     binding.uploadButton.setOnClickListener {
-      //uploadPdf()
+      // uploadPdf()
       Toast.makeText(requireContext(), "Uploading...", Toast.LENGTH_LONG).show()
 
       val intent = Intent(activity, UploadService::class.java)
-      activity?.let { it1 -> ContextCompat.startForegroundService(it1,intent) }
+      activity?.let { it1 -> ContextCompat.startForegroundService(it1, intent) }
       activity?.startService(intent)
     }
 
@@ -129,7 +127,7 @@ class SettingsFragment : Fragment() {
         Toast.makeText(requireContext(), "Uploaded PDFs!!", Toast.LENGTH_LONG).show()
         backupViewModel.isUploaded.postValue(false)
         val currentDate = Calendar.getInstance().time.time
-        with (sharedPreferences.edit()) {
+        with(sharedPreferences.edit()) {
           putLong(Constants.LAST_SYNCED_TIME, currentDate)
           apply()
         }
@@ -176,12 +174,12 @@ class SettingsFragment : Fragment() {
     }
   }
 
-  private fun backup(time: Long){
+  private fun backup(time: Long) {
     context?.let { WorkManager.getInstance(it).cancelAllWork() }
-    if(time != 0L){
-      Log.d("TIME", time.toString());
+    if (time != 0L) {
+      Log.d("TIME", time.toString())
       val periodicWorkRequest = PeriodicWorkRequest
-        .Builder(UploadWorker::class.java,time, TimeUnit.DAYS)
+        .Builder(UploadWorker::class.java, time, TimeUnit.DAYS)
         .build()
       context?.let { WorkManager.getInstance(it).enqueue(periodicWorkRequest) }
     }

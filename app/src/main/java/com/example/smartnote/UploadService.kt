@@ -53,28 +53,29 @@ class UploadService : Service() {
     CoroutineScope(Dispatchers.IO).launch {
       initializeDriveHelper()
       val books = provideBookDao(applicationContext).getBooks()
-      for(book in books){
+      for (book in books) {
         val subjectPaths = book.subjectFolderPaths
-        for(subjectPath in subjectPaths){
-          for(i in 1..5){
-            val unitPath = subjectPath + "/unit${i}"
+        for (subjectPath in subjectPaths) {
+          for (i in 1..5) {
+            val unitPath = subjectPath + "/unit$i"
             /*val pdf = providePdfDao(applicationContext).getPdfByName(pdfName)
             try to append images to the existing pdf*/
-            val images = pdfHelper.getFiles(unitPath,applicationContext)
-            if(images != null){
-              for(image in images){
-                if(image.name.endsWith(".png")) {
+            val images = pdfHelper.getFiles(unitPath, applicationContext)
+            if (images != null) {
+              for (image in images) {
+                if (image.name.endsWith(".png")) {
                   fileStrings.add(image.path)
-                  if(Date(image.lastModified()).after(lastSyncedDate)){
+                  if (Date(image.lastModified()).after(lastSyncedDate)) {
                     storePdf(unitPath)
-                    Log.d("path - service",unitPath)
+                    Log.d("path - service", unitPath)
                     val pdfName = unitPath.split('/').toString()
                     providePdfDao(applicationContext).deletePdfByname(pdfName)
-                    val pdf =Pdf(
+                    val pdf = Pdf(
                       0,
                       unitPath.split('/').toString(),
                       unitPath,
-                      Calendar.getInstance().time)
+                      Calendar.getInstance().time
+                    )
                     providePdfDao(applicationContext).insertPdf(pdf)
                     pdfs.add(pdf)
                     break
@@ -102,7 +103,7 @@ class UploadService : Service() {
           isuploaded = true
         }
       }
-      if(isuploaded) {
+      if (isuploaded) {
         val currentDate = Calendar.getInstance().time.time
         with(sharedPreferences.edit()) {
           putLong(Constants.LAST_SYNCED_TIME, currentDate)
@@ -150,8 +151,11 @@ class UploadService : Service() {
       .build()
   }
 
-  private fun storePdf(unitPath: String){
-    pdfHelper.storePdf(fileStrings, applicationContext.filesDir.toString() + unitPath,
-      unitPath.split('/').toString())
+  private fun storePdf(unitPath: String) {
+    pdfHelper.storePdf(
+      fileStrings,
+      applicationContext.filesDir.toString() + unitPath,
+      unitPath.split('/').toString()
+    )
   }
 }

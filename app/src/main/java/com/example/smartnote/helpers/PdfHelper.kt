@@ -2,21 +2,14 @@ package com.example.smartnote.helpers
 
 import android.content.Context
 import android.graphics.*
-import android.graphics.drawable.Drawable
 import android.graphics.pdf.PdfDocument
-import android.graphics.pdf.PdfDocument.PageInfo
-import android.net.Uri
 import android.util.Log
-import com.squareup.picasso.Picasso
-import dagger.Provides
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import java.io.File
 import java.io.FileOutputStream
-import java.lang.Exception
 import javax.inject.Inject
-
+import kotlin.math.roundToInt
 
 class PdfHelper @Inject constructor() {
 
@@ -31,17 +24,19 @@ class PdfHelper @Inject constructor() {
     for ((index, path) in paths.withIndex()) {
       val bitmap = getBitmapFromLocalPath(path)
       val pageInfo = PdfDocument.PageInfo.Builder(
-        bitmap!!.width, bitmap!!.height,
+        874,
+        1240,
         index
       ).create()
       val page: PdfDocument.Page = pdfDocument.startPage(pageInfo)
       val canvas: Canvas = page.canvas
 
-      canvas.drawBitmap(bitmap!!, 0f, 0f, null)
+      val scaledBitmap = scale(bitmap!!, 874, 1240)
+      canvas.drawBitmap(scaledBitmap, (874 - scaledBitmap.width).toFloat() / 2, (1240 - scaledBitmap.height).toFloat() / 2, null)
       pdfDocument.finishPage(page)
     }
 
-    val fileOutputStream = FileOutputStream(outPath + "/${fileName}.pdf")
+    val fileOutputStream = FileOutputStream(outPath + "/$fileName.pdf")
     pdfDocument.writeTo(fileOutputStream)
     fileOutputStream.close()
     pdfDocument.close()
@@ -77,5 +72,37 @@ class PdfHelper @Inject constructor() {
     }
     return list
   }
-}
 
+  private fun scale(bitmap: Bitmap, maxWidth: Int, maxHeight: Int): Bitmap {
+    // Determine the constrained dimension, which determines both dimensions.
+    val width: Int
+    val height: Int
+    val widthRatio = bitmap.width.toFloat() / maxWidth
+    val heightRatio = bitmap.height.toFloat() / maxHeight
+    // Width constrained.
+    if (widthRatio >= heightRatio) {
+      width = maxWidth
+      height = (width.toFloat() / bitmap.width * bitmap.height).roundToInt()
+    } else {
+      height = maxHeight
+      width = (height.toFloat() / bitmap.height * bitmap.width).roundToInt()
+    }
+    val scaledBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+    val ratioX = width.toFloat() / bitmap.width
+    val ratioY = height.toFloat() / bitmap.height
+    val middleX = width / 2.0f
+    val middleY = height / 2.0f
+    val scaleMatrix = Matrix()
+    scaleMatrix.setScale(ratioX, ratioY, middleX, middleY)
+    val canvas = Canvas(scaledBitmap)
+    canvas.setMatrix(scaleMatrix)
+    canvas.drawBitmap(
+      bitmap,
+      middleX - bitmap.width / 2,
+      middleY - bitmap.height / 2,
+      Paint(Paint.FILTER_BITMAP_FLAG)
+    )
+    bitmap.recycle()
+    return scaledBitmap
+  }
+}

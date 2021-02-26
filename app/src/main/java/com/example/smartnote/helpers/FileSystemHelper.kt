@@ -26,12 +26,12 @@ class FileSystemHelper(@ApplicationContext var context: Context) {
     }
     val timeStamp =
       SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-    val mypath = File(directory, "IMG_" + timeStamp + ".png")
+    val mypath = File(directory, "IMG_" + timeStamp + ".jpeg")
 
     var fos: FileOutputStream? = null
     try {
       fos = FileOutputStream(mypath)
-      bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
+      bitmap.compress(Bitmap.CompressFormat.JPEG, 70, fos)
       fos.close()
     } catch (e: Exception) {
       Log.e("SAVE_IMAGE", e.message, e)
@@ -43,12 +43,10 @@ class FileSystemHelper(@ApplicationContext var context: Context) {
     return path.listFiles()
   }
 
-  suspend fun deleteFile(fileName: String){
+  suspend fun deleteFile(fileName: String) {
     val file = File(fileName)
-    if(file.exists()){
+    if (file.exists()) {
       file.delete()
     }
   }
-
-
 }
