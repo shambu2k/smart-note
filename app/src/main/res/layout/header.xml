@@ -3,31 +3,31 @@
     android:layout_width="match_parent"
     android:layout_height="212dp"
     android:padding="25dp"
-    android:background="@color/colorPrimary"
+    android:background="@color/colorPrimaryDark"
     android:orientation="vertical"
     style="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageView
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:src="@drawable/smartnote"
+        android:src="@drawable/copyrevert"
+        android:contentDescription="@string/app_name"
         android:layout_marginTop="25dp"/>
 
     <TextView
 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Smart Note"
+        android:text="@string/app_name"
         android:textAlignment="center"
         style="@style/TextAppearance.AppCompat.Headline"
-
         android:textColor="@android:color/white"
         android:textStyle="bold" />
     <TextView
         android:id="@+id/welcomeUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Welcome ..."
+        android:text="@string/welcome"
         style="@style/TextAppearance.AppCompat.Body1"
         android:textColor="@android:color/white"
         android:textStyle="bold"/>
@@ -35,7 +35,7 @@
         android:id="@+id/signIn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Not signed in..."
+        android:text="@string/nosignin"
         style="@style/TextAppearance.AppCompat.Body1"
         android:textColor="@android:color/white"
         android:textStyle="bold"/>
