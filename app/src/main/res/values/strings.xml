@@ -8,12 +8,21 @@
     <string name="open">Open</string>
     <string name="close">Close</string>
     <string name="book_bitmap">Book bitmap</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="drive_backup">Drive Backup</string>
+    <string name="drive_backup_frequency">Back up to google drive</string>
+    <string name="display_image">Display_Image</string>
     <string name="sign_out">Sign Out</string>
     <string name="daily">Daily</string>
     <string name="weekly">Weekly</string>
     <string name="monthly">Monthly</string>
     <string name="none">None</string>
+    <string name="upload_now">Upload now</string>
+    <string name="add_book">Add Book</string>
+    <string name="create_pdf">Create PDF</string>
+    <string name="add_pages">Add Pages</string>
+    <string name="welcome">Welcome!</string>
+    <string name="nosignin">Not signed in</string>
+    <string name="app_info">App Info</string>
+    <string name="delete">Delete</string>
+    <string name="select_all">Select All</string>
 </resources>

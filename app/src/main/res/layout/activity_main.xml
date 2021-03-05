@@ -14,7 +14,9 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorPrimaryDark"
+        app:titleTextColor="@android:color/white"
+        app:titleTextAppearance="@style/Toolbar.TitleText"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <androidx.fragment.app.FragmentContainerView

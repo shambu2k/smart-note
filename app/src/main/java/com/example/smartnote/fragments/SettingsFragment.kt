@@ -171,6 +171,7 @@ class SettingsFragment : Fragment() {
   private fun updateUI(account: GoogleSignInAccount?) {
     if (account != null) {
       binding.displayName.text = account.displayName
+      binding.displayEmail.text = account.email
       val uri = account.photoUrl
       Picasso.get().load(uri).into(binding.displayImage)
     }
