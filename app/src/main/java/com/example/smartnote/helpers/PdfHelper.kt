@@ -4,6 +4,8 @@ import android.content.Context
 import android.graphics.*
 import android.graphics.pdf.PdfDocument
 import android.util.Log
+import com.example.smartnote.helpers.Constants.PDF_PAGE_HEIGHT
+import com.example.smartnote.helpers.Constants.PDF_PAGE_WIDTH
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import java.io.File
@@ -24,15 +26,15 @@ class PdfHelper @Inject constructor() {
     for ((index, path) in paths.withIndex()) {
       val bitmap = getBitmapFromLocalPath(path)
       val pageInfo = PdfDocument.PageInfo.Builder(
-        874,
-        1240,
+        PDF_PAGE_WIDTH,
+        PDF_PAGE_HEIGHT,
         index
       ).create()
       val page: PdfDocument.Page = pdfDocument.startPage(pageInfo)
       val canvas: Canvas = page.canvas
 
-      val scaledBitmap = scale(bitmap!!, 874, 1240)
-      canvas.drawBitmap(scaledBitmap, (874 - scaledBitmap.width).toFloat() / 2, (1240 - scaledBitmap.height).toFloat() / 2, null)
+      val scaledBitmap = scale(bitmap!!, PDF_PAGE_WIDTH, PDF_PAGE_HEIGHT)
+      canvas.drawBitmap(scaledBitmap, (PDF_PAGE_WIDTH - scaledBitmap.width).toFloat() / 2, (PDF_PAGE_HEIGHT - scaledBitmap.height).toFloat() / 2, null)
       pdfDocument.finishPage(page)
     }
 
