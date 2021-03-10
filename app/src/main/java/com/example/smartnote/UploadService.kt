@@ -63,7 +63,7 @@ class UploadService : Service() {
             val images = pdfHelper.getFiles(unitPath, applicationContext)
             if (images != null) {
               for (image in images) {
-                if (image.name.endsWith(".png")) {
+                if (image.name.endsWith(".jpeg")) {
                   fileStrings.add(image.path)
                   if (Date(image.lastModified()).after(lastSyncedDate)) {
                     storePdf(unitPath)

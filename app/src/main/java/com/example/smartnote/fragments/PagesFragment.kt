@@ -1,6 +1,7 @@
 package com.example.smartnote.fragments
 
 import android.Manifest
+import android.content.ClipData
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -16,6 +17,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
@@ -32,12 +34,15 @@ import com.example.smartnote.viewmodels.FileViewModel
 import com.scanlibrary.ScanActivity
 import com.scanlibrary.ScanConstants
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.File
 import java.io.IOException
 import java.util.*
+
 
 @AndroidEntryPoint
 class PagesFragment : Fragment() {
 
+  private lateinit var pdf_file: File
   private var binding by viewLifecycle<FragmentPagesBinding>()
   private val viewModel: FileViewModel by lazy {
     ViewModelProvider(requireActivity()).get(FileViewModel::class.java)
@@ -64,10 +69,9 @@ class PagesFragment : Fragment() {
       checkPermissionAndScan()
     }
     (activity as MainActivity).supportActionBar?.title = "${args.subjectName} - Unit ${args.unitNo}"
-    val fileStrings = reloadImgs(args.unitFolderPath)
+    var fileStrings = reloadImgs(args.unitFolderPath)
 
     binding.pagesRecyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
-    val folderPath = args.unitFolderPath
     adapter = PagesAdapter(
       fileStrings,
       activity as MainActivity,
@@ -97,6 +101,7 @@ class PagesFragment : Fragment() {
     binding.pagesRecyclerView.adapter = adapter
 
     binding.buttonCreatePdf.setOnClickListener {
+      fileStrings = reloadImgs(args.unitFolderPath)
       Log.i("pdf", "clicked")
       Log.i("pdf", fileStrings.size.toString())
       if (fileStrings.size == 0) {
@@ -121,6 +126,34 @@ class PagesFragment : Fragment() {
         bookViewModel.deletePdfByName(args.unitFolderPath.split('/').toString())
         bookViewModel.insertPdf(pdf)
         Toast.makeText(activity, "Pdf created successfully", Toast.LENGTH_SHORT).show()
+
+        val list = context?.let { viewModel.getFiles(args.unitFolderPath, it) }
+        if (list != null && list.size > 0) {
+          for (currentFile in list) {
+            if (currentFile.name.endsWith(".pdf")) {
+              pdf_file = currentFile
+            }
+          }
+        }
+
+        val uri = FileProvider.getUriForFile(
+          requireActivity().applicationContext,
+          "com.example.smartnote.provider",
+          pdf_file
+        )
+
+        try{
+          val shareIntent = Intent()
+          shareIntent.action = Intent.ACTION_SEND
+          shareIntent.type = "application/pdf"
+          shareIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+          shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+          shareIntent.clipData = ClipData.newRawUri("",uri)
+          shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
+          startActivity(Intent.createChooser(shareIntent, "Share via"))
+        }catch (e:Exception){
+          Toast.makeText(requireContext(),"Something went wrong!", Toast.LENGTH_SHORT).show()
+        }
       }
     }
   }
