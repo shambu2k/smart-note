@@ -13,6 +13,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
+import androidx.work.Constraints
+import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import com.example.smartnote.R
@@ -177,10 +179,17 @@ class SettingsFragment : Fragment() {
 
   private fun backup(time: Long) {
     context?.let { WorkManager.getInstance(it).cancelAllWork() }
+    val constraints = Constraints.Builder()
+      .setRequiredNetworkType(NetworkType.CONNECTED)
+      .setRequiresBatteryNotLow(true)
+      .setRequiresStorageNotLow(true)
+      .build()
     if (time != 0L) {
       Log.d("TIME", time.toString())
+      val period = time*24*60
       val periodicWorkRequest = PeriodicWorkRequest
-        .Builder(UploadWorker::class.java, time, TimeUnit.DAYS)
+        .Builder(UploadWorker::class.java, period, TimeUnit.MINUTES,5,TimeUnit.MINUTES)
+        .setConstraints(constraints)
         .build()
       context?.let { WorkManager.getInstance(it).enqueue(periodicWorkRequest) }
     }

@@ -37,7 +37,7 @@ class UploadService : Service() {
   private lateinit var basePath: String
   private lateinit var notif: Notification
   private lateinit var pdfHelper: PdfHelper
-  val fileStrings = mutableListOf<String>()
+  //val fileStrings = mutableListOf<String>()
 
   override fun onCreate() {
     super.onCreate()
@@ -62,25 +62,29 @@ class UploadService : Service() {
             try to append images to the existing pdf*/
             val images = pdfHelper.getFiles(unitPath, applicationContext)
             if (images != null) {
+              val fileStrings = mutableListOf<String>()
+              var flag:Int=0
               for (image in images) {
                 if (image.name.endsWith(".jpeg")) {
                   fileStrings.add(image.path)
                   if (Date(image.lastModified()).after(lastSyncedDate)) {
-                    storePdf(unitPath)
-                    Log.d("path - service", unitPath)
-                    val pdfName = unitPath.split('/').toString()
-                    providePdfDao(applicationContext).deletePdfByname(pdfName)
-                    val pdf = Pdf(
-                      0,
-                      unitPath.split('/').toString(),
-                      unitPath,
-                      Calendar.getInstance().time
-                    )
-                    providePdfDao(applicationContext).insertPdf(pdf)
-                    pdfs.add(pdf)
-                    break
+                    flag=1;
                   }
                 }
+              }
+              if(flag==1) {
+                storePdf(unitPath, fileStrings)
+                Log.d("path - service", unitPath)
+                val pdfName = unitPath.split('/').toString()
+                providePdfDao(applicationContext).deletePdfByname(pdfName)
+                val pdf = Pdf(
+                  0,
+                  unitPath.split('/').toString(),
+                  unitPath,
+                  Calendar.getInstance().time
+                )
+                providePdfDao(applicationContext).insertPdf(pdf)
+                pdfs.add(pdf)
               }
             }
           }
@@ -151,7 +155,7 @@ class UploadService : Service() {
       .build()
   }
 
-  private fun storePdf(unitPath: String) {
+  private fun storePdf(unitPath: String,fileStrings: MutableList<String>) {
     pdfHelper.storePdf(
       fileStrings,
       applicationContext.filesDir.toString() + unitPath,
