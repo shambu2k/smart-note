@@ -1,22 +1,21 @@
 package com.example.smartnote.fragments
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
-import androidx.work.Constraints
-import androidx.work.NetworkType
-import androidx.work.PeriodicWorkRequest
-import androidx.work.WorkManager
+import com.example.smartnote.AlertReceiver
 import com.example.smartnote.R
 import com.example.smartnote.SignInActivity
 import com.example.smartnote.UploadService
@@ -24,7 +23,6 @@ import com.example.smartnote.databinding.FragmentSettingsBinding
 import com.example.smartnote.db.Pdf
 import com.example.smartnote.helpers.Constants
 import com.example.smartnote.helpers.DriveServiceHelper
-import com.example.smartnote.helpers.UploadWorker
 import com.example.smartnote.helpers.viewLifecycle
 import com.example.smartnote.viewmodels.BackupViewModel
 import com.example.smartnote.viewmodels.BookViewModel
@@ -39,7 +37,6 @@ import com.google.api.services.drive.Drive
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -75,19 +72,19 @@ class SettingsFragment : Fragment() {
     binding.radioGrp.setOnCheckedChangeListener { group, checkedId ->
       when (checkedId) {
         R.id.daily -> {
-          backup(1)
+          backupAlarm(1)
         }
         R.id.weekly -> {
-          backup(7)
+          backupAlarm(7)
         }
         R.id.monthly -> {
-          backup(30)
+          backupAlarm(30)
         }
         R.id.none -> {
-          backup(0)
+          backupAlarm(0)
         }
         else -> {
-          backup(0)
+          backupAlarm(0)
         }
       }
       with(sharedPreferences.edit()) {
@@ -113,7 +110,6 @@ class SettingsFragment : Fragment() {
       signOut()
     }
     binding.uploadButton.setOnClickListener {
-      // uploadPdf()
       Toast.makeText(requireContext(), "Uploading...", Toast.LENGTH_LONG).show()
 
       val intent = Intent(activity, UploadService::class.java)
@@ -134,15 +130,6 @@ class SettingsFragment : Fragment() {
           apply()
         }
       }
-    }
-  }
-
-  private fun uploadPDF() {
-    Toast.makeText(requireContext(), "Uploading...", Toast.LENGTH_LONG).show()
-    val sharedPreferences = requireActivity().getPreferences(Context.MODE_PRIVATE)
-    val lastSyncedDate = Date(sharedPreferences.getLong(Constants.LAST_SYNCED_TIME, 0))
-    if (this::mPDFs.isInitialized) {
-      backupViewModel.uploadPDFs(mDriveServiceHelper, mPDFs, requireContext().filesDir.toString(), lastSyncedDate)
     }
   }
 
@@ -177,21 +164,28 @@ class SettingsFragment : Fragment() {
     }
   }
 
-  private fun backup(time: Long) {
-    context?.let { WorkManager.getInstance(it).cancelAllWork() }
-    val constraints = Constraints.Builder()
-      .setRequiredNetworkType(NetworkType.CONNECTED)
-      .setRequiresBatteryNotLow(true)
-      .setRequiresStorageNotLow(true)
-      .build()
-    if (time != 0L) {
-      Log.d("TIME", time.toString())
-      val period = time*24*60
-      val periodicWorkRequest = PeriodicWorkRequest
-        .Builder(UploadWorker::class.java, period, TimeUnit.MINUTES,5,TimeUnit.MINUTES)
-        .setConstraints(constraints)
-        .build()
-      context?.let { WorkManager.getInstance(it).enqueue(periodicWorkRequest) }
+  private fun backupAlarm(time: Long) {
+    cancelAlarm()
+    if (time == 0L) {
+      return
     }
+    val minutes = time*24*60
+    sharedPreferences.edit {
+      putLong("backup_period", minutes)
+      apply()
+    }
+    val c = Calendar.getInstance()
+    c.add(Calendar.MINUTE, minutes.toInt())
+    val alarmManager = requireActivity().getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    val intent = Intent(requireContext(), AlertReceiver::class.java)
+    val pendingIntent = PendingIntent.getBroadcast(requireContext(), 1, intent, 0)
+    alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.timeInMillis, pendingIntent)
+  }
+
+  private fun cancelAlarm() {
+    val alarmManager = requireActivity().getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    val intent = Intent(requireContext(), AlertReceiver::class.java)
+    val pendingIntent = PendingIntent.getBroadcast(requireContext(), 1, intent, 0)
+    alarmManager.cancel(pendingIntent);
   }
 }

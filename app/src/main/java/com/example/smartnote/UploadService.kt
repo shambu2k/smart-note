@@ -1,9 +1,6 @@
 package com.example.smartnote
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.Service
+import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -114,9 +111,25 @@ class UploadService : Service() {
           apply()
         }
       }
+      setNextAlarm()
       stopForeground(true)
       stopSelf()
     }
+  }
+
+  private fun setNextAlarm() {
+    val c = Calendar.getInstance()
+    val sharedPreferences = applicationContext.getSharedPreferences("shared_prefs", Context.MODE_PRIVATE)
+    val minutes = sharedPreferences.getLong("backup_period", 0L)
+    c.add(Calendar.MINUTE, minutes.toInt())
+    val alarmManager = applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    val intent = Intent(applicationContext, AlertReceiver::class.java)
+    val pendingIntent = PendingIntent.getBroadcast(applicationContext, 1, intent, 0)
+    if (minutes == 0L) {
+      alarmManager.cancel(pendingIntent)
+      return
+    }
+    alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.timeInMillis, pendingIntent)
   }
 
   override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {

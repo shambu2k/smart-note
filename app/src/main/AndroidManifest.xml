@@ -38,6 +38,7 @@
             android:name=".UploadService"
             android:icon="@drawable/ic_baseline_backup_24"
             android:label="Files upload"/>
+        <receiver android:name=".AlertReceiver"/>
     </application>
 
 </manifest>
