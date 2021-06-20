@@ -6,6 +6,8 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,7 +21,19 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.mlkit.vision.common.InputImage;
+import com.google.mlkit.vision.text.Text;
+import com.google.mlkit.vision.text.TextRecognition;
+import com.google.mlkit.vision.text.TextRecognizer;
+import com.google.mlkit.vision.text.TextRecognizerOptions;
+
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by jhansi on 29/03/15.
@@ -85,6 +99,69 @@ public class ResultFragment extends Fragment {
         initRadioButtons();
     }
 
+    private int initText(Bitmap bitmap) {
+        InputImage image = InputImage.fromBitmap(bitmap,0);
+        TextRecognizer recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
+        final int[] ans = {0};
+        Task<Text> result =
+                recognizer.process(image)
+                        .addOnSuccessListener(new OnSuccessListener<Text>() {
+                            @Override
+                            public void onSuccess(Text visionText) {
+                                // Task completed successfully
+                                // ...
+                                Log.i("ocr","success");
+                                String resultText = visionText.getText();
+                                for (Text.TextBlock block : visionText.getTextBlocks()) {
+                                    int lineNo=0;
+                                    boolean flag=false;
+                                    for (Text.Line line : block.getLines()) {
+
+                                        for (Text.Element element : line.getElements()) {
+                                            String elementText = element.getText();
+                                            char[] chars = elementText.toCharArray();
+
+                                            for(char c : chars){
+                                                if(Character.isDigit(c)){
+                                                    if(lineNo==0) {
+                                                        ans[0] += (10 * (c - '0'));
+                                                        Log.i("ocrRes",Integer.toString(ans[0]));
+                                                        lineNo=1;
+                                                    }
+                                                    else if(lineNo==1){
+                                                        ans[0]+=(c-'0');
+                                                        setRadioButtons(ans[0]);
+                                                        Log.i("ocrRes",Integer.toString(ans[0]));
+                                                        flag=true;
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                            if(flag)
+                                                break;
+                                            Log.i("ocr",elementText);
+                                        }
+                                        if(flag)
+                                            break;
+                                    }
+                                    if(flag)
+                                        break;
+                                }
+                            }
+                        })
+                        .addOnFailureListener(
+                                new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        // Task failed with an exception
+                                        // ...
+                                        Log.i("ocr","failed");
+                                    }
+                                });
+        return ans[0];
+
+    }
+
     private Bitmap getBitmap() {
         Uri uri = getUri();
         try {
@@ -115,8 +192,10 @@ public class ResultFragment extends Fragment {
             @Override
             public void run() {
                 try {
-                    int r = ((ScanActivity) getActivity()).getSubjectUnit(original);
-                    setRadioButtons(r);
+                    //int r = ((ScanActivity) getActivity()).getSubjectUnit(original);
+                    int r = initText(original);
+                    Log.i("ocrRadio",Integer.toString(r));
+                   // setRadioButtons(r);
                     dismissDialog();
                 } catch (final OutOfMemoryError e) {
                     getActivity().runOnUiThread(new Runnable() {
@@ -370,5 +449,22 @@ public class ResultFragment extends Fragment {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        // CREATE A MATRIX FOR THE MANIPULATION
+        Matrix matrix = new Matrix();
+        // RESIZE THE BIT MAP
+        matrix.postScale(scaleWidth, scaleHeight);
+
+        // "RECREATE" THE NEW BITMAP
+        Bitmap resizedBitmap = Bitmap.createBitmap(
+                bm, 0, 0, width, height, matrix, false);
+        bm.recycle();
+        return resizedBitmap;
     }
 }
