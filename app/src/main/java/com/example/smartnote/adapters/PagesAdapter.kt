@@ -1,10 +1,14 @@
 package com.example.smartnote.adapters
 
+import android.app.Dialog
+import android.graphics.BitmapFactory
 import android.view.*
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartnote.MainActivity
 import com.example.smartnote.R
 import com.example.smartnote.databinding.PageItemBinding
+import com.jsibbold.zoomage.ZoomageView
 import com.squareup.picasso.Picasso
 import java.io.File
 
@@ -46,6 +50,15 @@ class PagesAdapter(var listImages: MutableList<String>, private var activity: Ma
     holder.binding.pageBg.setOnClickListener {
       if (multiselect)
         selectItem(holder, listImages[position])
+      else{
+        val pageDialog = Dialog(activity,android.R.style.Theme_Material_Light_NoActionBar_Fullscreen)
+        pageDialog.window?.requestFeature(Window.FEATURE_NO_TITLE)
+        val view = activity.layoutInflater.inflate(R.layout.dialog_image_view,null)
+        val bitmap = BitmapFactory.decodeFile(listImages[position])
+        view.findViewById<ZoomageView>(R.id.page_image).setImageBitmap(bitmap)
+        pageDialog.setContentView(view)
+        pageDialog.show()
+      }
     }
   }
 

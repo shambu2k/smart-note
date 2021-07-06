@@ -22,7 +22,7 @@ class BookViewModel @ViewModelInject constructor(
 
   val books = bookRepository.books
   val book = MutableLiveData<Book>()
-
+  val recentpdfs = bookRepository.pdfs
   private val allSubjectGrids: LiveData<List<SubjectGrid>> = bookRepository.getAllSubjectGrids()
 
   private val scope = CoroutineScope(Dispatchers.IO + viewModelJob)
@@ -117,6 +117,9 @@ class BookViewModel @ViewModelInject constructor(
 
   fun getAllPDFs(): LiveData<List<Pdf>> {
     return bookRepository.getAllPDFs()
+  }
+  fun getRecPdfs(): LiveData<List<Pdf>>{
+    return bookRepository.getRecPdfs()
   }
 
   fun insertPdf(pdf: Pdf) {

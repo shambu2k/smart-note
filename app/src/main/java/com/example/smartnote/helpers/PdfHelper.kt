@@ -75,6 +75,19 @@ class PdfHelper @Inject constructor() {
     return list
   }
 
+  fun getFirstImage(folderPath: String,context: Context) : File? {
+    var file: File? = null
+    val fileSystemHelper = FileSystemHelper(context)
+    runBlocking(Dispatchers.IO) {
+      try{
+        file = fileSystemHelper.getFirstImage(folderPath)
+      }catch (e: Exception){
+        e.stackTrace
+      }
+    }
+    return file
+  }
+
   private fun scale(bitmap: Bitmap, maxWidth: Int, maxHeight: Int): Bitmap {
     // Determine the constrained dimension, which determines both dimensions.
     val width: Int

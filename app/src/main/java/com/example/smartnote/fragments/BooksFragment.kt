@@ -1,6 +1,7 @@
 package com.example.smartnote.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,23 +12,34 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartnote.adapters.BooksAdapter
+import com.example.smartnote.adapters.RecentPdfsAdapter
 import com.example.smartnote.databinding.FragmentBooksBinding
 import com.example.smartnote.db.Book
+import com.example.smartnote.db.Pdf
 import com.example.smartnote.helpers.viewLifecycle
 import com.example.smartnote.viewmodels.BookViewModel
+import com.example.smartnote.viewmodels.FileViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class BooksFragment : Fragment() {
   private var binding by viewLifecycle<FragmentBooksBinding>()
   private var books: List<Book> = listOf()
+  private var pdfs: List<Pdf> = listOf()
+  private var images: List<String> = listOf()
 
   // recycler_view
   private lateinit var recyclerView: RecyclerView
   private lateinit var adapter: BooksAdapter
+  private lateinit var recentView: RecyclerView
+  private lateinit var recentPdfsAdapter: RecentPdfsAdapter
 
   private val viewModel: BookViewModel by lazy {
     ViewModelProvider(requireActivity()).get(BookViewModel::class.java)
+  }
+
+  private val fileViewModel: FileViewModel by lazy {
+    ViewModelProvider(requireActivity()).get(FileViewModel::class.java)
   }
 
   override fun onCreateView(
@@ -46,6 +58,7 @@ class BooksFragment : Fragment() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     setUpRecyclerView()
+
   }
 
   private fun setUpRecyclerView() {
@@ -53,6 +66,11 @@ class BooksFragment : Fragment() {
     recyclerView = binding.recyclerView
     recyclerView.layoutManager = LinearLayoutManager(activity)
     recyclerView.adapter = adapter
+
+    recentPdfsAdapter = RecentPdfsAdapter(pdfs,images)
+    recentView = binding.recentRecyclerView
+    recentView.layoutManager = LinearLayoutManager(activity,LinearLayoutManager.HORIZONTAL,false)
+    recentView.adapter = recentPdfsAdapter
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,5 +84,31 @@ class BooksFragment : Fragment() {
         }
       }
     )
+    try {
+      viewModel.getRecPdfs().observe(
+        this,
+        Observer { pdfs ->
+          this.pdfs = pdfs
+          val fileStrings = mutableListOf<String>()
+          for (curr in pdfs) {
+            val file = activity?.let { fileViewModel.getFirstImage(curr.location, it) }
+            fileStrings.add(file!!.path)
+          }
+          this.images = fileStrings
+          Log.i("size", pdfs.size.toString())
+          recentPdfsAdapter.refresh(this.pdfs, this.images)
+        }
+      )
+    }catch (e:Exception){
+      e.stackTrace
+    }
+
+
+
+
+
+
+
+
   }
 }

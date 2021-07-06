@@ -29,4 +29,7 @@ interface PdfDao {
 
   @Query("SELECT * FROM pdf_locations_table where pdf_name=:name")
   suspend fun getPdfByName(name: String): List<Pdf>
+
+  @Query("SELECT * FROM pdf_locations_table ORDER BY pdf_upload_time DESC LIMIT 6")
+  fun getRecentPdfs() : LiveData<List<Pdf>>
 }

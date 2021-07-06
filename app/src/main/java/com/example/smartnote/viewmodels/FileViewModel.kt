@@ -42,6 +42,9 @@ class FileViewModel @ViewModelInject constructor(
   fun getFiles(folderPath: String, context: Context): Array<File>? {
     return pdfHelper.getFiles(folderPath, context)
   }
+  fun getFirstImage(folderPath: String,context: Context): File?{
+    return pdfHelper.getFirstImage(folderPath,context)
+  }
   fun storePdf(paths: List<String>, outPath: String, fileName: String) {
     pdfHelper.storePdf(paths, outPath, fileName)
   }
