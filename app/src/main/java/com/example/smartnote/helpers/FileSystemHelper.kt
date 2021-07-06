@@ -43,6 +43,19 @@ class FileSystemHelper(@ApplicationContext var context: Context) {
     return path.listFiles()
   }
 
+  suspend fun getFirstImage(folderPath: String): File? {
+    val path = File(context.filesDir.toString() + folderPath)
+    val list = path.listFiles()
+    if (list != null && list.size > 0) {
+      for (currentFile in list) {
+        if (currentFile.name.endsWith(".jpeg")) {
+          return currentFile
+        }
+      }
+    }
+    return list[0]
+  }
+
   suspend fun deleteFile(fileName: String) {
     val file = File(fileName)
     if (file.exists()) {
