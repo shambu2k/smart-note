@@ -38,6 +38,7 @@ class BookViewModel @ViewModelInject constructor(
       bookRepository.updateBook(book)
     }
   }
+
   fun deleteBook(book: Book) {
     scope.launch {
       bookRepository.deleteBook(book)
@@ -87,6 +88,17 @@ class BookViewModel @ViewModelInject constructor(
     return bookRepository.getBook(id)
   }
 
+  fun getSubjectNumber(bookName: String, subjectName: String): Int {
+    var book: Book?
+    runBlocking(Dispatchers.IO) {
+      book = bookRepository.getBookWithName(bookName)
+    }
+    if (book == null) {
+      return 0
+    }
+    return book!!.subjects.indexOf(subjectName) + 1
+  }
+
   fun getSubjectFolderPath(bookName: String, subNo: Int): String {
     var sub: List<SubjectGrid>? = null
     runBlocking(Dispatchers.IO) {
@@ -124,6 +136,7 @@ class BookViewModel @ViewModelInject constructor(
       bookRepository.insertPdf(pdf)
     }
   }
+
   fun deletePdfByName(name: String) {
     scope.launch {
       bookRepository.deletePdf(name)
