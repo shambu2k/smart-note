@@ -91,6 +91,7 @@ class UploadService : Service() {
         }
       }
       val totalPdfs = pdfs.size
+      val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
       pdfs.forEachIndexed { index, pdf ->
         if (pdf.time.after(lastSyncedDate)) {
           notif =
@@ -100,7 +101,6 @@ class UploadService : Service() {
               .setSmallIcon(R.drawable.ic_baseline_backup_24)
               .setOngoing(true)
               .build()
-          val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
           notificationManager.notify(1, notif)
           Log.i("Backup", "$basePath${pdf.location}/${pdf.name}.pdf")
           backupRepository.uploadPDF(mDriveServiceHelper, "$basePath${pdf.location}/${pdf.name}.pdf")
@@ -116,6 +116,17 @@ class UploadService : Service() {
       }
       stopForeground(true)
       stopSelf()
+      with(sharedPreferences.edit()){
+        val currentDate = Calendar.getInstance().time.time
+        putLong("UPLOAD_TIME",currentDate)
+        apply()
+      }
+      notif =
+        NotificationCompat.Builder(baseContext, "upload_channel")
+          .setContentTitle("Synced your files")
+          .setSmallIcon(R.drawable.ic_baseline_backup_24)
+          .build()
+      notificationManager.notify(1, notif)
     }
   }
 
