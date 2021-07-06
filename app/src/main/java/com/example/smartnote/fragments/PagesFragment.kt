@@ -180,6 +180,11 @@ class PagesFragment : Fragment() {
       val preference = ScanConstants.OPEN_CAMERA
       val intent = Intent(requireContext(), ScanActivity::class.java)
       intent.putExtra(ScanConstants.OPEN_INTENT_PREFERENCE, preference)
+      intent.putExtra(
+        ScanConstants.SELECTED_SUBJECT,
+        bookViewModel.getSubjectNumber(args.bookName, args.subjectName)
+      )
+      intent.putExtra(ScanConstants.SELECTED_UNIT, args.unitNo)
       startActivityForResult(intent, Constants.SCANNER_REQUEST_CODE)
     }
   }

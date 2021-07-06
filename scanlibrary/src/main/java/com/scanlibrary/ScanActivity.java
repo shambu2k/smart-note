@@ -53,6 +53,8 @@ public class ScanActivity extends Activity implements IScanner, ComponentCallbac
         ResultFragment fragment = new ResultFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(ScanConstants.SCANNED_RESULT, uri);
+        bundle.putInt(ScanConstants.SELECTED_SUBJECT, getIntent().getIntExtra(ScanConstants.SELECTED_SUBJECT, 0));
+        bundle.putInt(ScanConstants.SELECTED_UNIT, getIntent().getIntExtra(ScanConstants.SELECTED_UNIT, 0));
         fragment.setArguments(bundle);
         android.app.FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

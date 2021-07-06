@@ -6,8 +6,6 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
-import android.graphics.Point;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -33,6 +31,7 @@ import com.google.mlkit.vision.text.TextRecognizer;
 import com.google.mlkit.vision.text.TextRecognizerOptions;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -99,10 +98,13 @@ public class ResultFragment extends Fragment {
         initRadioButtons();
     }
 
-    private int initText(Bitmap bitmap) {
-        InputImage image = InputImage.fromBitmap(bitmap,0);
+    private void selectRadioButtons(Bitmap bitmap, final int selectedSubject, final int selectedUnit) {
+        if (selectedSubject != 0 && selectedUnit != 0) {
+            setRadioButtons(selectedSubject * 10 + selectedUnit);
+            return;
+        }
+        InputImage image = InputImage.fromBitmap(bitmap, 0);
         TextRecognizer recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
-        final int[] ans = {0};
         Task<Text> result =
                 recognizer.process(image)
                         .addOnSuccessListener(new OnSuccessListener<Text>() {
@@ -110,42 +112,44 @@ public class ResultFragment extends Fragment {
                             public void onSuccess(Text visionText) {
                                 // Task completed successfully
                                 // ...
-                                Log.i("ocr","success");
-                                String resultText = visionText.getText();
+                                Log.i("ocr", "success");
+                                List<Integer> list = new ArrayList<Integer>();
+                                outer:
                                 for (Text.TextBlock block : visionText.getTextBlocks()) {
-                                    int lineNo=0;
-                                    boolean flag=false;
                                     for (Text.Line line : block.getLines()) {
-
                                         for (Text.Element element : line.getElements()) {
-                                            String elementText = element.getText();
-                                            char[] chars = elementText.toCharArray();
-
-                                            for(char c : chars){
-                                                if(Character.isDigit(c)){
-                                                    if(lineNo==0) {
-                                                        ans[0] += (10 * (c - '0'));
-                                                        Log.i("ocrRes",Integer.toString(ans[0]));
-                                                        lineNo=1;
-                                                    }
-                                                    else if(lineNo==1){
-                                                        ans[0]+=(c-'0');
-                                                        setRadioButtons(ans[0]);
-                                                        Log.i("ocrRes",Integer.toString(ans[0]));
-                                                        flag=true;
-                                                        break;
+                                            for (char c : element.getText().toCharArray()) {
+                                                Log.i("ResultFragment", "Detected char: " + c);
+                                                if (Character.isDigit(c)) {
+                                                    list.add(c - '0');
+                                                    if (list.size() == 2) {
+                                                        break outer;
                                                     }
                                                 }
                                             }
-                                            if(flag)
-                                                break;
-                                            Log.i("ocr",elementText);
                                         }
-                                        if(flag)
-                                            break;
                                     }
-                                    if(flag)
-                                        break;
+                                }
+                                if (list.size() == 2) {
+                                    if (selectedSubject != 0) {
+                                        setRadioButtons(selectedSubject * 10 + list.get(1));
+                                    } else {
+                                        setRadioButtons(list.get(0) + list.get(1));
+                                    }
+                                } else if (list.size() == 1) {
+                                    if (selectedSubject != 0) {
+                                        if (selectedSubject == list.get(0)) {
+                                            setRadioButtons(selectedSubject * 10);
+                                        } else {
+                                            setRadioButtons(selectedSubject * 10 + list.get(0));
+                                        }
+                                    } else {
+                                        setRadioButtons(list.get(0) * 10);
+                                    }
+                                } else {
+                                    if (selectedSubject != 0) {
+                                        setRadioButtons(selectedSubject * 10);
+                                    }
                                 }
                             }
                         })
@@ -155,11 +159,9 @@ public class ResultFragment extends Fragment {
                                     public void onFailure(@NonNull Exception e) {
                                         // Task failed with an exception
                                         // ...
-                                        Log.i("ocr","failed");
+                                        Log.i("ocr", "failed");
                                     }
                                 });
-        return ans[0];
-
     }
 
     private Bitmap getBitmap() {
@@ -192,10 +194,11 @@ public class ResultFragment extends Fragment {
             @Override
             public void run() {
                 try {
-                    //int r = ((ScanActivity) getActivity()).getSubjectUnit(original);
-                    int r = initText(original);
-                    Log.i("ocrRadio",Integer.toString(r));
-                   // setRadioButtons(r);
+                    selectRadioButtons(
+                            original,
+                            getArguments().getInt(ScanConstants.SELECTED_SUBJECT, 0),
+                            getArguments().getInt(ScanConstants.SELECTED_UNIT, 0)
+                    );
                     dismissDialog();
                 } catch (final OutOfMemoryError e) {
                     getActivity().runOnUiThread(new Runnable() {
@@ -213,12 +216,14 @@ public class ResultFragment extends Fragment {
 
     private void setRadioButtons(int r) {
         Log.d("ResultFragment", "setRadioButtons int passed: " + r);
-        if(r<=55) {
-            if(r/10 != 0 && r%10 != 0) {
-                subjectRadioGroup.check(((RadioButton)subjectRadioGroup.getChildAt(r/10)).getId());
-                unitRadioGroup.check(((RadioButton)unitRadioGroup.getChildAt(r%10)).getId());
-            } else if(r/10 != 0 && r%10 == 0) subjectRadioGroup.check(((RadioButton)subjectRadioGroup.getChildAt(r/10)).getId());
-            else if(r/10 == 0 && r%10 != 0) unitRadioGroup.check(((RadioButton)unitRadioGroup.getChildAt(r%10)).getId());
+        if (r <= 55) {
+            if (r / 10 != 0 && r % 10 != 0) {
+                subjectRadioGroup.check(((RadioButton) subjectRadioGroup.getChildAt(r / 10)).getId());
+                unitRadioGroup.check(((RadioButton) unitRadioGroup.getChildAt(r % 10)).getId());
+            } else if (r / 10 != 0 && r % 10 == 0)
+                subjectRadioGroup.check(((RadioButton) subjectRadioGroup.getChildAt(r / 10)).getId());
+            else if (r / 10 == 0 && r % 10 != 0)
+                unitRadioGroup.check(((RadioButton) unitRadioGroup.getChildAt(r % 10)).getId());
         }
     }
 
@@ -272,7 +277,7 @@ public class ResultFragment extends Fragment {
     private class DoneButtonClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            if(subjectRadioGroup.getCheckedRadioButtonId() == -1 && unitRadioGroup.getCheckedRadioButtonId() == -1) {
+            if (subjectRadioGroup.getCheckedRadioButtonId() == -1 && unitRadioGroup.getCheckedRadioButtonId() == -1) {
                 Toast.makeText(getActivity(), "Check the radioButtons", Toast.LENGTH_SHORT).show();
             } else {
                 showProgressDialog(getResources().getString(R.string.loading));
@@ -290,7 +295,7 @@ public class ResultFragment extends Fragment {
                             Uri uri = Utils.getUri(getActivity(), bitmap);
                             data.putExtra(ScanConstants.SCANNED_RESULT, uri);
                             data.putExtra(ScanConstants.SCANNED_SUB, subjectRadioGroup.indexOfChild(subRadioButton));
-                            data.putExtra(ScanConstants.SCANNED_UNIT, unitRadioGroup.indexOfChild(unitRadioButton)  );
+                            data.putExtra(ScanConstants.SCANNED_UNIT, unitRadioGroup.indexOfChild(unitRadioButton));
                             getActivity().setResult(Activity.RESULT_OK, data);
                             original.recycle();
                             System.gc();
@@ -442,7 +447,7 @@ public class ResultFragment extends Fragment {
     private Bitmap rotateBitmap(final int degrees, Bitmap bitMapOrg) {
         try {
             Matrix matrix = new Matrix();
-            matrix.postRotate(degrees, bitMapOrg.getWidth()/2, bitMapOrg.getHeight()/2);
+            matrix.postRotate(degrees, bitMapOrg.getWidth() / 2, bitMapOrg.getHeight() / 2);
             Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitMapOrg, bitMapOrg.getWidth(), bitMapOrg.getHeight(), true);
             return Bitmap.createBitmap(scaledBitmap, 0, 0, scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix, true);
         } catch (Exception e) {
