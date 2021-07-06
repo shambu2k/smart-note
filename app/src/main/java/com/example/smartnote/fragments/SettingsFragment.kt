@@ -38,6 +38,7 @@ import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.drive.Drive
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -72,7 +73,12 @@ class SettingsFragment : Fragment() {
     sharedPreferences = requireActivity().getSharedPreferences("shared_prefs", Context.MODE_PRIVATE)
     val index = sharedPreferences.getInt("settings", 3)
     binding.radioGrp.check(binding.radioGrp.getChildAt(index).id)
+    updateText()
     binding.radioGrp.setOnCheckedChangeListener { group, checkedId ->
+      with(sharedPreferences.edit()) {
+        putInt("settings", binding.radioGrp.indexOfChild(binding.radioGrp.findViewById(binding.radioGrp.checkedRadioButtonId)))
+        apply()
+      }
       when (checkedId) {
         R.id.daily -> {
           backup(1)
@@ -90,12 +96,41 @@ class SettingsFragment : Fragment() {
           backup(0)
         }
       }
-      with(sharedPreferences.edit()) {
-        putInt("settings", binding.radioGrp.indexOfChild(binding.radioGrp.findViewById(binding.radioGrp.checkedRadioButtonId)))
-        apply()
-      }
     }
     return binding.root
+  }
+
+  private fun updateText() {
+    val index = sharedPreferences.getInt("settings", 3)
+    var date = Date(sharedPreferences.getLong("UPLOAD_TIME", 0))
+    val c = Calendar.getInstance()
+    c.time = date
+    var isnone = false
+    when (index) {
+      0 -> {
+        c.add(Calendar.DAY_OF_MONTH,1)
+        date = c.time
+      }
+      1 -> {
+        c.add(Calendar.WEEK_OF_MONTH,1)
+        date = c.time
+      }
+      2 -> {
+        c.add(Calendar.MONTH,1)
+        date = c.time
+      }
+      R.id.none -> {
+        isnone = true
+      }
+      else -> {
+        isnone = true
+      }
+    }
+    val text = "Your files will be synced again on " + SimpleDateFormat("dd/MM/yyyy hh:mm aa",Locale.getDefault()).format(date)
+    binding.uploadDetails.text = text
+    if(isnone){
+      binding.uploadDetails.text = "Please set your choice for syncing the files with drive!"
+    }
   }
 
   override fun onStart() {
@@ -113,12 +148,18 @@ class SettingsFragment : Fragment() {
       signOut()
     }
     binding.uploadButton.setOnClickListener {
+      with(sharedPreferences.edit()) {
+        val currentDate = Calendar.getInstance().time.time
+        putLong("UPLOAD_TIME", currentDate)
+        apply()
+      }
       // uploadPdf()
       Toast.makeText(requireContext(), "Uploading...", Toast.LENGTH_LONG).show()
 
       val intent = Intent(activity, UploadService::class.java)
       activity?.let { it1 -> ContextCompat.startForegroundService(it1, intent) }
       activity?.startService(intent)
+      updateText()
     }
 
     booksViewModel.getAllPDFs().observe(viewLifecycleOwner) {
@@ -178,6 +219,12 @@ class SettingsFragment : Fragment() {
   }
 
   private fun backup(time: Long) {
+    with(sharedPreferences.edit()) {
+      val currentDate = Calendar.getInstance().time.time
+      putLong("UPLOAD_TIME", currentDate)
+      apply()
+      updateText()
+    }
     context?.let { WorkManager.getInstance(it).cancelAllWork() }
     val constraints = Constraints.Builder()
       .setRequiredNetworkType(NetworkType.CONNECTED)
