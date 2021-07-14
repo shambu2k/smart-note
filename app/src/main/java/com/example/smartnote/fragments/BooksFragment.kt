@@ -69,10 +69,19 @@ class BooksFragment : Fragment() {
 
     recentsText = binding.recentsText
     emptyView = binding.emptyView
-    emptyView.visibility = View.VISIBLE
 
-    recentsText.visibility = View.GONE
-    recyclerView.visibility = View.GONE
+    if(books.isEmpty()){
+      emptyView.visibility = View.VISIBLE
+      recyclerView.visibility = View.GONE
+    }else{
+      emptyView.visibility = View.GONE
+      recyclerView.visibility = View.VISIBLE
+    }
+
+    if(pdfs.isEmpty())
+      recentsText.visibility = View.GONE
+    else
+      recentsText.visibility = View.VISIBLE
 
     recyclerView.layoutManager = LinearLayoutManager(activity)
     recyclerView.adapter = adapter
