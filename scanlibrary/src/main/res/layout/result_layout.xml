@@ -6,7 +6,6 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/topBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical">
@@ -58,14 +57,9 @@
     <FrameLayout
         android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_gravity="center"
         android:layout_margin="@dimen/scanPadding">
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -78,16 +72,7 @@
             android:layout_gravity="center"
             android:layout_margin="@dimen/scanPadding" />
 
-                <ImageView
-                    android:id="@+id/processedImage"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginBottom="0dp"
-                    android:src="@drawable/camera" />
-
             </RelativeLayout>
-        </ScrollView>
     </FrameLayout>
 
     <RadioGroup
@@ -104,27 +89,22 @@
             android:textColor="@color/blue"/>
 
         <RadioButton
-            android:id="@+id/sub_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:buttonTint="@color/blue"/>
         <RadioButton
-            android:id="@+id/sub_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:buttonTint="@color/blue"/>
         <RadioButton
-            android:id="@+id/sub_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:buttonTint="@color/blue"/>
         <RadioButton
-            android:id="@+id/sub_4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:buttonTint="@color/blue"/>
         <RadioButton
-            android:id="@+id/sub_5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:buttonTint="@color/blue"/>
@@ -144,34 +124,28 @@
             android:textColor="@color/blue"/>
 
         <RadioButton
-            android:id="@+id/unit_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:buttonTint="@color/blue"/>
         <RadioButton
-            android:id="@+id/unit_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:buttonTint="@color/blue"/>
         <RadioButton
-            android:id="@+id/unit_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:buttonTint="@color/blue"/>
         <RadioButton
-            android:id="@+id/unit_4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:buttonTint="@color/blue"/>
         <RadioButton
-            android:id="@+id/unit_5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:buttonTint="@color/blue"/>
     </RadioGroup>
 
     <LinearLayout
-        android:id="@+id/bottomBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical">

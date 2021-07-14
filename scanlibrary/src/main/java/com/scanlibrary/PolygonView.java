@@ -21,7 +21,7 @@ import java.util.Map;
  */
 public class PolygonView extends FrameLayout {
 
-    protected Context context;
+    protected final Context context;
     private Paint paint;
     private ImageView pointer1;
     private ImageView pointer2;
@@ -94,7 +94,7 @@ public class PolygonView extends FrameLayout {
 
     public Map<Integer, PointF> getPoints() {
 
-        List<PointF> points = new ArrayList<PointF>();
+        List<PointF> points = new ArrayList<>();
         points.add(new PointF(pointer1.getX(), pointer1.getY()));
         points.add(new PointF(pointer2.getX(), pointer2.getY()));
         points.add(new PointF(pointer3.getX(), pointer3.getY()));
@@ -178,11 +178,11 @@ public class PolygonView extends FrameLayout {
 
     private class MidPointTouchListenerImpl implements OnTouchListener {
 
-        PointF DownPT = new PointF(); // Record Mouse Position When Pressed Down
+        final PointF DownPT = new PointF(); // Record Mouse Position When Pressed Down
         PointF StartPT = new PointF(); // Record Start Position of 'img'
 
-        private ImageView mainPointer1;
-        private ImageView mainPointer2;
+        private final ImageView mainPointer1;
+        private final ImageView mainPointer2;
 
         public MidPointTouchListenerImpl(ImageView mainPointer1, ImageView mainPointer2) {
             this.mainPointer1 = mainPointer1;
@@ -227,7 +227,7 @@ public class PolygonView extends FrameLayout {
                     StartPT = new PointF(v.getX(), v.getY());
                     break;
                 case MotionEvent.ACTION_UP:
-                    int color = 0;
+                    int color;
                     if (isValidShape(getPoints())) {
                         color = getResources().getColor(R.color.blue);
                     } else {
@@ -254,7 +254,7 @@ public class PolygonView extends FrameLayout {
 
     private class TouchListenerImpl implements OnTouchListener {
 
-        PointF DownPT = new PointF(); // Record Mouse Position When Pressed Down
+        final PointF DownPT = new PointF(); // Record Mouse Position When Pressed Down
         PointF StartPT = new PointF(); // Record Start Position of 'img'
 
         @Override
@@ -275,7 +275,7 @@ public class PolygonView extends FrameLayout {
                     StartPT = new PointF(v.getX(), v.getY());
                     break;
                 case MotionEvent.ACTION_UP:
-                    int color = 0;
+                    int color;
                     if (isValidShape(getPoints())) {
                         color = getResources().getColor(R.color.blue);
                     } else {

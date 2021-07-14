@@ -1,7 +1,7 @@
 package com.example.smartnote.helpers
 
 import androidx.room.TypeConverter
-import java.util.*
+import java.util.Date
 
 class Converter {
   @TypeConverter
@@ -19,6 +19,6 @@ class Converter {
 
   @TypeConverter
   fun dateToTimestamp(date: Date?): Long? {
-    return date?.time?.toLong()
+    return date?.time
   }
 }

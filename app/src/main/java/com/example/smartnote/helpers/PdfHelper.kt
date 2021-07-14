@@ -1,7 +1,11 @@
 package com.example.smartnote.helpers
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
+import android.graphics.Paint
 import android.graphics.pdf.PdfDocument
 import android.util.Log
 import com.example.smartnote.helpers.Constants.PDF_PAGE_HEIGHT
@@ -15,7 +19,7 @@ import kotlin.math.roundToInt
 
 class PdfHelper @Inject constructor() {
 
-  suspend fun createPdfFromImages(
+  private suspend fun createPdfFromImages(
     paths: List<String>,
     outPath: String, // No need to append slash at the end here!
     fileName: String
@@ -75,13 +79,13 @@ class PdfHelper @Inject constructor() {
     return list
   }
 
-  fun getFirstImage(folderPath: String,context: Context) : File? {
+  fun getFirstImage(folderPath: String, context: Context): File? {
     var file: File? = null
     val fileSystemHelper = FileSystemHelper(context)
     runBlocking(Dispatchers.IO) {
-      try{
+      try {
         file = fileSystemHelper.getFirstImage(folderPath)
-      }catch (e: Exception){
+      } catch (e: Exception) {
         e.stackTrace
       }
     }

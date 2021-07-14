@@ -10,7 +10,7 @@ import com.example.smartnote.fragments.UnitsFragmentDirections
 class UnitsAdapter(private val bookName: String, private var subjectPath: String, private var subjectName: String) : RecyclerView.Adapter<UnitsAdapter.UnitsViewHolder>() {
   class UnitsViewHolder(b: UnitItemBinding) : RecyclerView.ViewHolder(b.root) {
     var binding = b
-    var unitTextView = binding.textViewUnitName
+    private var unitTextView = binding.textViewUnitName
     fun bind(unitName: String) {
       unitTextView.text = unitName
     }

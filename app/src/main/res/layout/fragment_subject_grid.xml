@@ -15,7 +15,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginRight="16dp"
-        android:hint="Book">
+        android:hint="@string/book">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_text_book_name"
@@ -32,7 +32,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginRight="16dp"
-        android:hint="Subject One">
+        android:hint="@string/subject_one">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_text_subject_one"
@@ -49,7 +49,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginRight="16dp"
-        android:hint="Subject Two">
+        android:hint="@string/subject_two">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_text_subject_two"
@@ -66,7 +66,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginRight="16dp"
-        android:hint="Subject Three">
+        android:hint="@string/subject_three">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_text_subject_three"
@@ -83,7 +83,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginRight="16dp"
-        android:hint="Subject Four">
+        android:hint="@string/subject_four">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_text_subject_four"
@@ -100,7 +100,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginRight="16dp"
-        android:hint="Subject Five">
+        android:hint="@string/subject_five">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_text_subject_five"
@@ -115,6 +115,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="16dp"
-        android:text="Add Book" />
+        android:text="@string/add_book" />
 
 </LinearLayout>

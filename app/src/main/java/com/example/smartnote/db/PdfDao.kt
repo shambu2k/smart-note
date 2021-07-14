@@ -1,7 +1,11 @@
 package com.example.smartnote.db
 
 import androidx.lifecycle.LiveData
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.Update
+import androidx.room.Delete
+import androidx.room.Query
 
 @Dao
 interface PdfDao {
@@ -27,9 +31,6 @@ interface PdfDao {
   @Query("DELETE FROM pdf_locations_table where pdf_name=:name")
   suspend fun deletePdfByname(name: String)
 
-  @Query("SELECT * FROM pdf_locations_table where pdf_name=:name")
-  suspend fun getPdfByName(name: String): List<Pdf>
-
   @Query("SELECT * FROM pdf_locations_table ORDER BY pdf_upload_time DESC LIMIT 6")
-  fun getRecentPdfs() : LiveData<List<Pdf>>
+  fun getRecentPdfs(): LiveData<List<Pdf>>
 }

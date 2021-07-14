@@ -36,8 +36,6 @@ import java.util.Date;
 public class PickImageFragment extends Fragment {
 
     private View view;
-    private ImageButton cameraButton;
-    private ImageButton galleryButton;
     private Uri fileUri;
     private IScanner scanner;
     private static final int MY_CAMERA_REQUEST_CODE = 100;
@@ -59,9 +57,9 @@ public class PickImageFragment extends Fragment {
     }
 
     private void init() {
-        cameraButton = (ImageButton) view.findViewById(R.id.cameraButton);
+        ImageButton cameraButton = view.findViewById(R.id.cameraButton);
         cameraButton.setOnClickListener(new CameraButtonClickListener());
-        galleryButton = (ImageButton) view.findViewById(R.id.selectButton);
+        ImageButton galleryButton = view.findViewById(R.id.selectButton);
         galleryButton.setOnClickListener(new GalleryClickListener());
         if (isIntentPreferenceSet()) {
             handleIntentPreference();
@@ -191,7 +189,7 @@ public class PickImageFragment extends Fragment {
     private Bitmap getBitmap(Uri selectedimg) throws IOException {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = 3;
-        AssetFileDescriptor fileDescriptor = null;
+        AssetFileDescriptor fileDescriptor;
         fileDescriptor =
                 getActivity().getContentResolver().openAssetFileDescriptor(selectedimg, "r");
         Bitmap original

@@ -39,31 +39,15 @@ import java.util.List;
  */
 public class ResultFragment extends Fragment {
 
-    // TODO: Refine detection after getting finalized page.
-
     private View view;
     private ImageView scannedImageView;
-    private ImageView processedImgV;
     private Bitmap original;
-    private Button originalButton;
-    private Button MagicColorButton;
-    private Button grayModeButton;
-    private Button bwButton;
-    private Button exitButton;
-    private Button rotateLeftButton;
-    private Button rotateRightButton;
-    private Button doneButton;
     private RadioGroup subjectRadioGroup;
     private RadioButton subRadioButton;
     private RadioGroup unitRadioGroup;
     private RadioButton unitRadioButton;
     private Bitmap transformed;
-    private Bitmap processed;
     private static ProgressDialogFragment progressDialogFragment;
-
-    public ResultFragment() {
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -73,27 +57,26 @@ public class ResultFragment extends Fragment {
     }
 
     private void init() {
-        scannedImageView = (ImageView) view.findViewById(R.id.scannedImage);
-        processedImgV = (ImageView) view.findViewById(R.id.processedImage);
-        originalButton = (Button) view.findViewById(R.id.original);
+        scannedImageView = view.findViewById(R.id.scannedImage);
+        Button originalButton = view.findViewById(R.id.original);
         originalButton.setOnClickListener(new OriginalButtonClickListener());
-        MagicColorButton = (Button) view.findViewById(R.id.magicColor);
-        MagicColorButton.setOnClickListener(new MagicColorButtonClickListener());
-        grayModeButton = (Button) view.findViewById(R.id.grayMode);
+        Button magicColorButton = view.findViewById(R.id.magicColor);
+        magicColorButton.setOnClickListener(new MagicColorButtonClickListener());
+        Button grayModeButton = view.findViewById(R.id.grayMode);
         grayModeButton.setOnClickListener(new GrayButtonClickListener());
-        bwButton = (Button) view.findViewById(R.id.BWMode);
+        Button bwButton = view.findViewById(R.id.BWMode);
         bwButton.setOnClickListener(new BWButtonClickListener());
         Bitmap bitmap = getBitmap();
         setScannedImage(bitmap);
-        exitButton = (Button) view.findViewById(R.id.exit_button);
+        Button exitButton = view.findViewById(R.id.exit_button);
         exitButton.setOnClickListener(new ExitButtonClickListener());
-        rotateLeftButton = (Button) view.findViewById(R.id.rotate_left);
+        Button rotateLeftButton = view.findViewById(R.id.rotate_left);
         rotateLeftButton.setOnClickListener(new RotateLeftButtonClickListener());
-        rotateRightButton = (Button) view.findViewById(R.id.rotate_right);
+        Button rotateRightButton = view.findViewById(R.id.rotate_right);
         rotateRightButton.setOnClickListener(new RotateRightButtonClickListener());
         subjectRadioGroup = view.findViewById(R.id.sub_grp);
         unitRadioGroup = view.findViewById(R.id.unit_grp);
-        doneButton = (Button) view.findViewById(R.id.done_button);
+        Button doneButton = view.findViewById(R.id.done_button);
         doneButton.setOnClickListener(new DoneButtonClickListener());
         initRadioButtons();
     }
@@ -113,7 +96,7 @@ public class ResultFragment extends Fragment {
                                 // Task completed successfully
                                 // ...
                                 Log.i("ocr", "success");
-                                List<Integer> list = new ArrayList<Integer>();
+                                List<Integer> list = new ArrayList<>();
                                 outer:
                                 for (Text.TextBlock block : visionText.getTextBlocks()) {
                                     for (Text.Line line : block.getLines()) {
@@ -183,9 +166,6 @@ public class ResultFragment extends Fragment {
 
     public void setScannedImage(Bitmap scannedImage) {
         scannedImageView.setImageBitmap(scannedImage);
-
-        processed = ((ScanActivity) getActivity()).getProcessedBitmap(original);
-        processedImgV.setImageBitmap(processed);
     }
 
     private void initRadioButtons() {
@@ -216,21 +196,25 @@ public class ResultFragment extends Fragment {
 
     private void setRadioButtons(int r) {
         Log.d("ResultFragment", "setRadioButtons int passed: " + r);
-        if (r <= 55) {
-            if (r / 10 != 0 && r % 10 != 0) {
-                subjectRadioGroup.check(((RadioButton) subjectRadioGroup.getChildAt(r / 10)).getId());
-                unitRadioGroup.check(((RadioButton) unitRadioGroup.getChildAt(r % 10)).getId());
-            } else if (r / 10 != 0 && r % 10 == 0)
-                subjectRadioGroup.check(((RadioButton) subjectRadioGroup.getChildAt(r / 10)).getId());
-            else if (r / 10 == 0 && r % 10 != 0)
-                unitRadioGroup.check(((RadioButton) unitRadioGroup.getChildAt(r % 10)).getId());
+        try {
+            if (r <= 55) {
+                if (r / 10 != 0 && r % 10 != 0) {
+                    subjectRadioGroup.check(subjectRadioGroup.getChildAt(r / 10).getId());
+                    unitRadioGroup.check(unitRadioGroup.getChildAt(r % 10).getId());
+                } else if (r / 10 != 0 && r % 10 == 0)
+                    subjectRadioGroup.check(subjectRadioGroup.getChildAt(r / 10).getId());
+                else if (r / 10 == 0 && r % 10 != 0)
+                    unitRadioGroup.check(unitRadioGroup.getChildAt(r % 10).getId());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     private class ExitButtonClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-
+            getActivity().getFragmentManager().popBackStack();
         }
     }
 
@@ -290,8 +274,8 @@ public class ResultFragment extends Fragment {
                             if (bitmap == null) {
                                 bitmap = original;
                             }
-                            subRadioButton = (RadioButton) view.findViewById(subjectRadioGroup.getCheckedRadioButtonId());
-                            unitRadioButton = (RadioButton) view.findViewById(unitRadioGroup.getCheckedRadioButtonId());
+                            subRadioButton = view.findViewById(subjectRadioGroup.getCheckedRadioButtonId());
+                            unitRadioButton = view.findViewById(unitRadioGroup.getCheckedRadioButtonId());
                             Uri uri = Utils.getUri(getActivity(), bitmap);
                             data.putExtra(ScanConstants.SCANNED_RESULT, uri);
                             data.putExtra(ScanConstants.SCANNED_SUB, subjectRadioGroup.indexOfChild(subRadioButton));

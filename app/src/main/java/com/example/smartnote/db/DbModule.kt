@@ -38,7 +38,11 @@ object DbModule {
   }
 
   @Provides
-  fun provideBookRepository(bookDao: BookDao, subjectDao: SubjectDao, unitDao: UnitDao, pdfDao: PdfDao) = BookRepository(bookDao, subjectDao, unitDao, pdfDao)
+  fun provideBookRepository(bookDao: BookDao, subjectDao: SubjectDao, unitDao: UnitDao, pdfDao: PdfDao) = BookRepository(
+    bookDao,
+    subjectDao,
+    pdfDao
+  )
 
   @Provides
   fun provideFileSystemHelper(@ApplicationContext appContext: Context) = FileSystemHelper(appContext)

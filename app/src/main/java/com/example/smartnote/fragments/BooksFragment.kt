@@ -34,8 +34,8 @@ class BooksFragment : Fragment() {
   private lateinit var adapter: BooksAdapter
   private lateinit var recentView: RecyclerView
   private lateinit var recentPdfsAdapter: RecentPdfsAdapter
-  private lateinit var recentsText : TextView
-  private lateinit var emptyView : TextView
+  private lateinit var recentsText: TextView
+  private lateinit var emptyView: TextView
 
   private val viewModel: BookViewModel by lazy {
     ViewModelProvider(requireActivity()).get(BookViewModel::class.java)
@@ -61,7 +61,6 @@ class BooksFragment : Fragment() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     setUpRecyclerView()
-
   }
 
   private fun setUpRecyclerView() {
@@ -78,9 +77,9 @@ class BooksFragment : Fragment() {
     recyclerView.layoutManager = LinearLayoutManager(activity)
     recyclerView.adapter = adapter
 
-    recentPdfsAdapter = RecentPdfsAdapter(pdfs,images)
+    recentPdfsAdapter = RecentPdfsAdapter(pdfs, images)
     recentView = binding.recentRecyclerView
-    recentView.layoutManager = LinearLayoutManager(activity,LinearLayoutManager.HORIZONTAL,false)
+    recentView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
     recentView.adapter = recentPdfsAdapter
   }
 
@@ -91,7 +90,7 @@ class BooksFragment : Fragment() {
       Observer { books ->
         books?.let {
           this.books = books
-          if(!this.books.isEmpty()){
+          if (this.books.isNotEmpty()) {
             emptyView.visibility = View.GONE
             recyclerView.visibility = View.VISIBLE
           }
@@ -104,7 +103,7 @@ class BooksFragment : Fragment() {
         this,
         Observer { pdfs ->
           this.pdfs = pdfs
-          if(!pdfs.isEmpty()){
+          if (pdfs.isNotEmpty()) {
             recentsText.visibility = View.VISIBLE
           }
           val fileStrings = mutableListOf<String>()
@@ -117,16 +116,8 @@ class BooksFragment : Fragment() {
           recentPdfsAdapter.refresh(this.pdfs, this.images)
         }
       )
-    }catch (e:Exception){
+    } catch (e: Exception) {
       e.stackTrace
     }
-
-
-
-
-
-
-
-
   }
 }

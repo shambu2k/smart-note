@@ -39,7 +39,10 @@ import com.google.api.services.drive.Drive
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
+import java.util.Date
+import java.util.Calendar
+import java.util.Collections
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -108,15 +111,15 @@ class SettingsFragment : Fragment() {
     var isnone = false
     when (index) {
       0 -> {
-        c.add(Calendar.DAY_OF_MONTH,1)
+        c.add(Calendar.DAY_OF_MONTH, 1)
         date = c.time
       }
       1 -> {
-        c.add(Calendar.WEEK_OF_MONTH,1)
+        c.add(Calendar.WEEK_OF_MONTH, 1)
         date = c.time
       }
       2 -> {
-        c.add(Calendar.MONTH,1)
+        c.add(Calendar.MONTH, 1)
         date = c.time
       }
       R.id.none -> {
@@ -126,9 +129,9 @@ class SettingsFragment : Fragment() {
         isnone = true
       }
     }
-    val text = "Your files will be synced again on " + SimpleDateFormat("dd/MM/yyyy hh:mm aa",Locale.getDefault()).format(date)
+    val text = "Your files will be synced again on " + SimpleDateFormat("dd/MM/yyyy hh:mm aa", Locale.getDefault()).format(date)
     binding.uploadDetails.text = text
-    if(isnone){
+    if (isnone) {
       binding.uploadDetails.text = "Please set your choice for syncing the files with drive!"
     }
   }
@@ -178,15 +181,6 @@ class SettingsFragment : Fragment() {
     }
   }
 
-  private fun uploadPDF() {
-    Toast.makeText(requireContext(), "Uploading...", Toast.LENGTH_LONG).show()
-    val sharedPreferences = requireActivity().getPreferences(Context.MODE_PRIVATE)
-    val lastSyncedDate = Date(sharedPreferences.getLong(Constants.LAST_SYNCED_TIME, 0))
-    if (this::mPDFs.isInitialized) {
-      backupViewModel.uploadPDFs(mDriveServiceHelper, mPDFs, requireContext().filesDir.toString(), lastSyncedDate)
-    }
-  }
-
   private fun signOut() {
     mGoogleSignInClient.signOut().addOnCompleteListener {
       Toast.makeText(requireContext(), "Signed out!", Toast.LENGTH_LONG).show()
@@ -233,9 +227,9 @@ class SettingsFragment : Fragment() {
       .build()
     if (time != 0L) {
       Log.d("TIME", time.toString())
-      val period = time*24*60
+      val period = time * 24 * 60
       val periodicWorkRequest = PeriodicWorkRequest
-        .Builder(UploadWorker::class.java, period, TimeUnit.MINUTES,5,TimeUnit.MINUTES)
+        .Builder(UploadWorker::class.java, period, TimeUnit.MINUTES, 5, TimeUnit.MINUTES)
         .setConstraints(constraints)
         .build()
       context?.let { WorkManager.getInstance(it).enqueue(periodicWorkRequest) }

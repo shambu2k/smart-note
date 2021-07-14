@@ -10,16 +10,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.smartnote.databinding.BookItemBinding
 import com.example.smartnote.db.Book
 import com.example.smartnote.fragments.BooksFragmentDirections
-import java.util.*
+import java.util.Locale
 
 class BooksAdapter(private var books: List<Book>) :
   RecyclerView.Adapter<BooksAdapter.BooksViewHolder>() {
 
   class BooksViewHolder(b: BookItemBinding) : RecyclerView.ViewHolder(b.root) {
     val binding = b
-    var bookImageTextView = binding.textViewImage
-    var bookTextView = binding.textViewBookName
-    var layout: LinearLayout = binding.linearLayout
+    private var bookImageTextView = binding.textViewImage
+    private var bookTextView = binding.textViewBookName
+    private var layout: LinearLayout = binding.linearLayout
     fun bind(book: Book) {
       (layout.background as GradientDrawable).setColor(Color.parseColor(book.colorString))
       var text: String
