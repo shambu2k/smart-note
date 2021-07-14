@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/black"
+    android:background="@android:color/white"
     android:orientation="vertical">
 
     <LinearLayout
@@ -15,9 +15,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@android:color/transparent"
+            android:background="@color/colorPrimaryDark"
             android:drawableTop="@drawable/ic_image"
-            android:text="Original"
+            android:text="@string/original"
+            android:textAllCaps="false"
             android:textColor="@android:color/white" />
 
         <Button
@@ -25,10 +26,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@android:color/transparent"
+            android:background="@color/colorPrimaryDark"
             android:drawableTop="@drawable/ic_enhamce_image"
             android:singleLine="true"
-            android:text="Magic color"
+            android:textAllCaps="false"
+            android:text="@string/magic_color"
             android:textColor="@android:color/white" />
 
         <Button
@@ -36,10 +38,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@android:color/transparent"
+            android:background="@color/colorPrimaryDark"
             android:drawableTop="@drawable/ic_gray"
             android:singleLine="true"
-            android:text="Gray Mode"
+            android:text="@string/gray_mode"
+            android:textAllCaps="false"
             android:textColor="@android:color/white" />
 
         <Button
@@ -47,10 +50,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@android:color/transparent"
+            android:background="@color/colorPrimaryDark"
             android:drawableTop="@drawable/ic_black_and_white"
             android:singleLine="true"
-            android:text="B and W"
+            android:text="@string/bandw"
+            android:textAllCaps="false"
             android:textColor="@android:color/white" />
     </LinearLayout>
 
@@ -85,29 +89,29 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Subject"
-            android:textColor="@color/blue"/>
+            android:text="@string/subject"
+            android:textColor="@color/colorPrimaryDark"/>
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:buttonTint="@color/blue"/>
+            android:buttonTint="@color/colorPrimaryDark"/>
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:buttonTint="@color/blue"/>
+            android:buttonTint="@color/colorPrimaryDark"/>
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:buttonTint="@color/blue"/>
+            android:buttonTint="@color/colorPrimaryDark"/>
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:buttonTint="@color/blue"/>
+            android:buttonTint="@color/colorPrimaryDark"/>
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:buttonTint="@color/blue"/>
+            android:buttonTint="@color/colorPrimaryDark"/>
     </RadioGroup>
 
     <RadioGroup
@@ -121,28 +125,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Unit      "
-            android:textColor="@color/blue"/>
+            android:textColor="@color/colorPrimaryDark"/>
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:buttonTint="@color/blue"/>
+            android:buttonTint="@color/colorPrimaryDark"/>
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:buttonTint="@color/blue"/>
+            android:buttonTint="@color/colorPrimaryDark"/>
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:buttonTint="@color/blue"/>
+            android:buttonTint="@color/colorPrimaryDark"/>
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:buttonTint="@color/blue"/>
+            android:buttonTint="@color/colorPrimaryDark"/>
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:buttonTint="@color/blue"/>
+            android:buttonTint="@color/colorPrimaryDark"/>
     </RadioGroup>
 
     <LinearLayout
@@ -155,9 +159,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@android:color/transparent"
+            android:background="@color/colorPrimaryDark"
             android:drawableTop="@drawable/ic_baseline_close_24"
-            android:text="Exit"
+            android:text="@string/exit"
+            android:textAllCaps="false"
             android:textColor="@android:color/white" />
 
         <Button
@@ -165,10 +170,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@android:color/transparent"
+            android:background="@color/colorPrimaryDark"
             android:drawableTop="@drawable/ic_baseline_rotate_left_24"
             android:singleLine="true"
-            android:text="Rotate left"
+            android:textAllCaps="false"
+            android:text="@string/rotate_left"
             android:textColor="@android:color/white" />
 
         <Button
@@ -176,10 +182,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@android:color/transparent"
+            android:textAllCaps="false"
+            android:background="@color/colorPrimaryDark"
             android:drawableTop="@drawable/ic_baseline_rotate_right_24"
             android:singleLine="true"
-            android:text="Rotate right"
+            android:text="@string/rotate_right"
             android:textColor="@android:color/white" />
 
         <Button
@@ -187,10 +194,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@android:color/transparent"
+            android:textAllCaps="false"
+            android:background="@color/colorPrimaryDark"
             android:drawableTop="@drawable/ic_baseline_check_24"
             android:singleLine="true"
-            android:text="Save"
+            android:text="@string/save"
             android:textColor="@android:color/white" />
     </LinearLayout>
 

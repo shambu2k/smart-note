@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/black"
+    android:background="@android:color/white"
     android:orientation="vertical">
 
     <Button
@@ -10,8 +10,9 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/bottom_background_color"
+        android:background="@color/colorPrimaryDark"
         android:orientation="horizontal"
+        android:textColor="@android:color/white"
         android:padding="@dimen/bottom_bar_padding"
         android:text="@string/scan" />
 
