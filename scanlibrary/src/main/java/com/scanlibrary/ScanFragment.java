@@ -20,7 +20,6 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +31,6 @@ import java.util.Map;
  */
 public class ScanFragment extends Fragment {
 
-    private Button scanButton;
     private ImageView sourceImageView;
     private FrameLayout sourceFrame;
     private PolygonView polygonView;
@@ -62,11 +60,11 @@ public class ScanFragment extends Fragment {
     }
 
     private void init() {
-        sourceImageView = (ImageView) view.findViewById(R.id.sourceImageView);
-        scanButton = (Button) view.findViewById(R.id.scanButton);
+        sourceImageView = view.findViewById(R.id.sourceImageView);
+        Button scanButton = view.findViewById(R.id.scanButton);
         scanButton.setOnClickListener(new ScanButtonClickListener());
-        sourceFrame = (FrameLayout) view.findViewById(R.id.sourceFrame);
-        polygonView = (PolygonView) view.findViewById(R.id.polygonView);
+        sourceFrame = view.findViewById(R.id.sourceFrame);
+        polygonView = view.findViewById(R.id.polygonView);
         sourceFrame.post(new Runnable() {
             @Override
             public void run() {
@@ -192,8 +190,6 @@ public class ScanFragment extends Fragment {
     }
 
     private Bitmap getScannedBitmap(Bitmap original, Map<Integer, PointF> points) {
-        int width = original.getWidth();
-        int height = original.getHeight();
         float xRatio = (float) original.getWidth() / sourceImageView.getWidth();
         float yRatio = (float) original.getHeight() / sourceImageView.getHeight();
 
@@ -212,7 +208,7 @@ public class ScanFragment extends Fragment {
 
     private class ScanAsyncTask extends AsyncTask<Void, Void, Bitmap> {
 
-        private Map<Integer, PointF> points;
+        private final Map<Integer, PointF> points;
 
         public ScanAsyncTask(Map<Integer, PointF> points) {
             this.points = points;

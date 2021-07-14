@@ -12,7 +12,7 @@ class SubjectsAdapter(private var book: Book) : RecyclerView.Adapter<SubjectsAda
 
   class SubjectsViewHolder(b: SubjectItemBinding) : RecyclerView.ViewHolder(b.root) {
     val binding = b
-    var subjectTextView = binding.textViewSubjectName
+    private var subjectTextView = binding.textViewSubjectName
     fun bind(subject: String) {
       subjectTextView.text = subject
     }
@@ -29,9 +29,13 @@ class SubjectsAdapter(private var book: Book) : RecyclerView.Adapter<SubjectsAda
   }
 
   override fun onBindViewHolder(holder: SubjectsViewHolder, position: Int) {
-    book.subjects.get(position).let { holder.bind(it) }
+    book.subjects[position].let { holder.bind(it) }
     holder.itemView.setOnClickListener {
-      it.findNavController().navigate(SubjectsFragmentDirections.actionSubjectsFragmentToUnitsFragment(book.subjectFolderPaths.get(position), book.subjects.get(position), book.name))
+      it.findNavController().navigate(
+        SubjectsFragmentDirections.actionSubjectsFragmentToUnitsFragment(
+          book.subjectFolderPaths[position], book.subjects[position], book.name
+        )
+      )
     }
   }
 

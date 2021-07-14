@@ -1,29 +1,28 @@
 package com.example.smartnote.viewmodels
 
 import android.util.Log
-import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.example.smartnote.db.Book
 import com.example.smartnote.db.BookRepository
 import com.example.smartnote.db.Pdf
 import com.example.smartnote.db.SubjectGrid
-import kotlinx.coroutines.*
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class BookViewModel @ViewModelInject constructor(
-  private val bookRepository: BookRepository,
-  @Assisted private val savedStateHandle: SavedStateHandle
+  private val bookRepository: BookRepository
 ) : ViewModel() {
 
   private val viewModelJob = SupervisorJob()
 
   val books = bookRepository.books
   val book = MutableLiveData<Book>()
-  val recentpdfs = bookRepository.pdfs
-  private val allSubjectGrids: LiveData<List<SubjectGrid>> = bookRepository.getAllSubjectGrids()
 
   private val scope = CoroutineScope(Dispatchers.IO + viewModelJob)
 
@@ -33,50 +32,10 @@ class BookViewModel @ViewModelInject constructor(
     }
   }
 
-  fun updateBook(book: Book) {
-    scope.launch {
-      bookRepository.updateBook(book)
-    }
-  }
-
-  fun deleteBook(book: Book) {
-    scope.launch {
-      bookRepository.deleteBook(book)
-    }
-  }
-
-  fun deleteAllBooks() {
-    scope.launch {
-      bookRepository.deleteAllBooks()
-    }
-  }
-
   fun insertSubjectGrid(subjectGrid: SubjectGrid) {
     scope.launch {
       bookRepository.insertSubjectGrid(subjectGrid)
     }
-  }
-
-  fun updateSubjectGrid(subjectGrid: SubjectGrid) {
-    scope.launch {
-      bookRepository.updateSubjectGrid(subjectGrid)
-    }
-  }
-
-  fun deleteSubjectGrid(subjectGrid: SubjectGrid) {
-    scope.launch {
-      bookRepository.deleteSubjectGrid(subjectGrid)
-    }
-  }
-
-  fun deleteAllSubjectGrids() {
-    scope.launch {
-      bookRepository.deleteAllSubjectGrids()
-    }
-  }
-
-  fun getAllSubjectGrids(): LiveData<List<SubjectGrid>> {
-    return allSubjectGrids
   }
 
   override fun onCleared() {
@@ -109,10 +68,10 @@ class BookViewModel @ViewModelInject constructor(
         Log.d("exc", e.message.toString())
       }
     }
-    if (sub == null) {
-      return "null"
+    return if (sub == null) {
+      "null"
     } else {
-      return when (subNo) {
+      when (subNo) {
         1 -> sub!![0].subjectOne
         2 -> sub!![0].subjectTwo
         3 -> sub!![0].subjectThree
@@ -123,14 +82,10 @@ class BookViewModel @ViewModelInject constructor(
     }
   }
 
-  fun getUnitFolderPath() {
-    // TODO(): unit number can be passed as parameters
-  }
-
   fun getAllPDFs(): LiveData<List<Pdf>> {
     return bookRepository.getAllPDFs()
   }
-  fun getRecPdfs(): LiveData<List<Pdf>>{
+  fun getRecPdfs(): LiveData<List<Pdf>> {
     return bookRepository.getRecPdfs()
   }
 

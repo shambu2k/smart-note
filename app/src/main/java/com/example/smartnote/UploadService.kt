@@ -26,7 +26,9 @@ import com.google.api.services.drive.Drive
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Date
+import java.util.Calendar
+import java.util.Collections
 import kotlin.collections.ArrayList
 
 class UploadService : Service() {
@@ -37,7 +39,7 @@ class UploadService : Service() {
   private lateinit var basePath: String
   private lateinit var notif: Notification
   private lateinit var pdfHelper: PdfHelper
-  //val fileStrings = mutableListOf<String>()
+  // val fileStrings = mutableListOf<String>()
 
   override fun onCreate() {
     super.onCreate()
@@ -45,7 +47,7 @@ class UploadService : Service() {
     startForeground(1, notification)
     val sharedPreferences = this.getSharedPreferences("shared_prefs", Context.MODE_PRIVATE)
     val lastSyncedDate = Date(sharedPreferences.getLong(Constants.LAST_SYNCED_TIME, 0))
-    var isuploaded: Boolean = false
+    var isuploaded = false
     basePath = applicationContext.filesDir.toString()
     backupRepository = BackupRepository()
     pdfs = ArrayList()
@@ -58,21 +60,19 @@ class UploadService : Service() {
         for (subjectPath in subjectPaths) {
           for (i in 1..5) {
             val unitPath = subjectPath + "/unit$i"
-            /*val pdf = providePdfDao(applicationContext).getPdfByName(pdfName)
-            try to append images to the existing pdf*/
             val images = pdfHelper.getFiles(unitPath, applicationContext)
             if (images != null) {
               val fileStrings = mutableListOf<String>()
-              var flag:Int=0
+              var flag = 0
               for (image in images) {
                 if (image.name.endsWith(".jpeg")) {
                   fileStrings.add(image.path)
                   if (Date(image.lastModified()).after(lastSyncedDate)) {
-                    flag=1;
+                    flag = 1
                   }
                 }
               }
-              if(flag==1) {
+              if (flag == 1) {
                 storePdf(unitPath, fileStrings)
                 Log.d("path - service", unitPath)
                 val pdfName = unitPath.split('/').toString()
@@ -116,9 +116,9 @@ class UploadService : Service() {
       }
       stopForeground(true)
       stopSelf()
-      with(sharedPreferences.edit()){
+      with(sharedPreferences.edit()) {
         val currentDate = Calendar.getInstance().time.time
-        putLong("UPLOAD_TIME",currentDate)
+        putLong("UPLOAD_TIME", currentDate)
         apply()
       }
       notif =
@@ -166,7 +166,7 @@ class UploadService : Service() {
       .build()
   }
 
-  private fun storePdf(unitPath: String,fileStrings: MutableList<String>) {
+  private fun storePdf(unitPath: String, fileStrings: MutableList<String>) {
     pdfHelper.storePdf(
       fileStrings,
       applicationContext.filesDir.toString() + unitPath,

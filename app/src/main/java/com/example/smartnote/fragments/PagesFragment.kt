@@ -36,8 +36,7 @@ import com.scanlibrary.ScanConstants
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.io.IOException
-import java.util.*
-
+import java.util.Calendar
 
 @AndroidEntryPoint
 class PagesFragment : Fragment() {
@@ -128,7 +127,7 @@ class PagesFragment : Fragment() {
         Toast.makeText(activity, "Pdf created successfully", Toast.LENGTH_SHORT).show()
 
         val list = context?.let { viewModel.getFiles(args.unitFolderPath, it) }
-        if (list != null && list.size > 0) {
+        if (list != null && list.isNotEmpty()) {
           for (currentFile in list) {
             if (currentFile.name.endsWith(".pdf")) {
               pdf_file = currentFile
@@ -142,17 +141,17 @@ class PagesFragment : Fragment() {
           pdf_file
         )
 
-        try{
+        try {
           val shareIntent = Intent()
           shareIntent.action = Intent.ACTION_SEND
           shareIntent.type = "application/pdf"
           shareIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
           shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-          shareIntent.clipData = ClipData.newRawUri("",uri)
+          shareIntent.clipData = ClipData.newRawUri("", uri)
           shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
           startActivity(Intent.createChooser(shareIntent, "Share via"))
-        }catch (e:Exception){
-          Toast.makeText(requireContext(),"Something went wrong!", Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+          Toast.makeText(requireContext(), "Something went wrong!", Toast.LENGTH_SHORT).show()
         }
       }
     }
@@ -215,16 +214,16 @@ class PagesFragment : Fragment() {
       }
     }
   }
-  fun reloadImgs(unitPath: String): MutableList<String> {
+  private fun reloadImgs(unitPath: String): MutableList<String> {
     val fileStrings = mutableListOf<String>()
     val list = context?.let { viewModel.getFiles(unitPath, it) }
-    if (list != null && list.size > 0) {
+    if (list != null && list.isNotEmpty()) {
       for (currentFile in list) {
         if (currentFile.name.endsWith(".jpeg")) {
           // File absolute path
           Log.i("pdf", currentFile.path)
           // File Name
-          Log.i("pdf", currentFile.getName())
+          Log.i("pdf", currentFile.name)
           fileStrings.add(currentFile.path)
           Log.i("pdf", fileStrings.size.toString())
         }

@@ -7,7 +7,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 class FileSystemHelper(@ApplicationContext var context: Context) {
 
@@ -25,7 +26,7 @@ class FileSystemHelper(@ApplicationContext var context: Context) {
       directory.mkdir()
     }
     val timeStamp =
-      SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+      SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
     val mypath = File(directory, "IMG_" + timeStamp + ".jpeg")
 
     var fos: FileOutputStream? = null
@@ -46,7 +47,7 @@ class FileSystemHelper(@ApplicationContext var context: Context) {
   suspend fun getFirstImage(folderPath: String): File? {
     val path = File(context.filesDir.toString() + folderPath)
     val list = path.listFiles()
-    if (list != null && list.size > 0) {
+    if (list != null && list.isNotEmpty()) {
       for (currentFile in list) {
         if (currentFile.name.endsWith(".jpeg")) {
           return currentFile

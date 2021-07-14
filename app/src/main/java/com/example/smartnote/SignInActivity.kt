@@ -66,7 +66,7 @@ class SignInActivity : AppCompatActivity() {
   private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
     try {
       val account = completedTask.getResult(ApiException::class.java)
-      Toast.makeText(this, "Welcome ${account?.displayName}!", Toast.LENGTH_LONG).show()
+      Toast.makeText(this, "Welcome ${account.displayName}!", Toast.LENGTH_LONG).show()
       startMainActivity()
     } catch (e: ApiException) {
       Log.w(SettingsFragment.TAG, "signInResult:failed code=" + e.statusCode)

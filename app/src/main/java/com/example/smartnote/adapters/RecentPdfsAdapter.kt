@@ -1,6 +1,5 @@
 package com.example.smartnote.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.findNavController
@@ -11,19 +10,19 @@ import com.example.smartnote.fragments.BooksFragmentDirections
 import com.squareup.picasso.Picasso
 import java.io.File
 
-class RecentPdfsAdapter(private var pdfs: List<Pdf>,private var images: List<String>)
-  : RecyclerView.Adapter<RecentPdfsAdapter.PdfsViewHolder>() {
+class RecentPdfsAdapter(private var pdfs: List<Pdf>, private var images: List<String>) :
+  RecyclerView.Adapter<RecentPdfsAdapter.PdfsViewHolder>() {
 
-  class PdfsViewHolder(b: RecentItemBinding) : RecyclerView.ViewHolder(b.root){
+  class PdfsViewHolder(b: RecentItemBinding) : RecyclerView.ViewHolder(b.root) {
     val binding = b
-     var bookName = binding.recentsBook
-     var subName =  binding.recentsSub
-    var unitName = binding.recentsUnit
-    fun bind(pdf: Pdf){
+    var bookName = binding.recentsBook
+    private var subName = binding.recentsSub
+    private var unitName = binding.recentsUnit
+    fun bind(pdf: Pdf) {
       val pdfname = pdf.location
       val names = pdfname.split("/")
       bookName.text = names[1]
-      subName.text =names[2]
+      subName.text = names[2]
       unitName.text = names[3]
     }
   }
@@ -47,15 +46,15 @@ class RecentPdfsAdapter(private var pdfs: List<Pdf>,private var images: List<Str
     Picasso.get().load(File(images[position])).into(holder.binding.pdfImage)
     val pdfname = pdfs[position].location
     val names = pdfname.split("/")
-    val unitNo = names[3].get(names[3].length-1) - '0'
+    val unitNo = names[3][names[3].length - 1] - '0'
     holder.itemView.setOnClickListener {
-      it.findNavController().navigate(BooksFragmentDirections.actionBooksFragmentToPagesFragment(pdfname,unitNo,names[2],names[1]))
+      it.findNavController().navigate(BooksFragmentDirections.actionBooksFragmentToPagesFragment(pdfname, unitNo, names[2], names[1]))
     }
   }
 
-  fun refresh(recentPdfs: List<Pdf>,recimages:List<String>) {
+  fun refresh(recentPdfs: List<Pdf>, recimages: List<String>) {
     pdfs = recentPdfs
-    images=recimages
+    images = recimages
     notifyDataSetChanged()
   }
 }

@@ -17,7 +17,6 @@ class UploadWorker(appContext: Context, workerParams: WorkerParameters) :
       val intent = Intent(applicationContext, UploadService::class.java)
       applicationContext.let { it1 -> ContextCompat.startForegroundService(it1, intent) }
       applicationContext.startService(intent)
-
     } catch (e: Exception) {
       return Result.retry()
     }

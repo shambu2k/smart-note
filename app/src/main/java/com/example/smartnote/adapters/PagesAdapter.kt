@@ -2,8 +2,12 @@ package com.example.smartnote.adapters
 
 import android.app.Dialog
 import android.graphics.BitmapFactory
-import android.view.*
-import android.widget.ImageView
+import android.view.ViewGroup
+import android.view.LayoutInflater
+import android.view.Window
+import android.view.MenuItem
+import android.view.Menu
+import android.view.MenuInflater
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartnote.MainActivity
 import com.example.smartnote.R
@@ -50,10 +54,10 @@ class PagesAdapter(var listImages: MutableList<String>, private var activity: Ma
     holder.binding.pageBg.setOnClickListener {
       if (multiselect)
         selectItem(holder, listImages[position])
-      else{
-        val pageDialog = Dialog(activity,android.R.style.Theme_Material_Light_NoActionBar_Fullscreen)
+      else {
+        val pageDialog = Dialog(activity, android.R.style.Theme_Material_Light_NoActionBar_Fullscreen)
         pageDialog.window?.requestFeature(Window.FEATURE_NO_TITLE)
-        val view = activity.layoutInflater.inflate(R.layout.dialog_image_view,null)
+        val view = activity.layoutInflater.inflate(R.layout.dialog_image_view, null)
         val bitmap = BitmapFactory.decodeFile(listImages[position])
         view.findViewById<ZoomageView>(R.id.page_image).setImageBitmap(bitmap)
         pageDialog.setContentView(view)
@@ -62,7 +66,7 @@ class PagesAdapter(var listImages: MutableList<String>, private var activity: Ma
     }
   }
 
-  private fun selectItem(holder: PagesAdapter.PagesViewHolder, s: String) {
+  private fun selectItem(holder: PagesViewHolder, s: String) {
     if (selectedItems.contains(s)) {
       selectedItems.remove(s)
       holder.binding.pageBg.alpha = 1.0f

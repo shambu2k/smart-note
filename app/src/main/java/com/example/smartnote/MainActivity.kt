@@ -13,16 +13,11 @@ import androidx.core.view.GravityCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
-import androidx.work.PeriodicWorkRequest
-import androidx.work.WorkManager
 import com.example.smartnote.databinding.ActivityMainBinding
-import com.example.smartnote.helpers.UploadWorker
 import com.example.smartnote.helpers.viewLifecycle
-import com.example.smartnote.viewmodels.BookViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.zxing.integration.android.IntentIntegrator
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -31,14 +26,11 @@ class MainActivity : AppCompatActivity() {
 
   private lateinit var navController: NavController
 
-  private lateinit var bookViewModel: BookViewModel
-
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     val view = binding.root
     setContentView(view)
     setupNavigation()
-    // Backup();
   }
 
   private fun setupNavigation() {
@@ -74,7 +66,7 @@ class MainActivity : AppCompatActivity() {
     val account = GoogleSignIn.getLastSignedInAccount(applicationContext)
     if (account != null) {
       val view: View = binding.sideNavigationDrawer.getHeaderView(0)
-      view.findViewById<TextView>(R.id.signIn).setText(account.displayName)
+      view.findViewById<TextView>(R.id.signIn).text = account.displayName
     }
   }
 
@@ -114,12 +106,5 @@ class MainActivity : AppCompatActivity() {
     } else {
       super.onActivityResult(requestCode, resultCode, data)
     }
-  }
-
-  private fun Backup() {
-    val periodicWorkRequest = PeriodicWorkRequest
-      .Builder(UploadWorker::class.java, 24, TimeUnit.HOURS)
-      .build()
-    WorkManager.getInstance(applicationContext).enqueue(periodicWorkRequest)
   }
 }

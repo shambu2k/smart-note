@@ -10,10 +10,10 @@ import android.os.Bundle;
 @SuppressLint("ValidFragment")
 public class SingleButtonDialogFragment extends DialogFragment {
 
-    protected int positiveButtonTitle;
-    protected String message;
-    protected String title;
-    protected boolean isCancelable;
+    protected final int positiveButtonTitle;
+    protected final String message;
+    protected final String title;
+    protected final boolean isCancelable;
 
     public SingleButtonDialogFragment(int positiveButtonTitle,
                                       String message, String title, boolean isCancelable) {
