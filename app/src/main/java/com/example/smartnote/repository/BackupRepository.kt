@@ -1,6 +1,5 @@
 package com.example.smartnote.repository
 
-import android.util.Log
 import com.example.smartnote.helpers.Constants.TYPE_FOLDER
 import com.example.smartnote.helpers.DriveServiceHelper
 import com.google.android.gms.common.api.ApiException
@@ -9,10 +8,6 @@ import java.text.DateFormat
 import java.util.Calendar
 
 class BackupRepository {
-
-  companion object {
-    const val TAG = "BackupRepository"
-  }
 
   suspend fun uploadPDF(
     helper: DriveServiceHelper,
@@ -60,10 +55,7 @@ class BackupRepository {
         helper.deleteFile(existingFileID)
       }
       val fileID = helper.createPDF(pdfName, subjectFolderID, pdfPath).await()
-      Log.i(TAG, "fileList: $fileList")
-      Log.i(TAG, "fileID: $fileID")
     } catch (e: ApiException) {
-      Log.w(TAG, "listFilesResult:failed code=" + e.statusCode)
     }
   }
 }

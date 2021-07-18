@@ -9,7 +9,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -105,7 +104,6 @@ class SubjectsFragment : Fragment() {
         PERMISSIONS_REQUEST_CODE
       )
     } else {
-      Log.i("SubjectsFragment", "Permissions Granted")
       val preference = ScanConstants.OPEN_CAMERA
       val intent = Intent(requireContext(), ScanActivity::class.java)
       intent.putExtra(ScanConstants.OPEN_INTENT_PREFERENCE, preference)

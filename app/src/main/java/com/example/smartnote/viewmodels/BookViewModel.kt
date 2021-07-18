@@ -1,6 +1,5 @@
 package com.example.smartnote.viewmodels
 
-import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -63,9 +62,7 @@ class BookViewModel @ViewModelInject constructor(
     runBlocking(Dispatchers.IO) {
       try {
         sub = bookRepository.getSubjectGrid(bookName)
-        Log.i("info", sub.toString())
       } catch (e: Exception) {
-        Log.d("exc", e.message.toString())
       }
     }
     return if (sub == null) {

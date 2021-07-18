@@ -2,7 +2,6 @@ package com.example.smartnote.helpers
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.util.Log
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import java.io.FileOutputStream
@@ -14,7 +13,6 @@ class FileSystemHelper(@ApplicationContext var context: Context) {
 
   suspend fun makeFolder(folderName: String, filePath: String) {
     val medFolder = File(context.filesDir.toString() + filePath, folderName)
-    Log.i("myTag", context.filesDir.toString() + filePath)
     if (!medFolder.exists()) {
       medFolder.mkdirs()
     }
@@ -35,7 +33,6 @@ class FileSystemHelper(@ApplicationContext var context: Context) {
       bitmap.compress(Bitmap.CompressFormat.JPEG, 70, fos)
       fos.close()
     } catch (e: Exception) {
-      Log.e("SAVE_IMAGE", e.message, e)
     }
   }
 

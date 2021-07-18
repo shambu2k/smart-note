@@ -1,7 +1,6 @@
 package com.example.smartnote.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -70,15 +69,15 @@ class BooksFragment : Fragment() {
     recentsText = binding.recentsText
     emptyView = binding.emptyView
 
-    if(books.isEmpty()){
+    if (books.isEmpty()) {
       emptyView.visibility = View.VISIBLE
       recyclerView.visibility = View.GONE
-    }else{
+    } else {
       emptyView.visibility = View.GONE
       recyclerView.visibility = View.VISIBLE
     }
 
-    if(pdfs.isEmpty())
+    if (pdfs.isEmpty())
       recentsText.visibility = View.GONE
     else
       recentsText.visibility = View.VISIBLE
@@ -121,7 +120,6 @@ class BooksFragment : Fragment() {
             fileStrings.add(file!!.path)
           }
           this.images = fileStrings
-          Log.i("size", pdfs.size.toString())
           recentPdfsAdapter.refresh(this.pdfs, this.images)
         }
       )

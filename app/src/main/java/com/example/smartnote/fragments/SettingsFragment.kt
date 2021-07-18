@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -226,7 +225,6 @@ class SettingsFragment : Fragment() {
       .setRequiresStorageNotLow(true)
       .build()
     if (time != 0L) {
-      Log.d("TIME", time.toString())
       val period = time * 24 * 60
       val periodicWorkRequest = PeriodicWorkRequest
         .Builder(UploadWorker::class.java, period, TimeUnit.MINUTES, 5, TimeUnit.MINUTES)

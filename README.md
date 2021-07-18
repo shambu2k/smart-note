@@ -1,5 +1,7 @@
 # Smart Note App
 
+Organize your notes into folders
+
 ## Contributing
  - Fork and Clone the repository and add shambu2k/smart-note as remote upstream.
  - Create new branch for features.

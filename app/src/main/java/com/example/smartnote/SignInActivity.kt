@@ -26,7 +26,6 @@ class SignInActivity : AppCompatActivity() {
 
   companion object {
     const val RC_SIGN_IN = 1
-    const val TAG = "SignInActivity"
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +34,6 @@ class SignInActivity : AppCompatActivity() {
 
     binding.buttonSignIn.setSize(SignInButton.SIZE_WIDE)
     binding.buttonSignIn.setOnClickListener {
-      Log.i(TAG, "Sign In CLicked")
       signIn()
     }
   }
