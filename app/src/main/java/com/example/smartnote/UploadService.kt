@@ -39,7 +39,6 @@ class UploadService : Service() {
   private lateinit var basePath: String
   private lateinit var notif: Notification
   private lateinit var pdfHelper: PdfHelper
-  // val fileStrings = mutableListOf<String>()
 
   override fun onCreate() {
     super.onCreate()
@@ -74,7 +73,6 @@ class UploadService : Service() {
               }
               if (flag == 1) {
                 storePdf(unitPath, fileStrings)
-                Log.d("path - service", unitPath)
                 val pdfName = unitPath.split('/').toString()
                 providePdfDao(applicationContext).deletePdfByname(pdfName)
                 val pdf = Pdf(
@@ -102,7 +100,6 @@ class UploadService : Service() {
               .setOngoing(true)
               .build()
           notificationManager.notify(1, notif)
-          Log.i("Backup", "$basePath${pdf.location}/${pdf.name}.pdf")
           backupRepository.uploadPDF(mDriveServiceHelper, "$basePath${pdf.location}/${pdf.name}.pdf")
           isuploaded = true
         }

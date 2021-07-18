@@ -22,7 +22,6 @@ import static com.example.smartnote.helpers.Constants.TYPE_PDF;
 public class DriveServiceHelper {
     private final Executor mExecutor = Executors.newSingleThreadExecutor();
     private final Drive mDriveService;
-    private static final String TAG = "DriveServiceHelper";
 
     public DriveServiceHelper(Drive driveService) {
         mDriveService = driveService;
@@ -60,7 +59,7 @@ public class DriveServiceHelper {
             try {
                 mDriveService.files().delete(fileId).execute();
             } catch (IOException e) {
-                Log.i(TAG, "An error occurred: " + e);
+
             }
             return null;
         });
@@ -88,13 +87,10 @@ public class DriveServiceHelper {
             try {
                 List<File> files = mDriveService.files().list().setQ("'" + fileID + "'" + " in parents and name = '" + fileName + "'").execute().getFiles();
                 if (files.size() != 0) {
-                    Log.i(TAG, "found");
                     return (String) files.get(0).get("id");
-                } else {
-                    Log.i(TAG, "not found");
                 }
             } catch (IOException e) {
-                Log.i(TAG, "An error occurred: " + e);
+
             }
             return null;
         });

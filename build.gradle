@@ -22,6 +22,17 @@ plugins {
     id "org.jlleitschuh.gradle.ktlint" version "10.0.0"
 }
 
+project.ext {
+    compileSdkVersion = 30
+    buildToolsVersion = "30.0.2"
+    applicationId = "com.example.smartnote"
+    minSdkVersion = 19
+    targetSdkVersion = 30
+    versionCode = 1
+    versionName = "1.0"
+    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+}
+
 allprojects {
     repositories {
         google()
@@ -33,3 +44,5 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+apply from: 'dependencies.gradle'

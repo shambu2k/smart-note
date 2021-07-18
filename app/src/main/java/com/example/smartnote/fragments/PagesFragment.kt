@@ -10,7 +10,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -101,13 +100,9 @@ class PagesFragment : Fragment() {
 
     binding.buttonCreatePdf.setOnClickListener {
       fileStrings = reloadImgs(args.unitFolderPath)
-      Log.i("pdf", "clicked")
-      Log.i("pdf", fileStrings.size.toString())
       if (fileStrings.size == 0) {
         Toast.makeText(activity, "No Images", Toast.LENGTH_SHORT).show()
       } else {
-
-        Log.i("pdf", "not null")
         viewModel.storePdf(
           fileStrings,
           context?.filesDir.toString() + args.unitFolderPath,
@@ -120,8 +115,6 @@ class PagesFragment : Fragment() {
           Calendar.getInstance().time
         )
         // if there is a pdf with same name it will delete it in db first then add newone
-        Log.d("filesdir", context?.filesDir.toString())
-        Log.d("path", args.unitFolderPath.split('/').toString())
         bookViewModel.deletePdfByName(args.unitFolderPath.split('/').toString())
         bookViewModel.insertPdf(pdf)
         Toast.makeText(activity, "Pdf created successfully", Toast.LENGTH_SHORT).show()
@@ -175,7 +168,6 @@ class PagesFragment : Fragment() {
         Constants.PERMISSIONS_REQUEST_CODE
       )
     } else {
-      Log.i("SubjectsFragment", "Permissions Granted")
       val preference = ScanConstants.OPEN_CAMERA
       val intent = Intent(requireContext(), ScanActivity::class.java)
       intent.putExtra(ScanConstants.OPEN_INTENT_PREFERENCE, preference)
@@ -220,12 +212,7 @@ class PagesFragment : Fragment() {
     if (list != null && list.isNotEmpty()) {
       for (currentFile in list) {
         if (currentFile.name.endsWith(".jpeg")) {
-          // File absolute path
-          Log.i("pdf", currentFile.path)
-          // File Name
-          Log.i("pdf", currentFile.name)
           fileStrings.add(currentFile.path)
-          Log.i("pdf", fileStrings.size.toString())
         }
       }
     }

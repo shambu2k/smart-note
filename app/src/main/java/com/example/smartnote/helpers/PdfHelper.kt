@@ -7,7 +7,6 @@ import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.pdf.PdfDocument
-import android.util.Log
 import com.example.smartnote.helpers.Constants.PDF_PAGE_HEIGHT
 import com.example.smartnote.helpers.Constants.PDF_PAGE_WIDTH
 import kotlinx.coroutines.Dispatchers
@@ -46,14 +45,12 @@ class PdfHelper @Inject constructor() {
     pdfDocument.writeTo(fileOutputStream)
     fileOutputStream.close()
     pdfDocument.close()
-    Log.i("pdf", "reached here")
   }
 
   private fun getBitmapFromLocalPath(path: String): Bitmap? {
     try {
       return BitmapFactory.decodeFile(path)
     } catch (e: Exception) {
-      Log.d("PdfHelper", e.toString())
     }
     return null
   }
@@ -61,7 +58,6 @@ class PdfHelper @Inject constructor() {
   fun storePdf(paths: List<String>, outPath: String, fileName: String) {
     runBlocking(Dispatchers.IO) {
       createPdfFromImages(paths, outPath, fileName)
-      Log.i("pdf", "reached viewModel")
     }
   }
 
@@ -71,7 +67,6 @@ class PdfHelper @Inject constructor() {
     runBlocking(Dispatchers.IO) {
       try {
         list = fileSystemHelper.getFilesList(folderPath)
-        Log.i("info", list.toString())
       } catch (e: Exception) {
         e.stackTrace
       }

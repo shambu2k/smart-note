@@ -7,17 +7,17 @@ apply plugin: "androidx.navigation.safeargs.kotlin"
 apply plugin: "org.jlleitschuh.gradle.ktlint"
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.2"
+    compileSdkVersion project.compileSdkVersion
+    buildToolsVersion project.buildToolsVersion
 
     defaultConfig {
-        applicationId "com.example.smartnote"
-        minSdkVersion 19
-        targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+        applicationId project.applicationId
+        minSdkVersion project.minSdkVersion
+        targetSdkVersion project.targetSdkVersion
+        versionCode project.versionCode
+        versionName project.versionName
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner project.testInstrumentationRunner
         multiDexEnabled true
     }
 
@@ -36,7 +36,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -62,92 +62,66 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.1.0'
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation "com.google.android.material:material:1.2.1"
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation appDependency.core
+    implementation appDependency.appcompat
+    implementation appDependency.constraintLayout
+    implementation appDependency.material
+    implementation appDependency.androidxLegacy
+    testImplementation appDependency.junit
+    androidTestImplementation appDependency.androidxJunit
+    androidTestImplementation appDependency.androidxEspresso
 
-    def hilt_version = "2.28-alpha"
-    def hilt_jetpack = "1.0.0-alpha01"
-    def room_version = "2.2.5"
-    def nav_version = "2.3.0"
-    def lifecycle_version = "2.2.0"
-    def material_version = "1.2.1"
-    def zxing_version = "4.1.0"
-    def zxing_old = "3.3.0"
-    def picasso ="2.71828"
-    def work_version = "2.4.0"
-    def multidex_version = "2.0.1"
-
-    // Hilt
-    implementation "com.google.dagger:hilt-android:$hilt_version"
-    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
-
-    //Hilt - Jetpack extension
-    implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hilt_jetpack"
-    kapt "androidx.hilt:hilt-compiler:$hilt_jetpack"
-
-    // Jetpack - Room
-    implementation "androidx.room:room-runtime:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
-    implementation "androidx.room:room-ktx:$room_version"
-
-    // Jetpack - Navigation
-    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
-    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
-
-    // Jetpack - Lifecycle Components
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
-    kapt "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
-
-
-
-    // Material Components
-    implementation "com.google.android.material:material:$material_version"
-
-    // Open CV SDK
-    
-    // Document Scanning library
+    // Document Scanning module
     implementation project(":scanlibrary")
 
+    // Hilt
+    implementation appDependency.hilt
+    kapt appDependency.hiltAndroidCompiler
+    implementation appDependency.hiltLifecycleViewmodel
+    kapt appDependency.hiltCompiler
+
+    // Jetpack - Room
+    implementation appDependency.roomRuntime
+    kapt appDependency.roomCompiler
+    implementation appDependency.room
+
+    // Jetpack - Navigation
+    implementation appDependency.navigation
+    implementation appDependency.navigationUi
+
+    // Jetpack - Lifecycle Components
+    implementation appDependency.viewmodel
+    implementation appDependency.livedata
+    kapt appDependency.lifecycleCompiler
+    implementation appDependency.lifecycleJava8
+    implementation appDependency.lifecycleRuntime
+
+    // Jetpack - WorkManager
+    implementation appDependency.workmanager
+
     // QR Scanning
-    implementation ("com.journeyapps:zxing-android-embedded:$zxing_version"){transitive = true}
-    implementation "com.google.zxing:core:$zxing_old"
+    implementation appDependency.zxing, {transitive = true}
+    implementation appDependency.zxingOld
 
-    //Coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9'
+    // Coroutines
+    implementation appDependency.coroutines
+    implementation appDependency.coroutinesAndroid
+    implementation appDependency.coroutinesPlayServices
 
-    implementation "com.squareup.picasso:picasso:$picasso"
-    
-    //WorkManager
-    implementation "androidx.work:work-runtime-ktx:$work_version"
+    // Picasso image lib
+    implementation appDependency.picasso
 
-    implementation 'com.google.android.gms:play-services-auth:19.0.0'
+    // Google Apis
+    implementation appDependency.googleAuth
+    implementation appDependency.googleHttp
+    implementation appDependency.googleApi, {exclude group: 'org.apache.httpcomponents'}
+    implementation appDependency.googleDriveApi, {exclude group: 'org.apache.httpcomponents'}
 
-    implementation 'com.google.http-client:google-http-client-gson:1.26.0'
-    implementation('com.google.api-client:google-api-client-android:1.31.1') {
-        exclude group: 'org.apache.httpcomponents'
-    }
-    implementation 'com.google.android.gms:play-services-auth:19.0.0'
-    //implementation 'com.google.api-client:google-api-client:1.31.1'
-    //implementation 'com.google.oauth-client:google-oauth-client-jetty:1.31.1'
-    implementation('com.google.apis:google-api-services-drive:v3-rev197-1.25.0') {
-        exclude group: 'org.apache.httpcomponents'
-    }
-    implementation "androidx.multidex:multidex:$multidex_version"
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.4.1'
+    // Circular ImageView
+    implementation appDependency.circularImage
 
-    //Circular ImageView
-    implementation 'de.hdodenhof:circleimageview:3.1.0'
+    // Zoom ImageView
+    implementation appDependency.zoomImage
 
-    //Zoom ImageView
-    implementation 'com.jsibbold:zoomage:1.3.1'
+    implementation appDependency.multidex
 }
