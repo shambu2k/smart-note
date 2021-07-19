@@ -5,6 +5,8 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
 apply plugin: "androidx.navigation.safeargs.kotlin"
 apply plugin: "org.jlleitschuh.gradle.ktlint"
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
 
 android {
     compileSdkVersion project.compileSdkVersion
@@ -124,4 +126,9 @@ dependencies {
     implementation appDependency.zoomImage
 
     implementation appDependency.multidex
+
+    // Firebase
+    implementation platform(appDependency.firebaseBoM)
+    implementation appDependency.firebaseAnalytics
+    implementation appDependency.firebaseCrashlytics
 }
