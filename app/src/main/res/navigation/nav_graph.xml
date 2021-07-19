@@ -30,14 +30,14 @@
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
         android:id="@+id/subjectGridFragment"
         android:name="com.example.smartnote.fragments.SubjectGridFragment"
         android:label="Add New Book"
-        tools:layout="@layout/fragment_subject_grid" >
+        tools:layout="@layout/fragment_subject_grid">
         <action
             android:id="@+id/action_subjectGridFragment_to_booksFragment"
             app:destination="@id/booksFragment"
@@ -50,34 +50,42 @@
         android:id="@+id/subjectsFragment"
         android:name="com.example.smartnote.fragments.SubjectsFragment"
         android:label="Subjects"
-        tools:layout="@layout/fragment_subjects" >
+        tools:layout="@layout/fragment_subjects">
         <argument
             android:name="bookId"
-            app:argType="integer"
-            android:defaultValue="0"/>
+            android:defaultValue="0"
+            app:argType="integer" />
         <argument
             android:name="bookName"
             app:argType="string" />
         <action
             android:id="@+id/action_subjectsFragment_to_unitsFragment"
-            app:destination="@id/unitsFragment" />
+            app:destination="@id/unitsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/unitsFragment"
         android:name="com.example.smartnote.fragments.UnitsFragment"
         android:label="fragment_units"
-        tools:layout="@layout/fragment_units" >
+        tools:layout="@layout/fragment_units">
         <action
             android:id="@+id/action_unitsFragment_to_pagesFragment"
-            app:destination="@id/pagesFragment" />
+            app:destination="@id/pagesFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
         <argument
             android:name="subjectFolderPath"
-            app:argType="string"
-            android:defaultValue='""' />
+            android:defaultValue='""'
+            app:argType="string" />
         <argument
             android:name="subjectName"
-            app:argType="string"
-            android:defaultValue='""' />
+            android:defaultValue='""'
+            app:argType="string" />
         <argument
             android:name="bookName"
             app:argType="string" />
@@ -86,19 +94,19 @@
         android:id="@+id/pagesFragment"
         android:name="com.example.smartnote.fragments.PagesFragment"
         android:label="fragment_pages"
-        tools:layout="@layout/fragment_pages" >
+        tools:layout="@layout/fragment_pages">
         <argument
             android:name="unitFolderPath"
-            app:argType="string"
-            android:defaultValue='""' />
+            android:defaultValue='""'
+            app:argType="string" />
         <argument
             android:name="unitNo"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
         <argument
             android:name="subjectName"
-            app:argType="string"
-            android:defaultValue='""' />
+            android:defaultValue='""'
+            app:argType="string" />
         <argument
             android:name="bookName"
             app:argType="string" />
@@ -111,7 +119,7 @@
 
     <fragment
         android:id="@+id/aboutFragment"
-        android:name="com.example.smartnote.fragments.AboutFragment"
+        android:name="com.example.smartnote.fragments.LicensesFragment"
         android:label="About"
-        tools:layout="@layout/fragment_about" />
+        tools:layout="@layout/fragment_licenses" />
 </navigation>
