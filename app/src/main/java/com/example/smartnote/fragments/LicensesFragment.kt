@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.smartnote.R
 import com.example.smartnote.databinding.FragmentLicensesBinding
 import com.example.smartnote.helpers.viewLifecycle
 
